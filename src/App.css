@@ -1,30 +1,23 @@
-body {
-  margin: 0;
-  font-family: "Noto Sans Georgian", sans-serif;
-  background-color: #f8fafc; /* რბილი ფონი გვერდისთვის */
+body{
+  max-width: 100%
 }
-
 .navbar {
   background:#f0f4f9;
-  backdrop-filter: blur(10px);
   height: 7em; 
   display: flex;
   justify-content: center;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+  font-size: clamp(0.4rem, 0.9vw, 1.2vw);
+  width:100%;
+  font-weight: 400;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   border-bottom: 1px solid #e0e0e0;
 }
-
 .nav-container {
   width: 95%;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-
 .logo {
   display: flex;
   align-items: center;
@@ -34,7 +27,7 @@ body {
 
 .logo img {
   width: auto;
-  height:5.5em;
+  height:6em;
 }
 
 .logo:hover {
@@ -44,14 +37,12 @@ body {
 .nav-links {
   display: flex;
   list-style: none;
-  gap: 5em;
+  gap:clamp(0.5rem, 6vw, 20vw);
 }
 
 .nav-links a {
   text-decoration: none;
   color: #28282b;
-  font-weight: 400;
-  font-size: 1em;
   transition: all 0.3s ease;
   padding: 5px 0;
 }
@@ -63,22 +54,15 @@ body {
   transform: scale(1.02);
 }
 
-
-.nav-links a:hover::after,
-.nav-links a.active::after {
-  width: 100%;
-}
-
 .logout-btn {
   background-color:#28282b;
+  font-family: "Noto Sans Georgian", sans-serif;
   color: white;
   border: none;
-  font-weight: 400;
-  padding: 10px 30px;
-  font-size: 1em;
-  border-radius: 8px;
+  padding: 10px 25px;
+  font-size: clamp(0.4rem, 0.9vw, 1.2vw);
+  border-radius: 5px;
   cursor: pointer;
-  font-family: "Noto Sans Georgian", sans-serif;
   transition: all 0.3s ease;
 }
 
@@ -88,36 +72,8 @@ body {
   transform: translateY(-1px);
 }
 
-main {
-  padding: 40px 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-  min-height: calc(100vh - 80px);
-}
-
-@media (max-width: 992px) {
-  .nav-links {
-    gap: 15px;
-  }
-  
-  .logo img {
-    height: 50px;
-  }
-}
-
 @media (max-width: 768px) {
-  .nav-container {
-    flex-direction: column;
-    height: auto;
-    padding: 15px 0;
-  }
-  
-  .navbar {
-    height: auto;
-  }
-
   .nav-links {
-    margin: 15px 0;
-    gap: 20px;
+    display: none;
   }
 }

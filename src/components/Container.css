@@ -2,79 +2,85 @@ body {
     background-color: whitesmoke;
     margin: 0;
     padding: 0;
+    max-width: 100%;
 }
 
 .about-section {
-    display: block;
-    margin-top: 70px;
-    padding: 20px; 
+    margin: 50px auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .about-container {
-    margin: 0 auto;
+    width: 140vh;
+    height:100vh;
+    box-shadow: 35px -35px 30px #28282B;
     background-color: white;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    max-width: 1150px;
-    width: 100%;
-    min-height: 450px; 
-    height: auto; 
-    border-radius: 10px;
-    border-top-right-radius: 10px;
+    grid-template-columns: 1fr 1fr; 
+    min-height: 400px;
+    height: auto;
     overflow: hidden; 
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.3s ease;
+
+    border-radius: 8px;
 }
 
-.about-container:hover {
-    
-    box-shadow: -15px 15px 30px rgba(40, 40, 43, 0.15);
-    transform: translateX(-5px) translateY(-5px);
+.about-container:hover {    
+    box-shadow: -15px 15px 40px #28282B;
+    transform: translate(-5px, -5px);
 }
 
 .about-content {
-    padding: 50px;
-    display: flex;
+    padding: 40px;
+    display: flex; 
     flex-direction: column;
     justify-content: center;
     color: #28282B;
 }
 
 .about-content h1 {
-    font-size: 2.5rem;
-    margin: 0;
+    color: #0e62a2;
+    font-size: clamp(1.5rem, 4vh, 2.5rem);
+    margin-bottom: 20px;
 }
 
 .about-content p {
-    margin-top: 20px;
-    font-size: 1.05rem;
-    line-height: 1.7;
+    line-height: 1.8;
+    font-size: clamp(1rem, 1.8vh, 1.2rem);
+    margin: 0;
 }
 
 .about-image-wrapper {
-    display: flex;
+    width: 100%;
+    height: 100%;
 }
 
 .about-img {
     width: 100%;
     height: 100%;
     object-fit: cover; 
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
+    display: block;
 }
 
-@media (max-width: 850px) {
+@media (max-width: 768px) {
     .about-container {
-        border-top-right-radius: 50px; 
+        grid-template-columns: 1fr; 
+        width: 90%;
     }
 
-    .about-img {
-        height: 350px; 
-        border-top-right-radius: 50px;
-        border-bottom-right-radius: 0;
+    .about-image-wrapper {
+        height: 250px; 
+        order: -1; 
     }
 
     .about-content {
-        padding: 40px 30px;
+        padding: 25px;
         text-align: center;
+    }
+
+    .about-content p {
+        font-size: 1rem;
     }
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import logo from "../images/TSU_Logo.png";
-import "../App.css"; // დარწმუნდი, რომ CSS აქ არის ან ცალკე Navbar.css-ში
+import "../App.css";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -9,15 +9,13 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    // replace: true იმისათვის, რომ "Back"-ით ვეღარ დაბრუნდეს
     navigate("/", { replace: true });
-    // reload საჭიროა, რომ App.js-მა თავიდან გადათვალოს დაცული როუტები
     window.location.reload(); 
   };
 
   return (
     <nav className="navbar">
-      <div className="nav-container"> {/* ეს კონტეინერი აუცილებელია ცენტრირებისთვის */}
+      <div className="nav-container"> 
         
         <div className="logo" onClick={() => navigate("/Home")}>
           <img src={logo} alt="TSU Logo" />
@@ -36,9 +34,7 @@ const Navbar = () => {
 
         <div className="nav-actions">
           {isAuth ? (
-            <button onClick={handleLogout} className="logout-btn">
-              გასვლა
-            </button>
+            <button onClick={handleLogout} className="logout-btn"> გასვლა</button>
           ) : (
             <NavLink to="/" className="login-link">შესვლა</NavLink>
           )}

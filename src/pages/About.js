@@ -5,16 +5,11 @@ import Container from "../components/Container";
 
 export default function About() {
   return (
-      <div>
-        <Container/>
-        <div style ={{
-        display: 'flex',
-        marginTop: '50px',
-      }}/>
-        <Footer/>
-      </div>
-    
-    
+  <div>
+    <div style={{ marginTop: '5vh' }}/>
+    <Container />
+    <div style={{ marginTop: '5vh' }}/>
+    <Footer />
+    </div>
   );
-  
 }

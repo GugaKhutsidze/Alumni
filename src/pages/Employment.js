@@ -2,14 +2,14 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import Footer from "../components/Footer";
-import "./Employment.css";
+import "./EE.css";
 
 function Employment() {
     const [searchTerm, setSearchTerm] = useState("");
     const [employment, setEmployment] = useState([]);
     const [sortBy, setSortBy] = useState("default");
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 5;
+    const itemsPerPage = 10;
 
     useEffect(() => {
         const url = "https://warrior.ge/api/movies"; 
@@ -22,19 +22,16 @@ function Employment() {
             });
     }, []);
 
-    // 1. ფილტრაცია
     let filteredEmployment = employment.filter((emp) =>
         emp.title?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    // 2. სორტირება
     if (sortBy === "az") {
         filteredEmployment.sort((a, b) => (a.title || "").localeCompare(b.title || ""));
     } else if (sortBy === "za") {
         filteredEmployment.sort((a, b) => (b.title || "").localeCompare(a.title || ""));
     }
 
-    // 3. პაგინაცია
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = filteredEmployment.slice(indexOfFirstItem, indexOfLastItem);
@@ -46,45 +43,45 @@ function Employment() {
     };
 
     return (
-        <div className="Employment-list">
-            <div className="asd1">
-            <h1 className="Employment-list-title">შენი შემდეგი კარიერული ნაბიჯი!</h1>
+        <div className="asd">
+        <div className="A-list">
+            <div className="A-image">
+                <h1 className="A-list-title">შენი შემდეგი კარიერული ნაბიჯი!</h1>
 
-            <div className="controls-container">
-                <input
-                    className="search-bar"
-                    type="text"
-                    placeholder="ძებნა..."
-                    value={searchTerm}
-                    onChange={handleSearch}
-                />
-                
-                <select 
-                    className="sort-dropdown" 
-                    value={sortBy} 
-                    onChange={(e) => setSortBy(e.target.value)}
-                >
-                    <option value="default">დალაგება</option>
-                    <option value="az">A-Z</option>
-                    <option value="za">Z-A</option>
-                </select>
+                <div className="controls-container">
+                    <input
+                        className="search-bar"
+                        type="text"
+                        placeholder="ძებნა..."
+                        value={searchTerm}
+                        onChange={handleSearch}
+                    />
+                    
+                    <select 
+                        className="sort-dropdown" 
+                        value={sortBy} 
+                        onChange={(e) => { setSortBy(e.target.value); setCurrentPage(1); }}
+                    >
+                        <option value="default">დალაგება</option>
+                        <option value="az">A-Z</option>
+                        <option value="za">Z-A</option>
+                    </select>
                 </div>
             </div>
 
-            <div className="employments">
+            <div className="As">
                 {currentItems.length > 0 ? (
                     currentItems.map((emp) => (
-                        <div className="employment" key={emp.id}>
+                        <div className="A" key={emp.id} >
                             <img
                                 src={emp.image || "https://via.placeholder.com/300x180"}
                                 alt={emp.title}
                             />
-                            <div className="employment-content">
+                            <div className="A-content">
                                 <h3>{emp.title}</h3>
                                 <p>{emp.description}</p>
-                                <p><strong>თარიღი:</strong> {emp.date}</p>
-                                <p><strong>კატეგორია:</strong> {emp.category}</p>
-                                <div className="EmploymentButtons">
+                                <p><strong>თარიღი:</strong> {emp.year}</p>
+                                <div className="A-buttons">
                                     <Link to={`/employment/${emp.id}`}>
                                         <button>განაცხადი</button>
                                     </Link>
@@ -97,7 +94,7 @@ function Employment() {
                 )}
             </div>
 
-            {totalPages > 1 && (
+            {totalPages > 0 && (
                 <div className="pagination-controls">
                     <button 
                         disabled={currentPage === 1} 
@@ -111,12 +108,14 @@ function Employment() {
                         onClick={() => setCurrentPage(prev => prev + 1)} >
                         შემდეგი
                     </button>
-                    
                 </div>
             )}
+
         </div>
+        <Footer />
+        </div>
+
     );
-    
 }
 
 export default Employment;

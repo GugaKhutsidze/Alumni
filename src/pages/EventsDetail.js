@@ -42,13 +42,16 @@ function EventsDetail() {
     if (!newComment.trim()) return;
 
     try {
-      await axios.post(
+      const res = await axios.post(
         `https://warrior.ge/api/movies/${id}/comments`,
         { content: newComment },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      
+      // Optimistic update: ვამატებთ ახალ კომენტარს სიაში ხელახალი fetch-ის გარეშე
+      const addedComment = res.data.data || { id: Date.now(), content: newComment, user: { name: "მე" } };
+      setComments((prev) => [...prev, addedComment]);
       setNewComment("");
-      fetchEventData(); // Refresh list to show the new comment
     } catch (e) {
       console.error("Error posting comment:", e);
     }
@@ -60,24 +63,29 @@ function EventsDetail() {
 
   return (
     <div className="event-detail">
-      <h1>{events?.title}</h1>
-      <div className="event-meta">
-        <p><strong>აღწერა:</strong> {events?.description}</p>
-        <p><strong>თარიღი:</strong> {events?.date}</p>
-        <p><strong>მდებარეობა:</strong> {events?.location}</p>
+      {/* მარცხენა სვეტი: კონტენტი */}
+      <div className="event-main-content">
+        <img src={events?.image} alt={events?.title} className="event-image" />
+        <div className="event-info-body">
+          <h1>{events?.title}</h1>
+          <div className="event-meta">
+            <p><strong>აღწერა:</strong> {events?.description}</p>
+            <p><strong>თარიღი:</strong> {events?.date}</p>
+            <p><strong>მდებარეობა:</strong> {events?.location}</p>
+          </div>
+        </div>
       </div>
 
-      <hr />
-
-      <section className="comments-section">
-        <h2>კომენტარები</h2>
+      <aside className="comments-sidebar">
+        <h2>დისკუსია</h2>
         <div className="comments-list">
           {comments.length === 0 ? (
-            <p>კომენტარები არ არის</p>
+            <p className="no-comments">კომენტარები ჯერ არ არის</p>
           ) : (
             comments.map((c) => (
               <div key={c.id} className="comment">
-                <strong>{c.user?.name || "მომხმარებელი"}:</strong> {c.content}
+                <strong>{c.user?.name || "მომხმარებელი"}</strong>
+                <p>{c.content}</p>
               </div>
             ))
           )}
@@ -93,7 +101,7 @@ function EventsDetail() {
           />
           <button type="submit" className="comment-button">გაგზავნა</button>
         </form>
-      </section>
+      </aside>
     </div>
   );
 }

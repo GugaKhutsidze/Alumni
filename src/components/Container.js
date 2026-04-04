@@ -1,6 +1,7 @@
 import React from "react";
 import imag3 from '../images/imag3.jpg';
-import './Container.css'
+import './Container.css';
+
 export default function Container() {
   return (
     <section className="about-section">
@@ -11,16 +12,14 @@ export default function Container() {
             პლატფორმა შექმნილია ივანე ჯავახიშვილის სახელობის თბილისის სახელმწიფო 
             უნივერსიტეტსა და მის კურსდამთავრებულებს შორის მჭიდრო, უწყვეტი კავშირის 
             დასამყარებლად. ჩვენი მიზანია შევქმნათ ერთიანი სივრცე, სადაც 
-            უნივერსიტეტის ალუმნი შეძლებს პროფესიულ განვითარებას, გამოცდილების 
+            უნივერსიტეტის კურსდამთავრებული შეძლებს პროფესიულ განვითარებას, გამოცდილების 
             გაზიარებასა და კარიერულ წინსვლას.
           </p>
         </div>
         <div className="about-image-wrapper">
-          <img src={imag3} alt="image" className="about-img"/>
+          <img src={imag3} alt="TSU Alumni" className="about-img"/>
         </div>
       </div>
     </section>
-    
   );
-  
 }

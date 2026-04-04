@@ -1,4 +1,3 @@
-/* Container Layout */
 .event-detail {
   max-width: 800px;
   margin: 40px auto;
@@ -6,11 +5,9 @@
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #333;
 }
 
-/* Typography */
 .event-detail h1 {
   font-size: 2.5rem;
   margin-bottom: 10px;
@@ -36,7 +33,6 @@ hr {
   margin: 30px 0;
 }
 
-/* Comments Section */
 .comments-section h2 {
   font-size: 1.5rem;
   margin-bottom: 20px;
@@ -54,7 +50,7 @@ hr {
   padding: 12px 16px;
   border-radius: 8px;
   margin-bottom: 12px;
-  border-left: 4px solid #007bff; /* Accent color */
+  border-left: 4px solid #007bff;
 }
 
 .comment strong {
@@ -62,7 +58,6 @@ hr {
   margin-right: 8px;
 }
 
-/* Form Styling */
 .comment-form {
   display: flex;
   gap: 10px;
@@ -101,7 +96,6 @@ hr {
   transform: scale(0.98);
 }
 
-/* Status Messages */
 .loading, .error {
   text-align: center;
   margin-top: 50px;

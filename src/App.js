@@ -14,11 +14,9 @@ import EventsDetail from "./pages/EventsDetail";
 // Components
 import Navbar from "./components/Navbar";
 
-// 1. ეს კომპონენტი იცავს შიდა გვერდებს და ამატებს ნავიგაციას
 const ProtectedLayout = () => {
   const token = localStorage.getItem("token");
 
-  // თუ ტოკენი არ არსებობს, გადაამისამართე ლოგინზე (/)
   if (!token) {
     return <Navigate to="/" replace />;
   }
@@ -27,7 +25,7 @@ const ProtectedLayout = () => {
     <>
       <Navbar />
       <div className="container">
-        <Outlet /> {/* აქ ჩაიტვირთება Home, About და ა.შ. */}
+        <Outlet /> 
       </div>
     </>
   );

@@ -1,45 +1,41 @@
-/* Container width - keep it narrow for minimalism */
+
 ::-webkit-scrollbar {
   width: 6px;
 }
 
-/* The track (background) - transparent or very faint */
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 
-/* The handle - subtle gray with rounding */
 ::-webkit-scrollbar-thumb {
   background: #28282B; 
   border-radius: 10px;
   transition: background 0.3s ease;
 }
 
-/* Darken slightly on interaction */
 ::-webkit-scrollbar-thumb:hover {
   background:#0e62a2;;
 }
 
-.Event-list {
-    padding: 20px;
-    min-height: 100vh;
-    width: 80vw;
+.A-list {
+    width:clamp(300px, 75%, 100%);
     margin: 0 auto;
+    margin-top:20px;
     color: #28282B;
 }
 
-.Event-list-title {
-    font-family: "Noto Sans Georgian", sans-serif;
-    font-size: 32px;
-    margin-bottom: 25px;
-    color: #28282B;
+.A-list-title {
+    margin-bottom: 1vw;
     text-align: center;
-    font-weight: 700;
+    font-size: clamp(0.8rem, 5vw, 2vw);
+    font-weight: 1000;
+    color: #28282B;
+    -webkit-text-stroke: 0.5px white;
 }
 
 .controls-container {
-    display: flex !important;
-    flex-direction: row !important;
+    display: flex ;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     gap: 10px;
@@ -49,36 +45,36 @@
 }
 
 .search-bar {
+    width:clamp(10px, 100%, 400px);
+    padding:clamp(4px, 1.5vw, 12px);
     flex: 2;
-    padding: 10px 15px;
-    border-radius: 10px;
     border: 1px solid #ddd;
     outline: none;
+    display: stretch;
     font-size: 16px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
 .sort-dropdown {
+    width:clamp(10px, 100%, 400px);
+    padding:clamp(4px, 1.5vw, 12px);
     flex: 1;
-    min-width: 120px;
-    padding: 10px;
-    border-radius: 10px;
     border: 1px solid #ddd;
     background-color: white;
-    font-size: 14px;
+    font-size:clamp(14px, 1.5vw, 16px);
     cursor: pointer;
     outline: none;
 }
 
 /* ბადისებრი განლაგება */
-.events {
+.As {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 25px;
     padding: 10px;
 }
 
-.event {
+.A {
     background-color: white;
     border-radius: 5px;
     overflow: hidden;
@@ -88,59 +84,58 @@
     flex-direction: column;
 }
 
-.event:hover {
+.A:hover {
     transform: scale(1.03);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-.event img {
+.A img {
     width: 100%;
     height: 180px;
     object-fit: cover;
 }
 
-.event-content {
+.A-content {
     padding: 20px;
     display: flex;
     flex-direction: column;
     flex: 1;
 }
 
-.event-content h3 {
+.A-content h3 {
     margin-bottom: 12px;
     color: #28282B;
     font-size: 20px;
 }
 
-.event-content p {
+.A-content p {
     font-size: 14px;
     margin: 6px 0;
     color: #444;
     line-height: 1.5;
 }
 
-.EventButtons {
+.A-buttons {
     margin-top: auto;
     padding-top: 15px;
 }
 
-.EventButtons button {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 8px;
-    background-color:#28282B;
+.A-buttons button {
+    padding: 12px 25px;
+    background: #28282B;
     color: white;
+    border: none;
+    border-radius: 6px;
     font-weight: 600;
     cursor: pointer;
+    white-space: nowrap; 
     transition: 0.3s;
 }
 
-.EventButtons button:hover {
+.A-buttons button:hover {
     background-color: #0a4d82;
 }
 
-/* პაგინაცია */
 .pagination-controls {
     display: flex;
     justify-content: center;
@@ -153,12 +148,16 @@
 .pagination-controls button {
    background-color: #28282B;
    color:white;
-   border: 1px solid #28282B;
+   border: 8px solid #28282B;
+   width:clamp(100px, 1vh, 1000vh);
+   border-radius: 5px;
+   cursor:pointer;
 
 }
 .pagination-controls button:hover {
-    color: white;
-    background-color: #0e62a2;
+    color: #0e62a2;
+    transform: scale(1.02);
+    transition: transform 0.3s ease;
 
 }
 
@@ -169,6 +168,22 @@
 }
 
 @media (max-width: 768px) {
-    .Event-list { width: 95vw; }
-    .controls-container { width: 90%; }
+    .A{
+        height:clamp(300px, 45vh, 10000vh);
+    }
+    .A img{
+        height:clamp(300px, 50vh, 10000vh);
+    }
+    .A-content p{
+        font-size:clamp(0.1rem, 1.5vh, 100vh);
+    }
+    .A-content h3{
+        font-size:clamp(0.1rem, 2vh, 10rem);
+    }
+
+  
+}
+.A-image {
+  width:clamp(300px, 100%, 100%);
+    background-image: url('../images/imag.5.jpg');
 }
