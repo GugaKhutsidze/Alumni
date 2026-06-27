@@ -3,12 +3,14 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import Footer from "../components/Footer";
 import "./EE.css";
+import { useTranslation } from "react-i18next";
 
 function Event() {
     const [searchTerm, setSearchTerm] = useState("");
     const [events, setEvents] = useState([]);
     const [sortBy, setSortBy] = useState("default");
     const [currentPage, setCurrentPage] = useState(1);
+  const { t, i18n } = useTranslation();
     const itemsPerPage = 20;
 
     useEffect(() => {
@@ -82,7 +84,7 @@ function Event() {
                         </div>
                     ))
                 ) : (
-                    <p className="no-data">ღონისძიებები ვერ მოიძებნა</p>
+                    <p className="no-data">{t("Not found")}</p>
                 )}
             </div>
 

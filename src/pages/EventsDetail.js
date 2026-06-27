@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import "./EventsDetail.css";
+import { useTranslation } from "react-i18next";
 
 function EventsDetail() {
   const [events, setEvents] = useState(null);
@@ -10,6 +11,7 @@ function EventsDetail() {
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
   const token = localStorage.getItem("token");
+  const { t, i18n } = useTranslation();
 
   const fetchEventData = useCallback(async () => {
     if (!token) return;
@@ -57,9 +59,6 @@ function EventsDetail() {
     }
   }
 
-  if (!token) return <div className="error">გთხოვთ გაიაროთ ავტორიზაცია</div>;
-  if (loading) return <div className="loading">იტვირთება...</div>;
-  if (!events) return <div className="error">ღონისძიება ვერ მოიძებნა</div>;
 
   return (
     <div className="event-detail">

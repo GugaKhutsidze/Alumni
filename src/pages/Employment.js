@@ -3,12 +3,14 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import Footer from "../components/Footer";
 import "./EE.css";
+import { useTranslation } from "react-i18next";
 
 function Employment() {
     const [searchTerm, setSearchTerm] = useState("");
     const [employment, setEmployment] = useState([]);
     const [sortBy, setSortBy] = useState("default");
     const [currentPage, setCurrentPage] = useState(1);
+    const { t, i18n } = useTranslation();
     const itemsPerPage =20;
 
     useEffect(() => {
@@ -89,7 +91,7 @@ function Employment() {
                         </div>
                     ))
                 ) : (
-                    <p className="no-data">ინფორმაცია ვერ მოიძებნა</p>
+                    <p className="no-data">{t("Not found")}</p>
                 )}
             </div>
             <div/>

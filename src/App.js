@@ -11,6 +11,7 @@ import Events from "./pages/Events";
 import Employment from "./pages/Employment";
 import EventsDetail from "./pages/EventsDetail";
 import Profile from "./pages/Profile";
+import Alumni from "./pages/Alumni";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -36,7 +37,7 @@ function App() {
 
   return (
     <BrowserRouter>
- 
+    
     
       <Routes>
         {/* საჯარო გვერდები (ნავიგაციის გარეშე) */}
@@ -48,9 +49,11 @@ function App() {
           <Route path="/Home" element={<Home />} />
           <Route path="/About" element={<About />} />
           <Route path="/event/:id" element={<EventsDetail />} />
+          
           <Route path="/Events" element={<Events />} />
           <Route path="/Employment" element={<Employment />} />
           <Route path="/Profile" element={<Profile />} />
+          <Route path="/Alumni" element={<Alumni />} />
         </Route>
 
         {/* თუ მომხმარებელი ჩაწერს არასწორ მისამართს, დაბრუნდეს საწყისზე */}

@@ -57,6 +57,9 @@ const Navbar = () => {
               <NavLink to="/Profile">
                 {t("Profile")}
               </NavLink>
+              <NavLink to="/Alumni">
+                {t("Alumni")}
+              </NavLink>
 
               <button
                 onClick={handleLogout}
