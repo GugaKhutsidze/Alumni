@@ -6,6 +6,9 @@ import "./L&R.css";
 export default function Register() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+  const [id, setId] = useState("");
+  const[tel, setTel] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -18,10 +21,10 @@ export default function Register() {
   }, [navigate]);
 
   async function handleRegister() {
-    if (!email || !name || !password) return alert("გთხოვ შეავსო ყველა ველი");
+    if (!email ||!tel|| !name || !id || !password) return alert("გთხოვ შეავსო ყველა ველი");
     try {
       setLoading(true);
-      await axios.post("https://warrior.ge/api/register", { email, name, password });
+      await axios.post("http:://localhost:5053/api/auth/register", { email, name,tel, surname, password, id });
       alert("რეგისტრაცია წარმატებით დასრულდა");
       navigate("/", { replace: true });
     } catch (error) {
@@ -36,7 +39,10 @@ export default function Register() {
       <div className={`SignUp ${isRegister ? "active-register" : ""}`}>
         <div className="form">
           <h1>მომხმარებლის რეგისტრაცია</h1>
-          <input type="text" placeholder="სახელი და გვარი" value={name} onChange={(e) => setName(e.target.value)} />
+          <input type="text" placeholder="პირადი ნომერი" value={id} onChange={(e)=>setId(e.target.value)} />
+          <input type="tel" placeholder="ტელეფონის ნომერი" value={tel} onChange={(e)=>setTel(e.target.value)} />
+          <input type="text" placeholder="სახელი" value={name} onChange={(e) => setName(e.target.value)} />
+          <input type="text" placeholder="გვარი" value={surname} onChange={(e) => setSurname(e.target.value)} />
           <input type="email" placeholder="ელფოსტა" value={email} onChange={(e) => setEmail(e.target.value)} />
           <input type="password" placeholder="პაროლი" value={password} onChange={(e) => setPassword(e.target.value)} />
           <button disabled={loading} onClick={handleRegister}>

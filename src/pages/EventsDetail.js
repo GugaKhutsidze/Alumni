@@ -77,7 +77,7 @@ function EventsDetail() {
       </div>
 
       <aside className="comments-sidebar">
-        <h2>დისკუსია</h2>
+        <h2>კომენტარები</h2>
         <div className="comments-list">
           {comments.length === 0 ? (
             <p className="no-comments">კომენტარები ჯერ არ არის</p>

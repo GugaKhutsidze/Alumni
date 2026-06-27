@@ -4,11 +4,9 @@ import Footer from "../components/Footer";
 
 export default function Home() {
   return (
-  <div>
-    <ImageSlider />
-    <div style={{ marginTop: '5vh'  }}/>
-    <Footer />
+     <div className="page">
+      <ImageSlider />
+      <Footer />
     </div>
-
   );
 }

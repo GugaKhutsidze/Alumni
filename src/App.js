@@ -10,6 +10,7 @@ import About from "./pages/About";
 import Events from "./pages/Events";
 import Employment from "./pages/Employment";
 import EventsDetail from "./pages/EventsDetail";
+import Profile from "./pages/Profile";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -32,8 +33,11 @@ const ProtectedLayout = () => {
 };
 
 function App() {
+
   return (
     <BrowserRouter>
+ 
+    
       <Routes>
         {/* საჯარო გვერდები (ნავიგაციის გარეშე) */}
         <Route path="/" element={<Login />} />
@@ -45,8 +49,8 @@ function App() {
           <Route path="/About" element={<About />} />
           <Route path="/event/:id" element={<EventsDetail />} />
           <Route path="/Events" element={<Events />} />
-          <Route path="/Employment" element={<Employment />} 
-          />
+          <Route path="/Employment" element={<Employment />} />
+          <Route path="/Profile" element={<Profile />} />
         </Route>
 
         {/* თუ მომხმარებელი ჩაწერს არასწორ მისამართს, დაბრუნდეს საწყისზე */}

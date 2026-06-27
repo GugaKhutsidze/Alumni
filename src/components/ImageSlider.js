@@ -26,6 +26,7 @@ const ImageSlider = () => {
   }, [currentIndex]);
 
   return (
+    <div className='asd'>
     <div className="slider-full-container">
       <div className="slider-viewport">
         
@@ -55,6 +56,7 @@ const ImageSlider = () => {
           ))}
         </div>
       </div>
+    </div>
     </div>
   );
 };

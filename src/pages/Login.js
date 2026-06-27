@@ -5,6 +5,7 @@ import "./L&R.css";
 
 export default function Login({ setIsLoggedIn }) {
   const [email, setEmail] = useState("");
+  const[id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ export default function Login({ setIsLoggedIn }) {
       if (setIsLoggedIn) setIsLoggedIn(true);
       navigate("/Home", { replace: true });
     } catch (error) {
-      alert("ელ-ფოსტა ან პაროლი არასწორია");
+      alert("პირადი ნომერი ან პაროლი არასწორია");
     } finally {
       setLoading(false);
     }

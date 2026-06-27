@@ -4,38 +4,31 @@ import { Link } from "react-router-dom";
 import Footer from "../components/Footer";
 import "./EE.css";
 
-function Employment() {
+function Event() {
     const [searchTerm, setSearchTerm] = useState("");
-    const [employment, setEmployment] = useState([]);
+    const [events, setEvents] = useState([]);
     const [sortBy, setSortBy] = useState("default");
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 10;
+    const itemsPerPage = 20;
 
     useEffect(() => {
-        const url = "https://warrior.ge/api/movies"; 
+        const url = "https://warrior.ge/api/movies";
         axios.get(url)
-            .then((res) => {
-                setEmployment(res.data.data || []);
-            })
-            .catch((err) => {
-                console.error("მონაცემების წამოღების შეცდომა:", err);
-            });
+            .then((res) => setEvents(res.data.data || []))
+            .catch((err) => console.error("მონაცემების წამოღების შეცდომა:", err));
     }, []);
 
-    let filteredEmployment = employment.filter((emp) =>
-        emp.title?.toLowerCase().includes(searchTerm.toLowerCase())
+    let filteredEvents = events.filter((event) =>
+        event.title?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    if (sortBy === "az") {
-        filteredEmployment.sort((a, b) => (a.title || "").localeCompare(b.title || ""));
-    } else if (sortBy === "za") {
-        filteredEmployment.sort((a, b) => (b.title || "").localeCompare(a.title || ""));
-    }
+    if (sortBy === "az") filteredEvents.sort((a, b) => (a.title || "").localeCompare(b.title || ""));
+    else if (sortBy === "za") filteredEvents.sort((a, b) => (b.title || "").localeCompare(a.title || ""));
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredEmployment.slice(indexOfFirstItem, indexOfLastItem);
-    const totalPages = Math.ceil(filteredEmployment.length / itemsPerPage);
+    const currentItems = filteredEvents.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(filteredEvents.length / itemsPerPage);
 
     const handleSearch = (e) => {
         setSearchTerm(e.target.value);
@@ -46,7 +39,6 @@ function Employment() {
         <div className="asd">
         <div className="A-list">
             <div className="A-image">
-                <h1 className="A-list-title">შენი შემდეგი კარიერული ნაბიჯი!</h1>
 
                 <div className="controls-container">
                     <input
@@ -56,13 +48,13 @@ function Employment() {
                         value={searchTerm}
                         onChange={handleSearch}
                     />
-                    
-                    <select 
-                        className="sort-dropdown" 
-                        value={sortBy} 
+
+                    <select
+                        className="sort-dropdown"
+                        value={sortBy}
                         onChange={(e) => { setSortBy(e.target.value); setCurrentPage(1); }}
                     >
-                        <option value="default">დალაგება</option>
+                        <option value="default"></option>
                         <option value="az">A-Z</option>
                         <option value="za">Z-A</option>
                     </select>
@@ -71,51 +63,52 @@ function Employment() {
 
             <div className="As">
                 {currentItems.length > 0 ? (
-                    currentItems.map((emp) => (
-                        <div className="A" key={emp.id} >
+                    currentItems.map((event) => (
+                        <div className="A" key={event.id}>
                             <img
-                                src={emp.image || "https://via.placeholder.com/300x180"}
-                                alt={emp.title}
+                                src={event.image || "https://via.placeholder.com/300x180"}
+                                alt={event.title}
                             />
                             <div className="A-content">
-                                <h3>{emp.title}</h3>
-                                <p>{emp.description}</p>
-                                <p><strong>თარიღი:</strong> {emp.year}</p>
+                                <h3>{event.title}</h3>
+                                <p>{event.description}</p>
+                                <p><strong>თარიღი:</strong> {event.year}</p>
                                 <div className="A-buttons">
-                                    <Link to={`/employment/${emp.id}`}>
-                                        <button>განაცხადი</button>
+                                    <Link to={`/event/${event.id}`}>
+                                        <button>დეტალურად</button>
                                     </Link>
                                 </div>
                             </div>
                         </div>
                     ))
                 ) : (
-                    <p className="no-data">ინფორმაცია ვერ მოიძებნა</p>
+                    <p className="no-data">ღონისძიებები ვერ მოიძებნა</p>
                 )}
             </div>
 
             {totalPages > 0 && (
                 <div className="pagination-controls">
-                    <button 
-                        disabled={currentPage === 1} 
+                    <button
+                        disabled={currentPage === 1}
                         onClick={() => setCurrentPage(prev => prev - 1)}
                     >
                         წინა
                     </button>
                     <span>გვერდი {currentPage} / {totalPages}</span>
-                    <button 
-                        disabled={currentPage === totalPages} 
-                        onClick={() => setCurrentPage(prev => prev + 1)} >
+                    <button
+                        disabled={currentPage === totalPages}
+                        onClick={() => setCurrentPage(prev => prev + 1)}
+                    >
                         შემდეგი
                     </button>
                 </div>
             )}
 
         </div>
-        <Footer />
-        </div>
+                     <Footer />
 
+        </div>
     );
 }
 
-export default Employment;
+export default Event;

@@ -12,6 +12,7 @@ html, body {
     overflow-x: hidden;
 }
 
+
 :root {
     --tsu-dark: #1a1a1a;
     --tsu-accent: #3498db;
@@ -20,30 +21,29 @@ html, body {
 }
 
 .footer-main {
-    
+     min-height: 100%;
+  display: flex;
+  flex-direction: column;
     width: 100%; 
     background-color: var(--tsu-dark);
     color: var(--white);
-    padding: 6vh 20px 3vh;
+    padding: 8vh 8vh 3vh;
     border-top: 4px solid var(--tsu-accent);
-    margin-top: auto; 
 }
 
 .footer-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 40px;
-    width: 100%;
-    max-width: 1200px; 
+    gap: 5vh;
+    width: 90%;
+    max-width: 100%; 
     margin: 0 auto;
 }
 
 .footer-section h4 {
-    font-size: clamp(1rem, 1rem, 1.5rem);
+    font-size: clamp(1vh, 1vw, 2.5vh);
     color: var(--white);
-    margin-bottom: 20px;
-    font-weight: 600;
-    letter-spacing: 1px;
+    margin-bottom: 2vh;
 }
 
 .footer-list {
@@ -52,35 +52,35 @@ html, body {
 }
 
 .footer-list li {
-    margin-bottom: 15px;
+    margin-bottom: 2vh;
 }
 
 .footer-link {
     color: var(--text-muted);
     text-decoration: none;
     transition: all 0.3s ease;
-    font-size: clamp(0.9rem, 1rem, 1.1rem);
+    font-size: clamp(1vh, 1vw, 2.5vh);
 }
 
 .footer-link:hover {
     color: var(--tsu-accent);
-    padding-left: 8px; 
+    padding-left: 1vh; 
 }
 
 .footer-bottom {
-    margin-top: 40px;
+    margin-top: 6vh;
     width: 100%;
     text-align: center;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding-top: 20px;
+    padding-top: 2vh;
 }
 
 .footer-bottom p {
-    font-size: 14px;
+    font-size: clamp(1vh, 1vw, 2.5vh);
     color: #666;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 92vh) {
     .footer-container {
         grid-template-columns: 1fr; 
         text-align: center;

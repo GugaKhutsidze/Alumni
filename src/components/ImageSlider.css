@@ -1,8 +1,19 @@
 
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.asd{
+  flex:1;
+}
 .slider-full-container {
   width:100%;
-  height: clamp(300px,70vh, 100vh);
+  
+  height: 95vh;
   display: flex;
+
   overflow: hidden;
 
 }
@@ -36,8 +47,8 @@
 }
 
 .dot {
-  width: 10px;
-  height: 10px;
+  width: 1vh;
+  height: 1vh;
   border-radius: 50%;
   cursor: pointer;
   transition: 0.4s ease;
@@ -58,11 +69,11 @@
   backdrop-filter: blur(4px);
   border: none;
   color: white;
-  width: 50px;
-  height: 50px;
+  width: 5vh;
+  height: 5vh;
   border-radius: 50%; 
   cursor: pointer;
-  font-size: 24px;
+  font-size: 2.4vh;
   z-index: 10;
   transition: 0.3s;
   display: flex;
@@ -75,5 +86,5 @@
   background: #28282b;
 }
 
-.arrow-left { left: 20px; }
-.arrow-right { right: 20px; }
+.arrow-left { left: 2vh; }
+.arrow-right { right: 2vh; }
