@@ -3,19 +3,31 @@ import { NavLink, useNavigate } from "react-router-dom";
 import logo from "../images/TSU_Logo.png";
 import "../App.css";
 import { useTranslation } from "react-i18next";
+import { jwtDecode } from "jwt-decode"; // 👈 Cryptographic decoder added
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+  const isAuth = !!token;
 
-  const isAuth = !!localStorage.getItem("token");
-  const role = localStorage.getItem("role"); // 👑 role check
+  // 🔒 SECURE ROLE EXTRACTION
+  let role = "";
+  if (token) {
+    try {
+      const decoded = jwtDecode(token);
+      // Extracts role directly out of the unalterable token payload
+      role = (decoded.role || "").toString().trim().toLowerCase();
+    } catch (error) {
+      console.error("Invalid token found in navbar");
+    }
+  }
 
   const [menuOpen, setMenuOpen] = useState(false);
   const { t, i18n } = useTranslation();
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("role"); // remove role too
+    localStorage.removeItem("role"); // Clean out any old string residue
     navigate("/", { replace: true });
     window.location.reload();
   };
@@ -45,12 +57,12 @@ const Navbar = () => {
               <NavLink to="/Employment">{t("Employment")}</NavLink>
               <NavLink to="/Profile">{t("Profile")}</NavLink>
 
-              {/* 👑 ADMIN ONLY LINKS */}
+              {/* 👑 SECURE ADMIN ONLY LINKS */}
               {role === "admin" && (
                 <>
                   <NavLink to="/AddEvent">{t("Add Event")}</NavLink>
                   <NavLink to="/AddJob">{t("Add Job")}</NavLink>
-                  <NavLink to="/alumni">{t("Alumni")}</NavLink>
+                  <NavLink to="/Alumni">{t("Alumni")}</NavLink>
                 </>
               )}
 

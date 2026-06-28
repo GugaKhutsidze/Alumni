@@ -6,6 +6,7 @@ import {
   Outlet,
   Navigate,
 } from "react-router-dom";
+import { jwtDecode } from "jwt-decode"; // 👈 Added secure decoder
 import "./App.css";
 
 import Login from "./pages/Login";
@@ -40,34 +41,49 @@ const ProtectedLayout = () => {
   );
 };
 
-
+/* =========================
+   ROLE PROTECTED (SECURE FLOW)
+========================= */
 const RoleProtected = ({ children, allowedRoles }) => {
   const token = localStorage.getItem("token");
-  const role = localStorage.getItem("role"); 
 
   if (!token) {
     return <Navigate to="/" replace />;
   }
 
-  if (!allowedRoles.includes(role)) {
-    return <Navigate to="/home" replace />;
+  try {
+    // 🔒 Decode the token payload securely 
+    const decoded = jwtDecode(token);
+    
+    // Extract the role from the cryptographically signed token
+    const role = (decoded.role || "").toString().trim().toLowerCase();
+    const allowed = allowedRoles.map(r => r.toLowerCase());
+
+    if (!allowed.includes(role)) {
+      return <Navigate to="/home" replace />;
+    }
+  } catch (error) {
+    // If the token is fake, expired, or tampered with, wipe it and force logout
+    localStorage.removeItem("token");
+    localStorage.removeItem("role"); // Clean legacy storage if it exists
+    return <Navigate to="/" replace />;
   }
 
   return children;
 };
 
-
+/* =========================
+   APP ROUTES
+========================= */
 function App() {
   return (
     <BrowserRouter>
       <Routes>
 
-        {/* PUBLIC ROUTES */}
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* AUTH PROTECTED ROUTES */}
-        <Route element={<ProtectedLayout />}>
+        <Route element={<ProtectedLayout />}> 
 
           <Route path="/home" element={<Home />} />
           <Route path="/about" element={<About />} />
@@ -76,7 +92,6 @@ function App() {
           <Route path="/event/:id" element={<EventsDetail />} />
           <Route path="/profile" element={<Profile />} />
 
-          {/* 👑 ADMIN ONLY ROUTES */}
           <Route
             path="/add-event"
             element={
@@ -94,17 +109,17 @@ function App() {
               </RoleProtected>
             }
           />
-             <Route path="/alumni"
-           element={<RoleProtected allowedRoles={["admin"]}>
-           <Alumni />
-           </RoleProtected>
 
-          }
+          <Route 
+            path="/alumni" 
+            element={
+              <RoleProtected allowedRoles={["admin"]}>
+                <Alumni />
+              </RoleProtected>
+            }
           />
-
         </Route>
 
-        {/* FALLBACK */}
         <Route path="*" element={<Navigate to="/" replace />} />
 
       </Routes>
