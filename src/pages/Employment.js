@@ -6,6 +6,7 @@ import "./EE.css";
 import { useTranslation } from "react-i18next";
 
 function Employment() {
+    
     const [searchTerm, setSearchTerm] = useState("");
     const [employment, setEmployment] = useState([]);
     const [sortBy, setSortBy] = useState("default");
@@ -81,10 +82,10 @@ function Employment() {
                             <div className="A-content">
                                 <h3>{emp.title}</h3>
                                 <p>{emp.description}</p>
-                                <p><strong>თარიღი:</strong> {emp.year}</p>
-                                <div className="A-buttons">
+                                <p><strong>{t("Date")}:</strong> {emp.year}</p>
+                           <div className="A-buttons">
                                     <Link to={`/employment/${emp.id}`}>
-                                        <button>განაცხადი</button>
+                                        <button>{t("Learn More")}</button>
                                     </Link>
                                 </div>
                             </div>

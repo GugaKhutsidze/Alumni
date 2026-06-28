@@ -26,7 +26,7 @@ export default function Login({ setIsLoggedIn }) {
       if (setIsLoggedIn) setIsLoggedIn(true);
       navigate("/Home", { replace: true });
     } catch (error) {
-      alert("პირადი ნომერი ან პაროლი არასწორია");
+      alert("ელფოსტა ან პაროლი არასწორია");
     } finally {
       setLoading(false);
     }

@@ -1,122 +1,150 @@
-body{
-    background:#f5f7fb;
-    font-family:Arial, Helvetica, sans-serif;
+
+.Bsd {
+    background-color: #f4f6f8;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #28282b;
 }
 
-.alumni-container{
-    max-width:1200px;
-    margin:40px auto;
-    padding:20px;
+.B-list {
+  flex: 1;
+  width: 90%;
+  margin: 0 auto;
+  margin-top: 2vh;
+  color: #ffffff;
 }
 
-.title{
-    text-align:center;
-    font-size:34px;
-    color:#2c3e50;
-    margin-bottom:25px;
+
+.B-image {
+  width: 100%;
+  background-image: url('../images/asd.jpg  ');
+  background-size:cover;
 }
 
-.search-box{
-    display:flex;
-    justify-content:center;
-    margin-bottom:20px;
+.Bs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(50vh, 1fr));
+    gap: 3vh;
+    margin-bottom: 4vh;
+}
+.B {
+background: #ffffff;
+    border-radius: 1vh;
+    padding: 3.2vh;
+    box-shadow: 0 1vh 2.5vh rgba(0, 0, 0, 0.04); 
+    
+    /* Change this from 'column' to 'row' to put elements side-by-side */
+    display: flex;
+    flex-direction: row; 
+    align-items: flex-start; /* Aligns the top of the image with the top of the text */
+    gap: 2.4vh; /* Creates space between the image and the text content */
+    
+    box-sizing: border-box;
 }
 
-.search-box input{
-    width:450px;
-    padding:14px 18px;
-    border:none;
-    border-radius:12px;
-    background:#fff;
-    box-shadow:0 5px 15px rgba(0,0,0,.08);
-    outline:none;
-    font-size:15px;
+.B img {
+    width: 13vh;
+    height: 13vh;
+    border-radius: 50%; 
+    object-fit: cover;
+    background-color: #0e62a2; 
+    flex-shrink: 0;
+
 }
 
-.search-box input:focus{
-    border:2px solid #6c63ff;
+.B-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2vh;
 }
 
-.results{
-    text-align:center;
-    color:#666;
-    margin-bottom:30px;
+
+/* Styled Fields Container (Mimicking the Tinted Data Blocks) */
+.B-content h3 {
+    margin: 0;
+    font-size: 1.8vh;
+    font-weight: 600;
+    color: #28282b;
+    padding: 1.2vh 1.6vh;
+    border-radius: 1.2vh;
 }
 
-.alumni-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-    gap:25px;
+.B-content p {
+    margin: 0;
+    font-size: 1.4vh;
+    line-height: 1.5;
+    color: #28282b;
+    min-height: 5vh;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+
 }
 
-.alumni-card{
-    background:#fff;
-    padding:25px;
-    border-radius:18px;
-    box-shadow:0 8px 20px rgba(0,0,0,.08);
-    transition:.3s;
+
+.B-buttons button {
+    
+  padding: 1.2vh 2.5vh;
+    background-color: #28282b; /* Vibrant identity blue/purple from image */
+    color: #ffffff;
+    border: none;
+    border-radius: 1.2vh;
+    font-size: 1.5vh;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
 }
 
-.alumni-card:hover{
-    transform:translateY(-6px);
-    box-shadow:0 15px 30px rgba(0,0,0,.15);
+.B-buttons button:hover {
+    background-color: #0e62a2; /* Slightly darker shade for hover effect */
 }
 
-.avatar{
-    width:65px;
-    height:65px;
-    border-radius:50%;
-    background:#6c63ff;
-    color:#fff;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:22px;
-    font-weight:bold;
-    margin-bottom:15px;
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2vh;
+  margin-top: 4vh;
+  padding-bottom: 4vh;
+  flex-wrap: wrap;
 }
 
-.alumni-card h2{
-    color:#2c3e50;
-    margin-bottom:20px;
-    font-size:22px;
+.pagination-controls button {
+  background-color: #28282B;
+  color: white;
+  border: none;
+  padding: 1.2vh 3vh;
+  border-radius: 1vh;
+  cursor: pointer;
+  transition: 0.3s ease;
+  font-size: 1.5vh;
 }
 
-.info{
-    display:flex;
-    flex-direction:column;
-    gap:12px;
+.pagination-controls button:hover {
+  background-color: #0e62a2;
+  transform: scale(1.03);
 }
 
-.info p{
-    background:#f8f9fc;
-    padding:12px;
-    border-radius:10px;
-    display:flex;
-    flex-direction:column;
+
+.no-data {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 6vh 2vh;
+    font-size: 1.6vh;
+    color: #28282b;
 }
 
-.info span{
-    color:#6c63ff;
-    font-size:12px;
-    font-weight:bold;
-    margin-bottom:4px;
-    text-transform:uppercase;
-}
 
-.loading,
-.no-results{
-    text-align:center;
-    margin-top:60px;
-    color:#666;
-}
-
-@media(max-width:768px){
-    .search-box input{
-        width:100%;
+@media (max-width: 92vh) {
+    .B-list {
+        padding: 4vh 1.6vh;
     }
-
-    .title{
-        font-size:28px;
+    
+    .Bs {
+        grid-template-columns: 1fr;
     }
 }

@@ -1,97 +1,126 @@
-import React, { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
+import Footer from "../components/Footer";
 import "./Alumni.css";
 import { useTranslation } from "react-i18next";
 
-export default function Alumni() {
-  const [alumni, setAlumni] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const { t, i18n } = useTranslation();
+function Alumni() {
+    const [searchTerm, setSearchTerm] = useState("");
+    const [alumnis, setAlumnis] = useState([]);
+    const [sortBy, setSortBy] = useState("default");
+    const [currentPage, setCurrentPage] = useState(1);
+    const { t, i18n } = useTranslation();
+    const itemsPerPage = 20;
 
-  useEffect(() => {
-    fetchAlumni();
-  }, []);
+    useEffect(() => {
+        const url = "https://warrior.ge/api/movies";
+        axios.get(url)
+            .then((res) => setAlumnis(res.data.data || []))
+            .catch((err) => console.error("მონაცემების წამოღების შეცდომა:", err));
+    }, []);
 
-  const fetchAlumni = async () => {
-    try {
-      const res = await axios.get("http://localhost:5053/api/auth/users");
-      setAlumni(res.data);
-    } catch (error) {
-      console.error(error);
-      alert("Failed to load alumni.");
-    } finally {
-      setLoading(false);
-    }
-  };
+    let filteredAlumnis = alumnis.filter((alumni) =>
+        alumni.title?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
-  const filteredAlumni = alumni.filter((user) => {
-    const query = search.toLowerCase();
+    if (sortBy === "az")
+        filteredAlumnis.sort((a, b) => (a.title || "").localeCompare(b.title || ""));
+    else if (sortBy === "za")
+        filteredAlumnis.sort((a, b) => (b.title || "").localeCompare(a.title || ""));
+
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filteredAlumnis.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(filteredAlumnis.length / itemsPerPage);
+
+    const handleSearch = (e) => {
+        setSearchTerm(e.target.value);
+        setCurrentPage(1);
+    };
 
     return (
-      user.name?.toLowerCase().includes(query) ||
-      user.surname?.toLowerCase().includes(query) ||
-      user.email?.toLowerCase().includes(query) ||
-      user.tel?.toLowerCase().includes(query) ||
-      user.id?.toString().includes(query)
+        <div className="Bsd">
+            <div className="B-list">
+                <div className="B-image">
+
+                    <div className="controls-container">
+                        <input
+                            className="search-bar"
+                            type="text"
+                            placeholder="ძებნა..."
+                            value={searchTerm}
+                            onChange={handleSearch}
+                        />
+
+                        <select
+                            className="sort-dropdown"
+                            value={sortBy}
+                            onChange={(e) => {
+                                setSortBy(e.target.value);
+                                setCurrentPage(1);
+                            }}
+                        >
+                            <option value="default"></option>
+                            <option value="az">A-Z</option>
+                            <option value="za">Z-A</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div className="Bs">
+                    {currentItems.length > 0 ? (
+                        currentItems.map((alumni) => (
+                            <div className="B" key={alumni.id}>
+                                <img
+                                    src={alumni.image || "https://via.placeholder.com/300x180"}
+                                    alt={"..."}
+                                />
+                                <div className="B-content">
+                                    <h3>{alumni.title} {alumni.year}</h3>
+                                    <p>
+                                     {alumni.description}
+                                    </p>
+
+                                </div>
+                                      <div className="B-buttons">
+                                        <Link to={`/profile/${alumni.id}`}>
+                                            <button>{t("Learn More")}</button>
+                                        </Link>
+                                    </div>
+                            </div>
+                        ))
+                    ) : (
+                        <p className="no-data">{t("Not found")}</p>
+                    )}
+                </div>
+
+                {totalPages > 0 && (
+                    <div className="pagination-controls">
+                        <button
+                            disabled={currentPage === 1}
+                            onClick={() => setCurrentPage(prev => prev - 1)}
+                        >
+                            წინა
+                        </button>
+
+                        <span>
+                            გვერდი {currentPage} / {totalPages}
+                        </span>
+
+                        <button
+                            disabled={currentPage === totalPages}
+                            onClick={() => setCurrentPage(prev => prev + 1)}
+                        >
+                            შემდეგი
+                        </button>
+                    </div>
+                )}
+            </div>
+
+            <Footer />
+        </div>
     );
-  });
-
-  if (loading) {
-    return <h2 className="loading">Loading...</h2>;
-  }
-
-  return (
-    <div className="alumni-container">
-      <h1 className="title">{t("Alumni members")}</h1>
-
-      <div className="search-box">
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
-
-      <p className="results">
-        {filteredAlumni.length} Alumni Found
-      </p>
-
-      <div className="alumni-grid">
-        {filteredAlumni.map((user) => (
-          <div className="alumni-card" key={user._id}>
-            <div className="avatar">
-              {user.name?.charAt(0)}
-              {user.surname?.charAt(0)}
-            </div>
-
-            <h2>
-              {user.name} {user.surname}
-            </h2>
-
-            <div className="info">
-              <p>
-                <span>Email</span>
-                {user.email}
-              </p>
-
-              <p>
-                <span>Phone</span>
-                {user.tel}
-              </p>
-
-              <p>
-                <span>ID</span>
-                {user.id}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {!filteredAlumni.length && (
-        <h3 className="no-results">No alumni found.</h3>
-      )}
-    </div>
-  );
 }
+
+export default Alumni;

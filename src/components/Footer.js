@@ -1,8 +1,10 @@
 import React from 'react';
 import './Footer.css';
+import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const { t,i18n } = useTranslation();
 
   return (
     
@@ -10,7 +12,7 @@ const Footer = () => {
       <div className="footer-container">
         
         <div className="footer-section">
-          <h4>სხვა</h4>
+          <h4>{t("Other")}</h4>
           <ul className="footer-list">
             <li><a href="https://www.facebook.com/TbilisiStateUniversity" className="footer-link">Facebook</a></li>
             <li><a href="https://www.youtube.com/user/TSUchannel" className="footer-link">Youtube</a></li>
@@ -19,7 +21,7 @@ const Footer = () => {
         </div>
         
         <div className="footer-section">
-          <h4>სოციალური ქსელი</h4>
+          <h4>{t("Social Networks")}</h4>
           <ul className="footer-list">
             <li><a href="https://www.facebook.com/TbilisiStateUniversity" className="footer-link">Facebook</a></li>
             <li><a href="https://www.youtube.com/user/TSUchannel" className="footer-link">Youtube</a></li>
@@ -28,18 +30,18 @@ const Footer = () => {
         </div>
 
         <div className="footer-section">
-          <h4>საკონტაქტო</h4>
+          <h4>{t("Contact")}</h4>
           <ul className="footer-list">
-            <li><a href="mailto:someone@example.com" className="footer-link">ელფოსტა</a></li>
-            <li><a href="tel:+995322250484" className="footer-link">ტელეფონი</a></li>
-            <li><a href="https://goo.gl/maps/..." className="footer-link" target="_blank" rel="noreferrer">ქ. თბილისი, ი. ჭავჭავაძის გამზ. N1</a></li>
+            <li><a href="mailto:someone@example.com" className="footer-link">{t("Email")}</a></li>
+            <li><a href="tel:+995322250484" className="footer-link">{t("Phone")}</a></li>
+            <li><a href="https://goo.gl/maps/..." className="footer-link" target="_blank" rel="noreferrer">{t("Address")}</a></li>
           </ul>
         </div>  
 
       </div>
       
       <div className="footer-bottom">
-        <p>© {currentYear} თბილისის სახელმწიფო უნივერსიტეტი</p>
+        <p>© {currentYear} {t("Ivana Javakhishvili Tbilisi State University")}</p>
       </div>
     </footer>
   );

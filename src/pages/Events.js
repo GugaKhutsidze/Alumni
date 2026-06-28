@@ -10,7 +10,7 @@ function Event() {
     const [events, setEvents] = useState([]);
     const [sortBy, setSortBy] = useState("default");
     const [currentPage, setCurrentPage] = useState(1);
-  const { t, i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
     const itemsPerPage = 20;
 
     useEffect(() => {
@@ -74,10 +74,10 @@ function Event() {
                             <div className="A-content">
                                 <h3>{event.title}</h3>
                                 <p>{event.description}</p>
-                                <p><strong>თარიღი:</strong> {event.year}</p>
+                                <p><strong>{t("Date")}:</strong> {event.year}</p>
                                 <div className="A-buttons">
                                     <Link to={`/event/${event.id}`}>
-                                        <button>დეტალურად</button>
+                                        <button>{t("Learn More")}</button>
                                     </Link>
                                 </div>
                             </div>

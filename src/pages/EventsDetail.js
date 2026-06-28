@@ -59,7 +59,6 @@ function EventsDetail() {
     }
   }
 
-
   return (
     <div className="event-detail">
       {/* მარცხენა სვეტი: კონტენტი */}

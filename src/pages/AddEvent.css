@@ -1,0 +1,136 @@
+body {
+  margin: 0;
+  font-family: "Inter", Arial, sans-serif;
+  background: #eef2f7;
+}
+
+.add-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 15px;
+}
+
+/* Main Card */
+.add-box {
+  width: 520px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 35px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f1f5f9;
+  transition: 0.3s;
+}
+
+.add-box:hover {
+  transform: translateY(-2px);
+}
+
+/* Titles */
+.add-box h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 26px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.add-box h2 {
+  margin-top: 25px;
+  font-size: 18px;
+  color: #1e293b;
+  font-weight: 600;
+}
+
+/* Inputs */
+.add-box input,
+.add-box textarea {
+  width: 100%;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  font-size: 15px;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.add-box input:focus,
+.add-box textarea:focus {
+  border-color: #3b82f6;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+}
+
+.add-box textarea {
+  min-height: 120px;
+  resize: none;
+}
+
+/* Image preview */
+.preview {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  border-radius: 14px;
+  margin-top: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+/* Primary button */
+.add-box button {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 8px;
+}
+
+.add-box button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.25);
+}
+
+.add-box button:disabled {
+  background: #93c5fd;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Divider */
+.add-box hr {
+  margin: 30px 0;
+  border: none;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* Delete section input */
+.add-box input[type="text"] {
+  background: #f8fafc;
+}
+
+/* Delete button (override) */
+.add-box button[style] {
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+}
+
+.add-box button[style]:hover {
+  box-shadow: 0 10px 25px rgba(239, 68, 68, 0.25);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .add-box {
+    width: 100%;
+    padding: 25px;
+    border-radius: 14px;
+  }
+}

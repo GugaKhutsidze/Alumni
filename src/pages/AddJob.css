@@ -1,0 +1,102 @@
+.add-job-page {
+  min-height: 100vh;
+  background: #eef2f7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 15px;
+}
+
+.add-job-box {
+  width: 520px;
+  background: #fff;
+  border-radius: 18px;
+  padding: 35px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f1f5f9;
+}
+
+.add-job-box h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 26px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.add-job-box h2 {
+  margin-top: 20px;
+  font-size: 18px;
+  color: #0f172a;
+}
+
+/* inputs */
+.add-job-box input,
+.add-job-box textarea {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  outline: none;
+  transition: 0.2s;
+}
+
+.add-job-box textarea {
+  min-height: 120px;
+  resize: none;
+}
+
+.add-job-box input:focus,
+.add-job-box textarea:focus {
+  border-color: #3b82f6;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(59,130,246,0.15);
+}
+
+/* image preview */
+.preview {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  border-radius: 14px;
+  margin-top: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+/* add button */
+.add-job-box button {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 5px;
+}
+
+/* delete button */
+.delete-btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.delete-btn:hover {
+  box-shadow: 0 10px 25px rgba(239,68,68,0.25);
+}
+
+.add-job-box hr {
+  margin: 25px 0;
+  border: none;
+  border-top: 1px solid #e5e7eb;
+}

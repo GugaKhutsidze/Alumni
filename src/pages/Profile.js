@@ -9,7 +9,6 @@ export default function Profile() {
 
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const [profile, setProfile] = useState({
     firstName: "",
     lastName: "",

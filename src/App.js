@@ -1,8 +1,13 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Outlet, Navigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Outlet,
+  Navigate,
+} from "react-router-dom";
 import "./App.css";
 
-// Pages
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
@@ -12,9 +17,11 @@ import Employment from "./pages/Employment";
 import EventsDetail from "./pages/EventsDetail";
 import Profile from "./pages/Profile";
 import Alumni from "./pages/Alumni";
+import AddEvent from "./pages/AddEvent";
+import AddJob from "./pages/AddJob";
 
-// Components
 import Navbar from "./components/Navbar";
+
 
 const ProtectedLayout = () => {
   const token = localStorage.getItem("token");
@@ -27,37 +34,79 @@ const ProtectedLayout = () => {
     <>
       <Navbar />
       <div className="container">
-        <Outlet /> 
+        <Outlet />
       </div>
     </>
   );
 };
 
-function App() {
 
+const RoleProtected = ({ children, allowedRoles }) => {
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role"); 
+
+  if (!token) {
+    return <Navigate to="/" replace />;
+  }
+
+  if (!allowedRoles.includes(role)) {
+    return <Navigate to="/home" replace />;
+  }
+
+  return children;
+};
+
+
+function App() {
   return (
     <BrowserRouter>
-    
-    
       <Routes>
-        {/* საჯარო გვერდები (ნავიგაციის გარეშე) */}
+
+        {/* PUBLIC ROUTES */}
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* დაცული გვერდები (მხოლოდ დალოგინებულებისთვის + ნავიგაციით) */}
+        {/* AUTH PROTECTED ROUTES */}
         <Route element={<ProtectedLayout />}>
-          <Route path="/Home" element={<Home />} />
-          <Route path="/About" element={<About />} />
+
+          <Route path="/home" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/employment" element={<Employment />} />
           <Route path="/event/:id" element={<EventsDetail />} />
-          
-          <Route path="/Events" element={<Events />} />
-          <Route path="/Employment" element={<Employment />} />
-          <Route path="/Profile" element={<Profile />} />
-          <Route path="/Alumni" element={<Alumni />} />
+          <Route path="/profile" element={<Profile />} />
+
+          {/* 👑 ADMIN ONLY ROUTES */}
+          <Route
+            path="/add-event"
+            element={
+              <RoleProtected allowedRoles={["admin"]}>
+                <AddEvent />
+              </RoleProtected>
+            }
+          />
+
+          <Route
+            path="/add-job"
+            element={
+              <RoleProtected allowedRoles={["admin"]}>
+                <AddJob />
+              </RoleProtected>
+            }
+          />
+             <Route path="/alumni"
+           element={<RoleProtected allowedRoles={["admin"]}>
+           <Alumni />
+           </RoleProtected>
+
+          }
+          />
+
         </Route>
 
-        {/* თუ მომხმარებელი ჩაწერს არასწორ მისამართს, დაბრუნდეს საწყისზე */}
+        {/* FALLBACK */}
         <Route path="*" element={<Navigate to="/" replace />} />
+
       </Routes>
     </BrowserRouter>
   );
