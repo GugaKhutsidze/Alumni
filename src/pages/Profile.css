@@ -42,7 +42,22 @@ body {
   gap: 2vh;
   margin-bottom: 3vh;
 }
+.profile__info h2,
+.profile__info p {
+  min-height: 5vh;
+  padding: 1.4vh;
+  border: 0.15vh solid var(--border);
+  border-radius: 1.2vh;
+  background: #f8fbff;
+  display: flex;
+  align-items: center;
+  font-size: 1.5vh;
+}
 
+.profile__info h2 {
+  font-size: 2.4vh;
+  font-weight: 700;
+}
 .btn {
   padding: 1.4vh 2vh;
   border-radius: 1.2vh;
@@ -72,7 +87,6 @@ body {
   color: white;
 }
 
-/* HEADER */
 .profile__header {
   display: grid;
   grid-template-columns: 26vh 1fr;
