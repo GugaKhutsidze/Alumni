@@ -25,7 +25,6 @@ function AddJob() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // IMAGE
   const handleImage = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -70,7 +69,6 @@ function AddJob() {
     setLoadingAdd(false);
   };
 
-  // 🗑️ DELETE JOB
   const handleDelete = async () => {
     if (!deleteId) {
       alert("Enter ID");

@@ -19,9 +19,7 @@ function AddEvent() {
   const [imageFile, setImageFile] = useState(null);
   const [preview, setPreview] = useState("");
 
-  // 👉 DELETE STATE
   const [deleteId, setDeleteId] = useState("");
-
   const [loadingAdd, setLoadingAdd] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
 
@@ -37,7 +35,6 @@ function AddEvent() {
     setPreview(URL.createObjectURL(file));
   };
 
-  // ➕ ADD EVENT
   const handleAdd = async (e) => {
     e.preventDefault();
 
@@ -76,7 +73,6 @@ function AddEvent() {
     setLoadingAdd(false);
   };
 
-  // 🗑️ DELETE EVENT
   const handleDelete = async () => {
     if (!deleteId) {
       alert("Enter ID to delete");
