@@ -96,7 +96,7 @@ body {
 .profile__photoBox {
   width: 26vh;
   height: 26vh;
-  border-radius: 2vh;
+  border-radius: 50%;
   overflow: hidden;
   cursor: pointer;
   background: var(--blue-soft);
