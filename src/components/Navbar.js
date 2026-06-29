@@ -1,92 +1,147 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+import { useTranslation } from "react-i18next";
 import logo from "../images/TSU_Logo.png";
 import "../App.css";
-import { useTranslation } from "react-i18next";
-import { jwtDecode } from "jwt-decode"; // 👈 Cryptographic decoder added
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
-  const isAuth = !!token;
+  const { t, i18n } = useTranslation();
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  let role = "";
-  if (token) {
+  // Read token once
+  const token = localStorage.getItem("token");
+
+  // Determine authentication & role safely
+  const { isAuth, role } = useMemo(() => {
+    if (!token) {
+      return { isAuth: false, role: "" };
+    }
+
     try {
       const decoded = jwtDecode(token);
-      // Extracts role directly out of the unalterable token payload
-      role = (decoded.role || "").toString().trim().toLowerCase();
-    } catch (error) {
-      console.error("Invalid token found in navbar");
-    }
-  }
 
-  const [menuOpen, setMenuOpen] = useState(false);
-  const { t, i18n } = useTranslation();
+      // Check token expiration
+      if (decoded.exp && decoded.exp * 1000 < Date.now()) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("role");
+        return { isAuth: false, role: "" };
+      }
+
+      return {
+        isAuth: true,
+        role: (decoded.role || "")
+          .toString()
+          .trim()
+          .toLowerCase(),
+      };
+    } catch (err) {
+      console.error("Invalid JWT:", err);
+      localStorage.removeItem("token");
+      localStorage.removeItem("role");
+
+      return {
+        isAuth: false,
+        role: "",
+      };
+    }
+  }, [token]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("role"); // Clean out any old string residue
+    localStorage.removeItem("role");
     navigate("/", { replace: true });
     window.location.reload();
+  };
+
+  const changeLanguage = (lang) => {
+    i18n.changeLanguage(lang);
+    localStorage.setItem("language", lang);
   };
 
   return (
     <nav className="navbar">
       <div className="nav-container">
 
-        {/* LOGO */}
-        <div className="logo" onClick={() => navigate("/Home")}>
+        {/* Logo */}
+        <div
+          className="logo"
+          onClick={() => navigate(isAuth ? "/Home" : "/")}
+          style={{ cursor: "pointer" }}
+        >
           <img src={logo} alt="TSU Logo" />
         </div>
 
-        {/* BURGER */}
-        <div className="burger" onClick={() => setMenuOpen(!menuOpen)}>
+        {/* Burger */}
+        <div
+          className="burger"
+          onClick={() => setMenuOpen((prev) => !prev)}
+        >
           ☰
         </div>
 
-        {/* LINKS */}
+        {/* Navigation */}
         <div className={`nav-links ${menuOpen ? "open" : ""}`}>
 
           {isAuth && (
             <>
-              <NavLink to="/Home">{t("Home")}</NavLink>
-              <NavLink to="/About">{t("About us")}</NavLink>
-              <NavLink to="/Events">{t("Events")}</NavLink>
-              <NavLink to="/Employment">{t("Employment")}</NavLink>
-              <NavLink to="/Profile">{t("Profile")}</NavLink>
+              <NavLink to="/Home" onClick={() => setMenuOpen(false)}>
+                {t("Home")}
+              </NavLink>
 
-              {/* 👑 SECURE ADMIN ONLY LINKS */}
-              {role === "admin" && (
-                <>
-                  <NavLink to="/AddEvent">{t("Add Event")}</NavLink>
-                  <NavLink to="/AddJob">{t("Add Job")}</NavLink>
-                  <NavLink to="/Alumni">{t("Alumni")}</NavLink>
-                </>
-              )}
+              <NavLink to="/About" onClick={() => setMenuOpen(false)}>
+                {t("About us")}
+              </NavLink>
 
-              {/* LOGOUT */}
-              <button onClick={handleLogout} className="logout-btn">
+              <NavLink to="/Events" onClick={() => setMenuOpen(false)}>
+                {t("Events")}
+              </NavLink>
+
+              <NavLink to="/Employment" onClick={() => setMenuOpen(false)}>
+                {t("Employment")}
+              </NavLink>
+
+              <NavLink to="/Profile" onClick={() => setMenuOpen(false)}>
+                {t("Profile")}
+              </NavLink>
+
+            {role === "admin" && (
+  <>
+    <NavLink to="/add-event" onClick={() => setMenuOpen(false)}>
+      {t("Add Event")}
+    </NavLink>
+
+    <NavLink to="/add-job" onClick={() => setMenuOpen(false)}>
+      {t("Add Job")}
+    </NavLink>
+
+    <NavLink to="/alumni" onClick={() => setMenuOpen(false)}>
+      {t("Alumni")}
+    </NavLink>
+  </>
+)}
+
+              <button
+                onClick={handleLogout}
+                className="logout-btn"
+              >
                 {t("Log out")}
               </button>
-
-              {/* LANGUAGE */}
-              <select
-                className="language-select"
-                value={i18n.language}
-                onChange={(e) => {
-                  i18n.changeLanguage(e.target.value);
-                  localStorage.setItem("language", e.target.value);
-                }}
-              >
-                <option value="ka">ქარ</option>
-                <option value="en">EN</option>
-              </select>
             </>
           )}
 
-        </div>
+          {/* Language selector */}
+          <select
+            className="language-select"
+            value={i18n.language}
+            onChange={(e) => changeLanguage(e.target.value)}
+          >
+            <option value="ka">ქარ</option>
+            <option value="en">EN</option>
+          </select>
 
+        </div>
       </div>
     </nav>
   );

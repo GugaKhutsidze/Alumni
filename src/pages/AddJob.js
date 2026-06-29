@@ -8,7 +8,6 @@ function AddJob() {
 
   const API_URL = "https://warrior.ge/api/movies";
 
-  // ➕ ADD STATE
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -19,11 +18,9 @@ function AddJob() {
   const [preview, setPreview] = useState("");
   const [loadingAdd, setLoadingAdd] = useState(false);
 
-  // 🗑️ DELETE STATE
   const [deleteId, setDeleteId] = useState("");
   const [loadingDelete, setLoadingDelete] = useState(false);
 
-  // INPUT CHANGE
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -37,7 +34,6 @@ function AddJob() {
     setPreview(URL.createObjectURL(file));
   };
 
-  // ➕ ADD JOB
   const handleAdd = async (e) => {
     e.preventDefault();
 
