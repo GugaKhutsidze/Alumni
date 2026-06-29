@@ -38,5 +38,11 @@
 "Title": "სათაური",
 "Description": "აღწერილობა",
 "Year": "წელი",
-"Image": "სურათი"
+"Image": "სურათი",
+"First Name": "სახელი",
+"Last Name": "გვარი",
+"Email": "ელფოსტა",
+"Faculty": "ფაკულტეტი",
+"Primary Program": "დეპარტამენტი",
+"About Me": "ჩემს შესახებ"
 }

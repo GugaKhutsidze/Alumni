@@ -10,7 +10,6 @@ const Navbar = () => {
   const token = localStorage.getItem("token");
   const isAuth = !!token;
 
-  // 🔒 SECURE ROLE EXTRACTION
   let role = "";
   if (token) {
     try {

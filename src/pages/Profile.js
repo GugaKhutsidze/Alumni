@@ -1,18 +1,26 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import "./Profile.css";
+import {useTranslation} from "react-i18next";
+
+const API_BASE_URL = process.env.REACT_APP_API_URL || "https://localhost:5001";
 
 export default function Profile() {
-
-  const user = JSON.parse(localStorage.getItem("user"));
+  const savedUser = localStorage.getItem("user");
+  const user = savedUser ? JSON.parse(savedUser) : null;
+  const { t } = useTranslation();
+  
   const fileRef = useRef(null);
 
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState("");
+
   const [profile, setProfile] = useState({
     firstName: "",
     lastName: "",
-    email: user?.email || "",
+    email: "",
     bio: "",
     faculty: "",
     department: "",
@@ -20,25 +28,26 @@ export default function Profile() {
   });
 
   useEffect(() => {
-    fetchProfile();
+    if (user && user.email) {
+      fetchProfile(user.email);
+    }
+    
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
   }, []);
 
-  const fetchProfile = async () => {
+  const fetchProfile = async (email) => {
     try {
-      const res = await axios.get(
-        `https://localhost:5001/api/profile/${profile.email}`
-      );
-
+      const res = await axios.get(`${API_BASE_URL}/api/profile/${email}`);
       setProfile(res.data);
-
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setProfile((prev) => ({
       ...prev,
       [name]: value
@@ -49,80 +58,99 @@ export default function Profile() {
     const file = e.target.files[0];
     if (!file) return;
 
-    const preview = URL.createObjectURL(file);
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      alert("ფაილის ზომა არ უნდა აღემატებოდეს 5MB-ს!");
+      return;
+    }
 
-    setProfile((prev) => ({
-      ...prev,
-      photo: preview
-    }));
+    setSelectedFile(file);
+    const objectUrl = URL.createObjectURL(file);
+    setPreviewUrl(objectUrl);
   };
 
   const handleSave = async () => {
     try {
       setLoading(true);
 
-      await axios.put(
-        "https://localhost:5001/api/profile/update",
-        profile
-      );
+      const formData = new FormData();
+      formData.append("firstName", profile.firstName || "");
+      formData.append("lastName", profile.lastName || "");
+      formData.append("email", profile.email || "");
+      formData.append("bio", profile.bio || "");
+      formData.append("faculty", profile.faculty || "");
+      formData.append("department", profile.department || "");
+      
+      if (selectedFile) {
+        formData.append("photo", selectedFile);
+      }
 
-      alert("პროფილი შენახულია");
+      await axios.put(`${API_BASE_URL}/api/profile/update`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
+
+      alert("პროფილი წარმატებით განახლდა");
       setIsEditing(false);
-
+      setSelectedFile(null);
+      
+      if (user && user.email) {
+        fetchProfile(user.email);
+      }
     } catch (err) {
-      console.log(err);
-      alert("შეცდომა");
-
+      console.error(err);
+      alert("შეცდომა პროფილის შენახვისას");
     } finally {
       setLoading(false);
     }
   };
 
+  const handleCancel = () => {
+    setIsEditing(false);
+    setSelectedFile(null);
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+      setPreviewUrl("");
+    }
+  };
+
   return (
     <div className="profile">
-
       <div className="profile__container">
-
-        {/* TOP BAR */}
+        
         <div className="profile__topbar">
-
           {!isEditing ? (
             <button className="btn edit" onClick={() => setIsEditing(true)}>
-              რედაქტირება
+              {t("Edit")}
             </button>
           ) : (
             <>
-              <button className="btn save" onClick={handleSave}>
+              <button className="btn save" onClick={handleSave} disabled={loading}>
                 {loading ? "ინახება..." : "შენახვა"}
               </button>
-
-              <button className="btn cancel" onClick={() => setIsEditing(false)}>
+              <button className="btn cancel" onClick={handleCancel}>
                 გაუქმება
               </button>
             </>
           )}
-
         </div>
 
-        {/* HEADER */}
         <div className="profile__header">
-
-          {/* PHOTO */}
+          
           <div
             className="profile__photoBox"
-            onClick={() => fileRef.current.click()}
+            onClick={() => isEditing && fileRef.current.click()}
+            style={{ cursor: isEditing ? "pointer" : "default" }}
           >
-
-            {profile.photo ? (
+            {previewUrl || profile.photo ? (
               <img
-                src={profile.photo}
+                src={previewUrl || profile.photo}
                 alt="profile"
                 className="profile__photo"
               />
             ) : (
-              <div className="profile__emptyPhoto">
-                Upload Photo
-              </div>
+              <div className="profile__emptyPhoto">Upload Photo</div>
             )}
 
             <input
@@ -132,19 +160,13 @@ export default function Profile() {
               accept="image/*"
               onChange={handlePhoto}
             />
-
           </div>
 
-          {/* INFO */}
           <div className="profile__info">
-
-            {/* NAME */}
+            
             <div className="nameRow">
-
               <div className="field">
-                <label>სახელი</label>
-                <small>შეიყვანეთ თქვენი სახელი</small>
-
+                <label>{t("First Name")}</label>
                 {isEditing ? (
                   <input
                     name="firstName"
@@ -158,9 +180,7 @@ export default function Profile() {
               </div>
 
               <div className="field">
-                <label>გვარი</label>
-                <small>შეიყვანეთ თქვენი გვარი</small>
-
+                <label>{t("Last Name")}</label>
                 {isEditing ? (
                   <input
                     name="lastName"
@@ -172,26 +192,29 @@ export default function Profile() {
                   <h2>{profile.lastName}</h2>
                 )}
               </div>
-
             </div>
 
-            {/* EMAIL */}
             <div className="field">
-              <label>ელფოსტა</label>
-              <p className="readonly">{profile.email}</p>
+              <label>{t("Email")}</label>
+              {isEditing ? (
+                <input
+                  name="email"
+                  value={profile.email}
+                  placeholder="შეიყვანეთ თქვენი ელფოსტა"
+                  onChange={handleChange}
+                />
+              ) : (
+                <p>{profile.email}</p>
+              )}
             </div>
 
-    
-
-            {/* FACULTY + DEPT */}
             <div className="grid">
-
               <div className="field">
-                <label>ფაკულტეტი</label>
-
+                <label>{t("Faculty")}</label>
                 {isEditing ? (
                   <input
                     name="faculty"
+                    placeholder="შეიყვანეთ თქვენი ფაკულტეტი"
                     value={profile.faculty}
                     onChange={handleChange}
                   />
@@ -201,11 +224,11 @@ export default function Profile() {
               </div>
 
               <div className="field">
-                <label>დეპარტამენტი</label>
-
+                <label>{t("Primary Program")}</label> 
                 {isEditing ? (
                   <input
                     name="department"
+                    placeholder="შეიყვანეთ თქვენი დეპარტამენტი"
                     value={profile.department}
                     onChange={handleChange}
                   />
@@ -213,10 +236,10 @@ export default function Profile() {
                   <p>{profile.department}</p>
                 )}
               </div>
-                      {/* BIO */}
-            <div className="field">
-              <label>ბიო</label>
+            </div>
 
+            <div className="field bio-field">
+              <label>{t("About Me")}</label>
               {isEditing ? (
                 <textarea
                   name="bio"
@@ -229,14 +252,9 @@ export default function Profile() {
               )}
             </div>
 
-            </div>
-
           </div>
-
         </div>
-
       </div>
-
     </div>
   );
 }

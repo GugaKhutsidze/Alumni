@@ -38,6 +38,21 @@
     "Title": "Title",
     "Description": "Description",
     "Year": "Year",
-    "Image": "Image"
-
-}
+    "Image": "Image",
+    "edit": "Edit",
+    "save": "Save",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "First Name": "First Name",
+    "Last Name": "Last Name",
+    "Email": "Email",
+    "Faculty": "Faculty",
+    "Primary Program": "Primary Program",
+    "About Me": "About Me",
+    "Upload Photo": "Upload Photo",
+    "Brief description about yourself...": "Brief description about yourself...",
+    "Photo Size Error": "File size must not exceed 5MB!",
+    "Profile updated successfully": "Profile updated successfully",
+    "Error saving profile": "Error saving profile",
+    "Edit": "Edit"
+  }
