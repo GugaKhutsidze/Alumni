@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || "https://localhost:5001";
 
-// ✅ CHARACTER LIMITS FOR ALL FIELDS
 const LIMITS = {
   firstName: 20,
   lastName: 20,
@@ -56,7 +55,6 @@ export default function Profile() {
     }
   };
 
-  // ✅ CHARACTER LIMIT HANDLER (FULL)
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -138,7 +136,6 @@ export default function Profile() {
     }
   };
 
-  // helper
   const countChars = (text = "") => text.length;
 
   return (
