@@ -184,7 +184,6 @@ textarea {
   padding: 1.4vh;
   border-radius: 1vh;
   background: #0e62a2;
-  border: 0.15vh solid var(--border);
   font-size: 1.5vh;
 }
 
