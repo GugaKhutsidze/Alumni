@@ -59,16 +59,22 @@ body {
 
 .search-bar,
 .sort-dropdown {
+  min-width:5vh;
   margin-top:4vh;
   margin-bottom:4vh;
   margin-inline:1vh;
-  padding: 1.3vh;
+  padding: 1vh;
   border: 0.1vh solid #ddd;
   outline: none;
   border-radius: 1vh;
-  font-size: 1.6vh;
+  font-size: 1.8vh;
   box-shadow: 0 0.2vh 0.5vh rgba(0, 0, 0, 0.05);
   transition: 0.3s;
+
+}
+.sort-dropdown option {
+  font-size: clamp(0.8vh,1.5vh,2vh);
+  background-color: white;
 }
 
 .search-bar {
@@ -144,6 +150,7 @@ body {
 
 .A-buttons {
   margin-top: auto;
+  padding-top: 2vh;
 }
 
 .A-buttons button {
