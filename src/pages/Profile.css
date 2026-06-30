@@ -65,7 +65,7 @@ body {
 
 .btn {
   padding: 1.4vh 2vh;
-  border-radius: 1.2vh;
+  border-radius: 1vh;
   border: none;
   cursor: pointer;
   font-size: 1.5vh;
@@ -74,7 +74,8 @@ body {
 }
 
 .btn:hover {
-  transform: translateY(-0.4vh);
+  background-color:#28282b;
+  transform: translateY(-0.2vh);
 }
 
 .edit {
