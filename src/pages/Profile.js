@@ -1,15 +1,25 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import "./Profile.css";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || "https://localhost:5001";
+
+// ✅ CHARACTER LIMITS FOR ALL FIELDS
+const LIMITS = {
+  firstName: 20,
+  lastName: 20,
+  email: 50,
+  faculty: 60,
+  department: 60,
+  bio: 700
+};
 
 export default function Profile() {
   const savedUser = localStorage.getItem("user");
   const user = savedUser ? JSON.parse(savedUser) : null;
   const { t } = useTranslation();
-  
+
   const fileRef = useRef(null);
 
   const [isEditing, setIsEditing] = useState(false);
@@ -31,7 +41,7 @@ export default function Profile() {
     if (user && user.email) {
       fetchProfile(user.email);
     }
-    
+
     return () => {
       if (previewUrl) URL.revokeObjectURL(previewUrl);
     };
@@ -46,8 +56,16 @@ export default function Profile() {
     }
   };
 
+  // ✅ CHARACTER LIMIT HANDLER (FULL)
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    const limit = LIMITS[name];
+
+    if (limit && value.length > limit) {
+      return; // stop typing if limit reached
+    }
+
     setProfile((prev) => ({
       ...prev,
       [name]: value
@@ -80,21 +98,25 @@ export default function Profile() {
       formData.append("bio", profile.bio || "");
       formData.append("faculty", profile.faculty || "");
       formData.append("department", profile.department || "");
-      
+
       if (selectedFile) {
         formData.append("photo", selectedFile);
       }
 
-      await axios.put(`${API_BASE_URL}/api/profile/update`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data"
+      await axios.put(
+        `${API_BASE_URL}/api/profile/update`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
         }
-      });
+      );
 
       alert("პროფილი წარმატებით განახლდა");
       setIsEditing(false);
       setSelectedFile(null);
-      
+
       if (user && user.email) {
         fetchProfile(user.email);
       }
@@ -109,16 +131,20 @@ export default function Profile() {
   const handleCancel = () => {
     setIsEditing(false);
     setSelectedFile(null);
+
     if (previewUrl) {
       URL.revokeObjectURL(previewUrl);
       setPreviewUrl("");
     }
   };
 
+  // helper
+  const countChars = (text = "") => text.length;
+
   return (
     <div className="profile">
       <div className="profile__container">
-        
+
         <div className="profile__topbar">
           {!isEditing ? (
             <button className="btn edit" onClick={() => setIsEditing(true)}>
@@ -126,7 +152,11 @@ export default function Profile() {
             </button>
           ) : (
             <>
-              <button className="btn save" onClick={handleSave} disabled={loading}>
+              <button
+                className="btn save"
+                onClick={handleSave}
+                disabled={loading}
+              >
                 {loading ? "ინახება..." : "შენახვა"}
               </button>
               <button className="btn cancel" onClick={handleCancel}>
@@ -137,7 +167,7 @@ export default function Profile() {
         </div>
 
         <div className="profile__header">
-          
+
           <div
             className="profile__photoBox"
             onClick={() => isEditing && fileRef.current.click()}
@@ -163,17 +193,22 @@ export default function Profile() {
           </div>
 
           <div className="profile__info">
-            
+
             <div className="nameRow">
+
               <div className="field">
                 <label>{t("First Name")}</label>
                 {isEditing ? (
-                  <input
-                    name="firstName"
-                    value={profile.firstName}
-                    onChange={handleChange}
-                    placeholder="მაგ: გიორგი"
-                  />
+                  <>
+                    <input
+                      name="firstName"
+                      value={profile.firstName}
+                      onChange={handleChange}
+                    />
+                    <small>
+                      {countChars(profile.firstName)}/{LIMITS.firstName}
+                    </small>
+                  </>
                 ) : (
                   <h2>{profile.firstName}</h2>
                 )}
@@ -182,71 +217,95 @@ export default function Profile() {
               <div className="field">
                 <label>{t("Last Name")}</label>
                 {isEditing ? (
-                  <input
-                    name="lastName"
-                    value={profile.lastName}
-                    onChange={handleChange}
-                    placeholder="მაგ: გიორგაძე"
-                  />
+                  <>
+                    <input
+                      name="lastName"
+                      value={profile.lastName}
+                      onChange={handleChange}
+                    />
+                    <small>
+                      {countChars(profile.lastName)}/{LIMITS.lastName}
+                    </small>
+                  </>
                 ) : (
                   <h2>{profile.lastName}</h2>
                 )}
               </div>
+
             </div>
 
             <div className="field">
               <label>{t("Email")}</label>
               {isEditing ? (
-                <input
-                  name="email"
-                  value={profile.email}
-                  placeholder="შეიყვანეთ თქვენი ელფოსტა"
-                  onChange={handleChange}
-                />
+                <>
+                  <input
+                    name="email"
+                    value={profile.email}
+                    onChange={handleChange}
+                  />
+                  <small>
+                    {countChars(profile.email)}/{LIMITS.email}
+                  </small>
+                </>
               ) : (
                 <p>{profile.email}</p>
               )}
             </div>
 
             <div className="grid">
+
               <div className="field">
                 <label>{t("Faculty")}</label>
                 {isEditing ? (
-                  <input
-                    name="faculty"
-                    placeholder="შეიყვანეთ თქვენი ფაკულტეტი"
-                    value={profile.faculty}
-                    onChange={handleChange}
-                  />
+                  <>
+                    <input
+                      name="faculty"
+                      value={profile.faculty}
+                      onChange={handleChange}
+                    />
+                    <small>
+                      {countChars(profile.faculty)}/{LIMITS.faculty}
+                    </small>
+                  </>
                 ) : (
                   <p>{profile.faculty}</p>
                 )}
               </div>
 
               <div className="field">
-                <label>{t("Primary Program")}</label> 
+                <label>{t("Primary Program")}</label>
                 {isEditing ? (
-                  <input
-                    name="department"
-                    placeholder="შეიყვანეთ თქვენი დეპარტამენტი"
-                    value={profile.department}
-                    onChange={handleChange}
-                  />
+                  <>
+                    <input
+                      name="department"
+                      value={profile.department}
+                      onChange={handleChange}
+                    />
+                    <small>
+                      {countChars(profile.department)}/{LIMITS.department}
+                    </small>
+                  </>
                 ) : (
                   <p>{profile.department}</p>
                 )}
               </div>
+
             </div>
 
             <div className="field bio-field">
               <label>{t("About Me")}</label>
+
               {isEditing ? (
-                <textarea
-                  name="bio"
-                  value={profile.bio}
-                  onChange={handleChange}
-                  placeholder="მოკლე აღწერა თქვენს შესახებ..."
-                />
+                <>
+                  <textarea
+                    name="bio"
+                    value={profile.bio}
+                    onChange={handleChange}
+                  />
+                  <small>
+                    {countChars(profile.bio)}/{LIMITS.bio}
+                  </small>
+                </>
               ) : (
                 <p>{profile.bio}</p>
               )}
