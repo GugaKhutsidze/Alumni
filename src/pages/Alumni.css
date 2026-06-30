@@ -35,12 +35,11 @@ background: #ffffff;
     padding: 3.2vh;
     box-shadow: 0 1vh 2.5vh rgba(0, 0, 0, 0.04); 
     
-    /* Change this from 'column' to 'row' to put elements side-by-side */
     display: flex;
     flex-direction: row; 
-    align-items: flex-start; /* Aligns the top of the image with the top of the text */
-    gap: 2.4vh; /* Creates space between the image and the text content */
-    
+    align-items: flex-start;
+    gap: 2.4vh; 
+
     box-sizing: border-box;
 }
 
@@ -87,7 +86,7 @@ background: #ffffff;
 .B-buttons button {
     
   padding: 1.2vh 2.5vh;
-    background-color: #28282b; /* Vibrant identity blue/purple from image */
+    background-color: #28282b;
     color: #ffffff;
     border: none;
     border-radius: 1.2vh;
@@ -98,7 +97,7 @@ background: #ffffff;
 }
 
 .B-buttons button:hover {
-    background-color: #0e62a2; /* Slightly darker shade for hover effect */
+    background-color: #0e62a2; 
 }
 
 

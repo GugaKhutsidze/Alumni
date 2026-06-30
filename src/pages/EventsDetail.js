@@ -61,7 +61,6 @@ function EventsDetail() {
 
   return (
     <div className="event-detail">
-      {/* მარცხენა სვეტი: კონტენტი */}
       <div className="event-main-content">
         <img src={events?.image} alt={events?.title} className="event-image" />
         <div className="event-info-body">
