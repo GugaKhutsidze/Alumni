@@ -37,13 +37,8 @@ body {
   flex: 1;
   width: 90%;
   margin: 0 auto;
-  margin-top: 2vh;
   color: #ffffff;
 }
-
-
-
-
 
 .controls-container {
   display: flex;
@@ -52,7 +47,7 @@ body {
   gap: 1.5vh;
   margin: 0 auto 4vh auto;
   width: 100%;
-  max-width: 90vh;
+  max-width: 65%;
   flex-wrap: wrap;
 }
 
@@ -61,7 +56,6 @@ body {
   min-width:5vh;
   margin-top:4vh;
   margin-bottom:4vh;
-  margin-inline:1vh;
   padding: 1vh;
   border: 0.1vh solid #ddd;
   outline: none;
@@ -106,7 +100,7 @@ body {
   box-shadow: 0 1vh 3vh rgba(0, 0, 0, 0.12);
   display: flex;
   flex-direction: column;
-  min-height: 50vh;
+  height: 45vh;
 }
 
 .A:hover {
@@ -122,7 +116,8 @@ body {
 }
 .A img {
   width: 100%;
-  height: 20vh;
+  height: 15vh;
+  object-fit: cover;
 }
 
 .A-content {
@@ -135,7 +130,7 @@ body {
 .A-content h3 {
   margin: 0 0 1vh 0;
   color: #28282B;
-  font-size: 2.2vh;
+  font-size: 2vh;
 }
 
 .A-content p {
@@ -195,7 +190,6 @@ body {
   transform: scale(1.03);
 }
 
-
 .no-data {
   text-align: center;
   grid-column: 1 / -1;
@@ -207,4 +201,51 @@ span {
   font-size: 1.5vh;
   color:#28282B;
 }
+@media (max-width: 100vh) {
+  .A {
+  background-color: white;
+  border-radius: 1.5vh;
+  overflow: hidden;
+  transition: 0.3s ease;
+  box-shadow: 0 1vh 3vh rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  height: 35vh;
+}
+.A-content h3 {
+  color: #28282B;
+  font-size: 1.5vh;
+}
 
+.A-content p {
+  font-size: 1vh;
+  margin: 0.7vh 0;
+  color: #444;
+  line-height: 1.6;
+}
+
+
+.A-buttons {
+  margin-top: auto;
+  padding-top: 2vh;
+}
+
+.A-buttons button {
+  background: #28282B;
+  color: white;
+  border: none;
+  border-radius: 1vh;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease;
+  font-size: 1vh;
+}
+
+.A-buttons button:hover {
+  background-color: #0a4d82;
+  transform: scale(1.03);
+}
+
+
+
+}

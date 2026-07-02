@@ -3,7 +3,8 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import "./EmployDetail.css";
 import { useTranslation } from "react-i18next";
-
+import "./EmployeDetail.css";
+import img3 from "../images/imag7.png"
 function EmployDetail() {
   const [employee, setEmployee] = useState(null);
   const [comments, setComments] = useState([]);
@@ -127,7 +128,12 @@ function EmployDetail() {
           ) : (
             comments.map((comment) => (
               <div key={comment.id} className="comment">
-                <strong><img>{comment.user?.image}</img>{comment.user?.name || "მომხმარებელი"}</strong>
+                <strong>
+                  <img
+                  src={comment.user?.image || img3} 
+                  />
+                  {comment.user?.name || "მომხმარებელი"}
+                                </strong>
                 <p>{comment.content}</p>
               </div>
             ))

@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import "./EventsDetail.css";
 import { useTranslation } from "react-i18next";
+import img3 from "../images/imag7.png"
 
 function EventsDetail() {
   const [events, setEvents] = useState(null);
@@ -62,7 +63,7 @@ function EventsDetail() {
   return (
     <div className="event-detail">
       <div className="event-main-content">
-        <img src={events?.image} alt={events?.title} className="event-image" />
+        <img src={events?.image || img3} alt={events?.title} className="event-image" />
         <div className="event-info-body">
           <h1>{events?.title}</h1>
           <div className="event-meta">
@@ -82,7 +83,12 @@ function EventsDetail() {
             comments.map((c) => (
               <div key={c.id} className="comment">
                 
-                <strong><img>{c.user?.image}</img>{c.user?.name || "მომხმარებელი"}</strong>
+                <strong>
+                  <img
+                  src={c.user?.image || img3} 
+                  />
+                  {c.user?.name || "მომხმარებელი"}
+                                </strong>
                 <p>{c.content}</p>
               </div>
             ))

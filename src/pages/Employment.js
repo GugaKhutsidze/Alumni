@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Footer from "../components/Footer";
 import "./EE.css";
 import { useTranslation } from "react-i18next";
+import img4 from "../images/imag7.png"
 
 function Employment() {
     
@@ -24,16 +25,31 @@ function Employment() {
                 console.error("მონაცემების წამოღების შეცდომა:", err);
             });
     }, []);
+       const limitText = (text, maxLength) => {
+        if (!text) return "";
+        return text.length > maxLength
+            ? text.slice(0, maxLength) + "..."
+            : text;
+    };
+
 
     let filteredEmployment = employment.filter((emp) =>
         emp.title?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    if (sortBy === "az") {
-        filteredEmployment.sort((a, b) => (a.title || "").localeCompare(b.title || ""));
-    } else if (sortBy === "za") {
-        filteredEmployment.sort((a, b) => (b.title || "").localeCompare(a.title || ""));
-    }
+ if (sortBy === "az") {
+    filteredEmployment.sort((a, b) =>
+        (a.title || "").localeCompare(b.title || "", undefined, {
+            numeric: true
+        })
+    );
+} else if (sortBy === "za") {
+    filteredEmployment.sort((a, b) =>
+        (b.title || "").localeCompare(a.title || "", undefined, {
+            numeric: true
+        })
+    );
+}
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -76,12 +92,12 @@ function Employment() {
                     currentItems.map((emp) => (
                         <div className="A" key={emp.id} >
                             <img
-                                src={emp.image || "https://via.placeholder.com/300x180"}
+                                src={emp.image || img4}
                                 alt={emp.title}
                             />
                             <div className="A-content">
-                                <h3>{emp.title}</h3>
-                                <p>{emp.description}</p>
+                                <h3>{limitText(emp.title, 30)}</h3>
+                                <p>{limitText(emp.description, 120)}</p>
                                 <p><strong>{t("Date")}:</strong> {emp.year}</p>
                            <div className="A-buttons">
                                     <Link to={`/employment/${emp.id}`}>
