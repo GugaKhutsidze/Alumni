@@ -8,7 +8,6 @@ body {
   background-color: #f8f9fb;
 }
 
-
 ::-webkit-scrollbar {
   width: 0.6vh;
 }
@@ -97,10 +96,7 @@ body {
     grid-template-columns: repeat(auto-fill, minmax(32vh, 1fr));
     gap: 3vh;
     padding: 1vh 0;
-    align-items: start;
-    justify-items: start; 
 }
-
 
 .A {
   background-color: white;
