@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import "./EmployDetail.css"; // Updated CSS import name
+import "./EmployDetail.css"; 
 import { useTranslation } from "react-i18next";
 import img3 from "../images/imag7.png";
 
@@ -40,26 +40,25 @@ function EmployDetail() {
     fetchEmployeeData();
   }, [fetchEmployeeData]);
 
-  async function addComment(e) {
-    e.preventDefault();
-    if (!newComment.trim()) return;
+ async function addComment(e) {
+  e.preventDefault();
+  if (!newComment.trim()) return;
 
-    try {
-      const res = await axios.post(
-        `https://warrior.ge/api/employees/${id}/comments`,
-        { content: newComment },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      
-      // Optimistic update: ვამატებთ ახალ კომენტარს სიაში ხელახალი fetch-ის გარეშე
-      const addedComment = res.data.data || { id: Date.now(), content: newComment, user: { name: "მე" } };
-      setComments((prev) => [...prev, addedComment]);
-      setNewComment("");
-    } catch (e) {
-      console.error("Error posting comment:", e);
-    }
+  try {
+    await axios.post(
+      `https://warrior.ge/api/employees/${id}/comments`,
+      { content: newComment },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    setNewComment("");
+
+    fetchEmployeeData();
+
+  } catch (e) {
+    console.error("Error posting comment:", e);
   }
-
+}
   if (loading) {
     return <h2>{t("loading")}</h2>;
   }
@@ -67,9 +66,9 @@ function EmployDetail() {
   return (
     <div className="employ-detail">
       <div className="employ-main-content">
-        <img src={employee?.image || img3} alt={employee?.name} className="employ-image" />
+        <img src={employee?.image || img3} alt={employee?.firstname} className="employ-image" />
         <div className="employ-info-body">
-          <h1>{employee?.name}</h1>
+          <h1>{employee?.firstname}</h1>
           <div className="employ-meta">
             <p><strong>{t("position")}:</strong> {employee?.position}</p>
             <p><strong>{t("department")}:</strong> {employee?.department}</p>
@@ -87,8 +86,8 @@ function EmployDetail() {
             comments.map((c) => (
               <div key={c.id} className="comment">
                 <strong>
-                  <img src={c.user?.image || img3} alt={c.user?.name || "avatar"} />
-                  {c.user?.name || "მომხმარებელი"}
+                  <img src={c.user?.image || img3} alt={c.user?.firstname || "avatar"} />
+                  {c.user?.firstname || "მომხმარებელი"}{c.user?.lastname || "მომხმარებელი"}
                 </strong>
                 <p>{c.content}</p>
               </div>

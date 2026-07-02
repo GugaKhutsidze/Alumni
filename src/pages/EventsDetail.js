@@ -40,26 +40,26 @@ function EventsDetail() {
     fetchEventData();
   }, [fetchEventData]);
 
-  async function addComment(e) {
-    e.preventDefault();
-    if (!newComment.trim()) return;
+ async function addComment(e) {
+  e.preventDefault();
+  if (!newComment.trim()) return;
 
-    try {
-      const res = await axios.post(
-        `https://warrior.ge/api/movies/${id}/comments`,
-        { content: newComment },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      
-      // Optimistic update: ვამატებთ ახალ კომენტარს სიაში ხელახალი fetch-ის გარეშე
-      const addedComment = res.data.data || { id: Date.now(), content: newComment, user: { name: "მე" } };
-      setComments((prev) => [...prev, addedComment]);
-      setNewComment("");
-    } catch (e) {
-      console.error("Error posting comment:", e);
-    }
+  try {
+    await axios.post(
+      `https://warrior.ge/api/movies/${id}/comments`,
+      { content: newComment },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    setNewComment("");
+
+    // 🔥 refresh comments immediately
+    fetchEventData();
+
+  } catch (e) {
+    console.error("Error posting comment:", e);
   }
-
+}
   return (
     <div className="event-detail">
       <div className="event-main-content">
@@ -86,7 +86,7 @@ function EventsDetail() {
                   <img
                   src={c.user?.image || img3} 
                   />
-                  {c.user?.name || "მომხმარებელი"}
+                  {c.user?.firstname || "სახელი"} {c.user?.lastname || "გვარი"}
                                 </strong>
                 <p>{c.content}</p>
               </div>
