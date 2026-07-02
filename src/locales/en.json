@@ -16,7 +16,6 @@
     "Event not found": "Event not found",
     "Other": "Other",
     "Social Networks": "Social Networks",
-    "Email": "Email",
     "Phone": "Phone",
     "Address": "Address",
     "Ivana Javakhishvili Tbilisi State University":"Ivana Javakhishvili Tbilisi State University",
@@ -54,5 +53,8 @@
     "Photo Size Error": "File size must not exceed 5MB!",
     "Profile updated successfully": "Profile updated successfully",
     "Error saving profile": "Error saving profile",
-    "Edit": "Edit"
+    "Edit": "Edit",
+    "A-Z": "A-Z",
+    "Z-A": "Z-A"
+
   }

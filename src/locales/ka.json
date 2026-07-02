@@ -16,7 +16,6 @@
 "Not found": "ვერ მოიძებნა",
 "Other": "სხვა",
 "Social Networks": "სოციალური ქსელი",
-"Email": "ელფოსტა",
 "Phone": "ტელეფონი",
 "Address": "მისამართი",
 "Ivana Javakhishvili Tbilisi State University":"ივანე ჯავახიშვილის სახელობის თბილისის სახელმწიფო უნივერსიტეტი",
@@ -45,5 +44,8 @@
 "Faculty": "ფაკულტეტი",
 "Primary Program": "ძირითადი პროგრამა",
 "About Me": "ჩემს შესახებ",
-"Edit": "რედაქტირება"
+"Edit": "რედაქტირება",
+"Alumni platform of Tbilisi State University unites university graduates, students and academic community in a single space.":"თბილისის სახელმწიფო უნივერსიტეტის კურსდამთავრებულთა პლატფორმა უნივერსიტეტის კურსდამთავრებულებს, სტუდენტებსა და აკადემიურ საზოგადოებას ერთ სივრცეში აერთიანებს.",
+"A-Z": "ა-ჰ",
+"Z-A": "ჰ-ა"
 }

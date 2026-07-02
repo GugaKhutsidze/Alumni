@@ -28,6 +28,7 @@
   display: block;
 }
 
+
 .event-info-body {
   padding: 30px;
 }
@@ -78,6 +79,12 @@
   flex: 1;
   overflow-y: auto;
   padding-right: 5px;
+}
+.comments-list img {
+  width: 4vh;
+  height: 4vh;
+  border-radius: 50%;
+  margin-right: 10px;
 }
 
 .comments-list::-webkit-scrollbar {

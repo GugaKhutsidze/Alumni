@@ -66,9 +66,9 @@ function EventsDetail() {
         <div className="event-info-body">
           <h1>{events?.title}</h1>
           <div className="event-meta">
-            <p><strong>აღწერა:</strong> {events?.description}</p>
-            <p><strong>თარიღი:</strong> {events?.date}</p>
-            <p><strong>მდებარეობა:</strong> {events?.location}</p>
+            <p><strong>{t("Description")}:</strong> {events?.description}</p>
+            <p><strong>{t("Date")}:</strong> {events?.date}</p>
+            <p><strong>{t("Location")}:</strong> {events?.location}</p>
           </div>
         </div>
       </div>
@@ -81,7 +81,8 @@ function EventsDetail() {
           ) : (
             comments.map((c) => (
               <div key={c.id} className="comment">
-                <strong>{c.user?.name || "მომხმარებელი"}</strong>
+                
+                <strong><img>{c.user?.image}</img>{c.user?.name || "მომხმარებელი"}</strong>
                 <p>{c.content}</p>
               </div>
             ))

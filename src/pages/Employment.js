@@ -11,7 +11,7 @@ function Employment() {
     const [employment, setEmployment] = useState([]);
     const [sortBy, setSortBy] = useState("default");
     const [currentPage, setCurrentPage] = useState(1);
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const itemsPerPage =20;
 
     useEffect(() => {
@@ -65,8 +65,8 @@ function Employment() {
                         onChange={(e) => { setSortBy(e.target.value); setCurrentPage(1); }}
                     >
                         <option value="default"></option>
-                        <option value="az">A-Z</option>
-                        <option value="za">Z-A</option>
+                        <option value="az">{t("A-Z")}</option>
+                        <option value="za">{t("Z-A")}</option>
                     </select>
                 </div>
             </div>

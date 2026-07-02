@@ -205,7 +205,7 @@ textarea {
   }
 }
 
-@media (max-width: 70vh) {
+@media (max-width: 92vh) {
 
   .profile__container {
     width: 90vh;

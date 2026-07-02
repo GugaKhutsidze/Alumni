@@ -127,7 +127,7 @@ function EmployDetail() {
           ) : (
             comments.map((comment) => (
               <div key={comment.id} className="comment">
-                <strong>{comment.user?.name || t("user")}</strong>
+                <strong><img>{comment.user?.image}</img>{comment.user?.name || "მომხმარებელი"}</strong>
                 <p>{comment.content}</p>
               </div>
             ))
