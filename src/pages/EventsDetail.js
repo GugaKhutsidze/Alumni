@@ -69,7 +69,6 @@ function EventsDetail() {
           <div className="event-meta">
             <p><strong>{t("Description")}:</strong> {events?.description}</p>
             <p><strong>{t("Date")}:</strong> {events?.date}</p>
-            <p><strong>{t("Location")}:</strong> {events?.location}</p>
           </div>
         </div>
       </div>
