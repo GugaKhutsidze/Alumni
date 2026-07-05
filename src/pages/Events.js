@@ -113,7 +113,6 @@ function Event() {
             <div className="A-list">
                 <div className="A-image">
 
-                {/* CONTROLS */}
                 <div className="controls-container">
                     <input
                         className="search-bar"

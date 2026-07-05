@@ -86,7 +86,7 @@ export default function Login({ setIsLoggedIn }) {
               value={i18n.language}
               onChange={(e) => changeLanguage(e.target.value)}
             >
-              <option value="ka">ქარ</option>
+              <option value="ka">GE</option>
               <option value="en">EN</option>
             </select>
           </p>
