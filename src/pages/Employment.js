@@ -20,7 +20,6 @@ function Employment() {
 
     const token = localStorage.getItem("token");
 
-    // 🔐 GET USER FROM BACKEND (ROLE COMES FROM SERVER)
     useEffect(() => {
         const fetchUser = async () => {
             if (!token) {
@@ -49,14 +48,12 @@ function Employment() {
 
     const isAdmin = user?.role === "admin";
 
-    // 🔥 FETCH EMPLOYMENT
     useEffect(() => {
         axios.get("https://warrior.ge/api/movies")
             .then((res) => setEmployment(res.data.data || []))
             .catch((err) => console.error(err));
     }, []);
 
-    // ❌ DELETE
     async function deleteHandler(id) {
         const confirmDelete = window.confirm(t("ნამდვილად გსურთ წაშლა?"));
         if (!confirmDelete) return;
@@ -189,12 +186,25 @@ function Employment() {
                         </button>
                     </div>
                 )}
-
+ {totalPages > 0 && (
+                    <div className="pagination-controls">
+                        <button disabled={currentPage === 1} onClick={() => setCurrentPage(prev => prev - 1)}>
+                            {t("Previous")}
+                        </button>
+                        <span>გვერდი {currentPage} / {totalPages}</span>
+                        <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(prev => prev + 1)}>
+                            {t("Next")}
+                        </button>
+                    </div>
+                )}
             </div>
-
             <Footer />
         </div>
     );
 }
-
 export default Employment;
+
+
+
+               
+

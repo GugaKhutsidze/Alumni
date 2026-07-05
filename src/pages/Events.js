@@ -11,19 +11,20 @@ function Event() {
     const [events, setEvents] = useState([]);
     const [sortBy, setSortBy] = useState("default");
     const [currentPage, setCurrentPage] = useState(1);
+
     const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loadingUser, setLoadingUser] = useState(true);
 
     const { t } = useTranslation();
     const itemsPerPage = 20;
 
     const token = localStorage.getItem("token");
 
-    // 🔐 GET USER FROM BACKEND (ROLE COMES FROM SERVER)
+    // 👤 GET USER FROM BACKEND (/me)
     useEffect(() => {
         const fetchUser = async () => {
             if (!token) {
-                setLoading(false);
+                setLoadingUser(false);
                 return;
             }
 
@@ -39,7 +40,7 @@ function Event() {
                 console.log("User fetch error:", err);
                 setUser(null);
             } finally {
-                setLoading(false);
+                setLoadingUser(false);
             }
         };
 
@@ -48,14 +49,14 @@ function Event() {
 
     const isAdmin = user?.role === "admin";
 
-    // 🔥 FETCH EVENTS
+    // 📦 GET EVENTS
     useEffect(() => {
         axios.get("https://warrior.ge/api/movies")
             .then((res) => setEvents(res.data.data || []))
             .catch((err) => console.error(err));
     }, []);
 
-    // ❌ DELETE
+    // 🗑 DELETE EVENT
     async function deleteHandler(id) {
         const confirmDelete = window.confirm(t("ნამდვილად გსურთ წაშლა?"));
         if (!confirmDelete) return;
@@ -70,17 +71,21 @@ function Event() {
                 }
             );
 
-            setEvents(prev => prev.filter(e => e.id !== id));
+            setEvents(prev =>
+                prev.filter(event => event.id !== id)
+            );
 
         } catch (e) {
             alert("წაშლა ვერ მოხერხდა.");
         }
     }
 
-    const filteredEvents = events.filter(e =>
-        e.title?.toLowerCase().includes(searchTerm.toLowerCase())
+    // 🔎 FILTER
+    const filteredEvents = events.filter(event =>
+        event.title?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    // 🔃 SORT
     if (sortBy === "az") {
         filteredEvents.sort((a, b) =>
             (a.title || "").localeCompare(b.title || "")
@@ -91,37 +96,42 @@ function Event() {
         );
     }
 
+    // 📄 PAGINATION
     const indexOfLast = currentPage * itemsPerPage;
     const indexOfFirst = indexOfLast - itemsPerPage;
     const currentItems = filteredEvents.slice(indexOfFirst, indexOfLast);
+
     const totalPages = Math.ceil(filteredEvents.length / itemsPerPage);
 
     const limitText = (text, max) =>
         !text ? "" : text.length > max ? text.slice(0, max) + "..." : text;
 
-    const handleSearch = (e) => {
-        setSearchTerm(e.target.value);
-        setCurrentPage(1);
-    };
-
-    if (loading) return <p>Loading user...</p>;
+    if (loadingUser) return <p>Loading...</p>;
 
     return (
         <div className="asd">
             <div className="A-list">
                 <div className="A-image">
 
+                {/* CONTROLS */}
                 <div className="controls-container">
                     <input
                         className="search-bar"
                         placeholder="ძებნა..."
                         value={searchTerm}
-                        onChange={handleSearch}
+                        onChange={(e) => {
+                            setSearchTerm(e.target.value);
+                            setCurrentPage(1);
+                        }}
                     />
 
-                    <select className="sort-dropdown"
+                    <select
+                        className="sort-dropdown"
                         value={sortBy}
-                        onChange={(e) => setSortBy(e.target.value)}
+                        onChange={(e) => {
+                            setSortBy(e.target.value);
+                            setCurrentPage(1);
+                        }}
                     >
                         <option value="default"></option>
                         <option value="az">{t("A-Z")}</option>
@@ -131,38 +141,51 @@ function Event() {
                 </div>
 
                 <div className="As">
-                    {currentItems.map(event => (
-                        <div className="A" key={event.id}>
-                            <img src={event.image || img4} />
+                    {currentItems.length > 0 ? (
+                        currentItems.map(event => (
+                            <div className="A" key={event.id}>
+                                <img src={event.image || img4} />
 
-                            <div className="A-content">
-                                <h3>{limitText(event.title, 30)}</h3>
-                                <p>{limitText(event.description, 120)}</p>
-                                <p>{event.year}</p>
+                                <div className="A-content">
+                                    <h3>{limitText(event.title, 30)}</h3>
+                                    <p>{limitText(event.description, 120)}</p>
+                                    <p>{event.year}</p>
 
-                                <div className="A-buttons">
-                                    <Link to={`/event/${event.id}`}>
-                                        <button>Learn More</button>
-                                    </Link>
+                                    <div className="A-buttons">
+                                        <Link to={`/event/${event.id}`}>
+                                            <button>{t("Learn More")}</button>
+                                        </Link>
 
-                                    {isAdmin && (
-                                        <button
-                                            onClick={() => deleteHandler(event.id)}
-                                        >
-                                            {t("წაშლა")}
-                                        </button>
-                                    )}
+                                        {isAdmin && (
+                                            <button
+                                                className="delete-btn"
+                                                onClick={() => deleteHandler(event.id)}
+                                            >
+                                                {t("წაშლა")}
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        ))
+                    ) : (
+                        <p className="no-data">{t("Not found")}</p>
+                    )}
                 </div>
-
+                {totalPages > 0 && (
+                    <div className="pagination-controls">
+                        <button disabled={currentPage === 1} onClick={() => setCurrentPage(prev => prev - 1)}>
+                            {t("Previous")}
+                        </button>
+                        <span>გვერდი {currentPage} / {totalPages}</span>
+                        <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(prev => prev + 1)}>
+                            {t("Next")}
+                        </button>
+                    </div>
+                )}
             </div>
-
             <Footer />
         </div>
     );
 }
-
 export default Event;
