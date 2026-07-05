@@ -105,14 +105,13 @@ body, html {
   .SignUp {
     flex-direction: column;
     width: 100%;        
-    min-width: 60vw;
+    min-width: 70vw;
     height: auto;
-    min-height:50vh;
   }
 
   .form-img {
     width: 100%;
-    height: 15vh;      
+    height: 25vh;      
     order: -1;
   }
 
