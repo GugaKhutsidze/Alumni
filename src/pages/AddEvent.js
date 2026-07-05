@@ -1,12 +1,12 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "./AddEvent.css";
 import { useTranslation } from "react-i18next";
+import "./EventAdd.css";
 
 function AddEvent() {
   const navigate = useNavigate();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const API_URL = "https://warrior.ge/api/movies";
 
@@ -19,7 +19,6 @@ function AddEvent() {
   const [imageFile, setImageFile] = useState(null);
   const [preview, setPreview] = useState("");
 
-  const [deleteId, setDeleteId] = useState("");
   const [loadingAdd, setLoadingAdd] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
 
@@ -73,30 +72,7 @@ function AddEvent() {
     setLoadingAdd(false);
   };
 
-  const handleDelete = async () => {
-    if (!deleteId) {
-      alert("Enter ID to delete");
-      return;
-    }
-
-    const confirmDelete = window.confirm("Are you sure?");
-    if (!confirmDelete) return;
-
-    setLoadingDelete(true);
-
-    try {
-      await axios.delete(`${API_URL}/${deleteId}`);
-
-      alert("Event deleted!");
-      setDeleteId("");
-    } catch (err) {
-      console.log(err);
-      alert("Delete failed");
-    }
-
-    setLoadingDelete(false);
-  };
-
+ 
   return (
     <div className="add-page">
 
@@ -146,32 +122,7 @@ function AddEvent() {
         </form>
 
         <hr style={{ margin: "20px 0" }} />
-
-        {/* 🗑️ DELETE SECTION */}
-        <h2>{t("Delete Event")}</h2>
-
-        <input
-          type="text"
-          placeholder={t("Enter Event ID")}
-          value={deleteId}
-          onChange={(e) => setDeleteId(e.target.value)}
-        />
-
-        <button
-          onClick={handleDelete}
-          disabled={loadingDelete}
-          style={{
-            background: "red",
-            color: "white",
-            width: "100%",
-            marginTop: "10px",
-          }}
-        >
-          {loadingDelete ? "Deleting..." : t("Delete Event")}
-        </button>
-
       </div>
-
 
     </div>
   );

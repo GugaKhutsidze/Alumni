@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { useTranslation } from "react-i18next";
@@ -11,15 +11,39 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [token, setToken] = useState(localStorage.getItem("token"));
 
+  // თვალყური ვადევნოთ ტოკენის ცვლილებებს localStorage-ში
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setToken(localStorage.getItem("token"));
+    };
+
+    // ვუსმენთ გარე ცვლილებებს (მაგალითად, სხვა ტაბიდან)
+    window.addEventListener("storage", handleStorageChange);
+    
+    // პერიოდულად შევამოწმოთ ლოკალური ცვლილებები (რადგან setItem არ იწვევს storage ივენთს იმავე ტაბზე)
+    const interval = setInterval(() => {
+      const currentToken = localStorage.getItem("token");
+      if (currentToken !== token) {
+        setToken(currentToken);
+      }
+    }, 1000);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [token]);
+
+  // ტოკენის დეკოდირება და ვალიდაცია
   const { isAuth, role } = useMemo(() => {
     if (!token) return { isAuth: false, role: "" };
 
     try {
       const decoded = jwtDecode(token);
 
+      // ვამოწმებთ ვადას (Token Expiration)
       if (decoded.exp && decoded.exp * 1000 < Date.now()) {
         localStorage.removeItem("token");
-        setToken(null);
         return { isAuth: false, role: "" };
       }
 
@@ -29,7 +53,6 @@ const Navbar = () => {
       };
     } catch (err) {
       localStorage.removeItem("token");
-      setToken(null);
       return { isAuth: false, role: "" };
     }
   }, [token]);
@@ -44,26 +67,29 @@ const Navbar = () => {
   const changeLanguage = (lang) => {
     i18n.changeLanguage(lang);
     localStorage.setItem("language", lang);
+    setMenuOpen(false); // ენის შეცვლისას მობილური მენიუ დაიხუროს
   };
 
   return (
     <nav className="navbar">
       <div className="nav-container">
-
+        
         <div
           className="logo"
-          onClick={() => navigate(isAuth ? "/Home" : "/")}
+          onClick={() => {
+            navigate(isAuth ? "/Home" : "/");
+            setMenuOpen(false);
+          }}
           style={{ cursor: "pointer" }}
         >
           <img src={logo} alt="TSU Logo" />
         </div>
 
         <div className="burger" onClick={() => setMenuOpen(prev => !prev)}>
-          ☰
+          {menuOpen ? "✕" : "☰"} {/* ვიზუალური გაუმჯობესება: იქსი დახურვისას */}
         </div>
 
         <div className={`nav-links ${menuOpen ? "open" : ""}`}>
-
           {isAuth && (
             <>
               <NavLink to="/Home" onClick={() => setMenuOpen(false)}>
@@ -84,7 +110,8 @@ const Navbar = () => {
 
               <NavLink to="/Profile" onClick={() => setMenuOpen(false)}>
                 {t("Profile")}
-              </NavLink>
+     
+          </NavLink>
 
               {role === "admin" && (
                 <>
@@ -116,11 +143,10 @@ const Navbar = () => {
             <option value="ka">ქარ</option>
             <option value="en">EN</option>
           </select>
-
         </div>
       </div>
     </nav>
   );
 };
 
-export default Navbar;  
+export default Navbar;

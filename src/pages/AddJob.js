@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "./AddJob.css";
+import "./JobAdd.css";
 
 function AddJob() {
   const navigate = useNavigate();
@@ -18,7 +18,6 @@ function AddJob() {
   const [preview, setPreview] = useState("");
   const [loadingAdd, setLoadingAdd] = useState(false);
 
-  const [deleteId, setDeleteId] = useState("");
   const [loadingDelete, setLoadingDelete] = useState(false);
 
   const handleChange = (e) => {
@@ -69,29 +68,7 @@ function AddJob() {
     setLoadingAdd(false);
   };
 
-  const handleDelete = async () => {
-    if (!deleteId) {
-      alert("Enter ID");
-      return;
-    }
-
-    const ok = window.confirm("Delete this job?");
-    if (!ok) return;
-
-    setLoadingDelete(true);
-
-    try {
-      await axios.delete(`${API_URL}/${deleteId}`);
-
-      alert("Deleted!");
-      setDeleteId("");
-    } catch (err) {
-      console.log(err);
-      alert("Delete failed");
-    }
-
-    setLoadingDelete(false);
-  };
+  
 
   return (
     <div className="add-job-page">
@@ -142,25 +119,6 @@ function AddJob() {
 
         </form>
 
-        <hr />
-
-        {/* 🗑️ DELETE SECTION */}
-        <h2>Delete Job</h2>
-
-        <input
-          type="text"
-          placeholder="Enter Job ID"
-          value={deleteId}
-          onChange={(e) => setDeleteId(e.target.value)}
-        />
-
-        <button
-          className="delete-btn"
-          onClick={handleDelete}
-          disabled={loadingDelete}
-        >
-          {loadingDelete ? "Deleting..." : "Delete Job"}
-        </button>
 
       </div>
 

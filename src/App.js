@@ -6,7 +6,7 @@ import {
   Outlet,
   Navigate,
 } from "react-router-dom";
-import { jwtDecode } from "jwt-decode"; // 👈 Added secure decoder
+import { jwtDecode } from "jwt-decode";
 import "./App.css";
 
 import Login from "./pages/Login";
@@ -24,6 +24,7 @@ import AddJob from "./pages/AddJob";
 import Navbar from "./components/Navbar";
 
 
+// 🔒 Protected layout (auth required)
 const ProtectedLayout = () => {
   const token = localStorage.getItem("token");
 
@@ -41,9 +42,7 @@ const ProtectedLayout = () => {
   );
 };
 
-/* =========================
-   ROLE PROTECTED (SECURE FLOW)
-========================= */
+
 const RoleProtected = ({ children, allowedRoles }) => {
   const token = localStorage.getItem("token");
 
@@ -52,20 +51,19 @@ const RoleProtected = ({ children, allowedRoles }) => {
   }
 
   try {
-    // 🔒 Decode the token payload securely 
     const decoded = jwtDecode(token);
-    
-    // Extract the role from the cryptographically signed token
-    const role = (decoded.role || "").toString().trim().toLowerCase();
+
+    const role = (decoded.role || "").toLowerCase().trim();
     const allowed = allowedRoles.map(r => r.toLowerCase());
 
+    // ❗ access denied
     if (!allowed.includes(role)) {
       return <Navigate to="/home" replace />;
     }
-  } catch (error) {
-    // If the token is fake, expired, or tampered with, wipe it and force logout
+
+  } catch (err) {
+    // invalid or expired token
     localStorage.removeItem("token");
-    localStorage.removeItem("role"); // Clean legacy storage if it exists
     return <Navigate to="/" replace />;
   }
 
@@ -73,16 +71,17 @@ const RoleProtected = ({ children, allowedRoles }) => {
 };
 
 
-
 function App() {
   return (
     <BrowserRouter>
       <Routes>
 
+        {/* Public routes */}
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        <Route element={<ProtectedLayout />}> 
+        {/* Protected routes */}
+        <Route element={<ProtectedLayout />}>
 
           <Route path="/home" element={<Home />} />
           <Route path="/about" element={<About />} />
@@ -90,7 +89,11 @@ function App() {
           <Route path="/employment" element={<Employment />} />
           <Route path="/event/:id" element={<EventsDetail />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/alumni" element={<Alumni />} />
+          <Route path="/add-event" element={<AddEvent />} />
+          <Route path="/add-job" element={<AddJob />} />
 
+          {/* 🔐 Admin only routes */}
           <Route
             path="/add-event"
             element={
@@ -109,16 +112,18 @@ function App() {
             }
           />
 
-          <Route 
-            path="/alumni" 
+          <Route
+            path="/alumni"
             element={
               <RoleProtected allowedRoles={["admin"]}>
                 <Alumni />
               </RoleProtected>
             }
           />
+
         </Route>
 
+        {/* fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
 
       </Routes>

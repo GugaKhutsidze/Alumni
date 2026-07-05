@@ -62,10 +62,11 @@
     "Register": "Register",
     "ID": "ID",
     "Phone Number": "Phone Number",
-       "Password": "Password",
+    "Password": "Password",
     "Already have an account?": "Already have an account?",
     "Login Here": "Login Here",
-    "Welcome": "Welcome"
+    "Welcome": "Welcome",
+    "Add Job": "Add Job"
 
 
   }

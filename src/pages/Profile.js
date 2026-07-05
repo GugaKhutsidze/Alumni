@@ -3,7 +3,8 @@ import axios from "axios";
 import "./Profile.css";
 import { useTranslation } from "react-i18next";
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || "https://localhost:5001";
+const API_BASE_URL =
+  process.env.REACT_APP_API_URL || "https://localhost:5001";
 
 const LIMITS = {
   firstName: 20,
@@ -11,14 +12,13 @@ const LIMITS = {
   email: 50,
   faculty: 60,
   department: 60,
-  bio: 700
+  bio: 700,
 };
 
 export default function Profile() {
-  const savedUser = localStorage.getItem("user");
-  const user = savedUser ? JSON.parse(savedUser) : null;
-  const { t } = useTranslation();
+  const token = localStorage.getItem("token"); 
 
+  const { t } = useTranslation();
   const fileRef = useRef(null);
 
   const [isEditing, setIsEditing] = useState(false);
@@ -33,22 +33,23 @@ export default function Profile() {
     bio: "",
     faculty: "",
     department: "",
-    photo: ""
+    photo: "",
   });
 
   useEffect(() => {
-    if (user && user.email) {
-      fetchProfile(user.email);
+    if (token) {
+      fetchProfile();
     }
-
-    return () => {
-      if (previewUrl) URL.revokeObjectURL(previewUrl);
-    };
   }, []);
 
-  const fetchProfile = async (email) => {
+  const fetchProfile = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/profile/${email}`);
+      const res = await axios.get(`${API_BASE_URL}/api/profile`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       setProfile(res.data);
     } catch (err) {
       console.error(err);
@@ -59,14 +60,11 @@ export default function Profile() {
     const { name, value } = e.target;
 
     const limit = LIMITS[name];
-
-    if (limit && value.length > limit) {
-      return; // stop typing if limit reached
-    }
+    if (limit && value.length > limit) return;
 
     setProfile((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -81,6 +79,7 @@ export default function Profile() {
     }
 
     setSelectedFile(file);
+
     const objectUrl = URL.createObjectURL(file);
     setPreviewUrl(objectUrl);
   };
@@ -106,8 +105,9 @@ export default function Profile() {
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data"
-          }
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
 
@@ -115,9 +115,7 @@ export default function Profile() {
       setIsEditing(false);
       setSelectedFile(null);
 
-      if (user && user.email) {
-        fetchProfile(user.email);
-      }
+      fetchProfile();
     } catch (err) {
       console.error(err);
       alert("შეცდომა პროფილის შენახვისას");
@@ -141,7 +139,6 @@ export default function Profile() {
   return (
     <div className="profile">
       <div className="profile__container">
-
         <div className="profile__topbar">
           {!isEditing ? (
             <button className="btn edit" onClick={() => setIsEditing(true)}>
@@ -156,6 +153,7 @@ export default function Profile() {
               >
                 {loading ? "ინახება..." : "შენახვა"}
               </button>
+
               <button className="btn cancel" onClick={handleCancel}>
                 გაუქმება
               </button>
@@ -164,11 +162,9 @@ export default function Profile() {
         </div>
 
         <div className="profile__header">
-
           <div
             className="profile__photoBox"
             onClick={() => isEditing && fileRef.current.click()}
-            style={{ cursor: isEditing ? "pointer" : "default" }}
           >
             {previewUrl || profile.photo ? (
               <img
@@ -190,124 +186,72 @@ export default function Profile() {
           </div>
 
           <div className="profile__info">
+            <div className="field">
+              <label>{t("First Name")}</label>
+              {isEditing ? (
+                <>
+                  <input
+                    name="firstName"
+                    value={profile.firstName}
+                    onChange={handleChange}
+                  />
+                  <small>
+                    {countChars(profile.firstName)}/{LIMITS.firstName}
+                  </small>
+                </>
+              ) : (
+                <h2>{profile.firstName}</h2>
+              )}
+            </div>
 
-            <div className="nameRow">
-
-              <div className="field">
-                <label>{t("First Name")}</label>
-                {isEditing ? (
-                  <>
-                    <input
-                      name="firstName"
-                      value={profile.firstName}
-                      onChange={handleChange}
-                    />
-                    <small>
-                      {countChars(profile.firstName)}/{LIMITS.firstName}
-                    </small>
-                  </>
-                ) : (
-                  <h2>{profile.firstName}</h2>
-                )}
-              </div>
-
-              <div className="field">
-                <label>{t("Last Name")}</label>
-                {isEditing ? (
-                  <>
-                    <input
-                      name="lastName"
-                      value={profile.lastName}
-                      onChange={handleChange}
-                    />
-                    <small>
-                      {countChars(profile.lastName)}/{LIMITS.lastName}
-                    </small>
-                  </>
-                ) : (
-                  <h2>{profile.lastName}</h2>
-                )}
-              </div>
-
+            <div className="field">
+              <label>{t("Last Name")}</label>
+              {isEditing ? (
+                <>
+                  <input
+                    name="lastName"
+                    value={profile.lastName}
+                    onChange={handleChange}
+                  />
+                  <small>
+                    {countChars(profile.lastName)}/{LIMITS.lastName}
+                  </small>
+                </>
+              ) : (
+                <h2>{profile.lastName}</h2>
+              )}
             </div>
 
             <div className="field">
               <label>{t("Email")}</label>
+              <p>{profile.email}</p>
+            </div>
+
+            <div className="field">
+              <label>{t("Faculty")}</label>
               {isEditing ? (
-                <>
-                  <input
-                    name="email"
-                    value={profile.email}
-                    onChange={handleChange}
-                  />
-                  <small>
-                    {countChars(profile.email)}/{LIMITS.email}
-                  </small>
-                </>
+                <input
+                  name="faculty"
+                  value={profile.faculty}
+                  onChange={handleChange}
+                />
               ) : (
-                <p>{profile.email}</p>
+                <p>{profile.faculty}</p>
               )}
             </div>
 
-            <div className="grid">
-
-              <div className="field">
-                <label>{t("Faculty")}</label>
-                {isEditing ? (
-                  <>
-                    <input
-                      name="faculty"
-                      value={profile.faculty}
-                      onChange={handleChange}
-                    />
-                    <small>
-                      {countChars(profile.faculty)}/{LIMITS.faculty}
-                    </small>
-                  </>
-                ) : (
-                  <p>{profile.faculty}</p>
-                )}
-              </div>
-
-              <div className="field">
-                <label>{t("Primary Program")}</label>
-                {isEditing ? (
-                  <>
-                    <input
-                      name="department"
-                      value={profile.department}
-                      onChange={handleChange}
-                    />
-                    <small>
-                      {countChars(profile.department)}/{LIMITS.department}
-                    </small>
-                  </>
-                ) : (
-                  <p>{profile.department}</p>
-                )}
-              </div>
-
-            </div>
-
-            <div className="field bio-field">
+            <div className="field">
               <label>{t("About Me")}</label>
-
               {isEditing ? (
-                <>
-                  <textarea
-                    name="bio"
-                    value={profile.bio}
-                    onChange={handleChange}
-                  />
-                  <small>
-                    {countChars(profile.bio)}/{LIMITS.bio}
-                  </small>
-                </>
+                <textarea
+                  name="bio"
+                  value={profile.bio}
+                  onChange={handleChange}
+                />
               ) : (
                 <p>{profile.bio}</p>
               )}
             </div>
-
           </div>
         </div>
       </div>
