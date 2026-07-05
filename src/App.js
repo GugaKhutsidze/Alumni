@@ -72,9 +72,8 @@ const RoleProtected = ({ children, allowedRoles }) => {
   return children;
 };
 
-/* =========================
-   APP ROUTES
-========================= */
+
+
 function App() {
   return (
     <BrowserRouter>

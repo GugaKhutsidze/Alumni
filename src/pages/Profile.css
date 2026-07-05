@@ -112,10 +112,7 @@ body {
   transition: 0.2s;
 }
 
-.profile__photoBox:hover {
-  border-color: #28282b;
-  box-shadow: 0 1.5vh 3vh rgba(37, 99, 235, 0.15);
-}
+
 
 .profile__photo {
   width: 100%;

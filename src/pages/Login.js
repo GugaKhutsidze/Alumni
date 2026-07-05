@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import "./L&R.css";
+import { useTranslation } from "react-i18next";
 
 export default function Login({ setIsLoggedIn }) {
   const [email, setEmail] = useState("");
@@ -10,6 +11,11 @@ export default function Login({ setIsLoggedIn }) {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { t, i18n } = useTranslation(); 
+    const changeLanguage = (lang) => {
+    i18n.changeLanguage(lang);
+    localStorage.setItem("language", lang);
+  };
 
   const isRegister = location.pathname === "/register";
 
@@ -36,16 +42,28 @@ export default function Login({ setIsLoggedIn }) {
     <div className="page-wrapper">
       <div className={`SignUp ${isRegister ? "active-register" : ""}`}>
         <div className="form">
-          <h1>მომხმარებლის ავტორიზაცია</h1>
-          <input type="email" placeholder="ელფოსტა" value={email} onChange={(e) => setEmail(e.target.value)} />
-          <input type="password" placeholder="პაროლი" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <h1>{t("Sign in")} </h1>
+          
+          <input type="email" placeholder={t("Email")} value={email} onChange={(e) => setEmail(e.target.value)} />
+          <input type="password" placeholder={t("Password")} value={password} onChange={(e) => setPassword(e.target.value)} />
           <button disabled={loading} onClick={handleLogin}>
-            {loading ? "იტვირთება..." : "შესვლა"}
+            {loading ? "იტვირთება..." : t("Sign in")}
           </button>
-          <p>არ ხართ რეგისტრირებული? <NavLink to="/register">რეგისტრაცია</NavLink></p>
+          <p>{t("Not Registered Yet?")} <NavLink to="/register">{t("Register Here")} </NavLink>  
+           <select
+            className="language-s"
+            value={i18n.language}
+            onChange={(e) => changeLanguage(e.target.value)}
+          >
+            <option value="ka">ქარ</option>
+            <option value="en">EN</option>
+          </select></p>
+          
         </div>
-        <div className="form-img"><h1>მოგესალმებით!</h1></div>
+     
+        <div className="form-img"></div>
       </div>
+      
     </div>
   );
 }

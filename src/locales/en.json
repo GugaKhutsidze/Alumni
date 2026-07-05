@@ -55,6 +55,17 @@
     "Error saving profile": "Error saving profile",
     "Edit": "Edit",
     "A-Z": "A-Z",
-    "Z-A": "Z-A"
+    "Z-A": "Z-A",
+    "Sign in": "Sign in",
+    "Not Registered Yet?": "Not Registered Yet?",
+    "Register Here": "Register Here",
+    "Register": "Register",
+    "ID": "ID",
+    "Phone Number": "Phone Number",
+       "Password": "Password",
+    "Already have an account?": "Already have an account?",
+    "Login Here": "Login Here",
+    "Welcome": "Welcome"
+
 
   }
