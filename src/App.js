@@ -24,7 +24,6 @@ import AddJob from "./pages/AddJob";
 import Navbar from "./components/Navbar";
 
 
-// 🔒 Protected layout (auth required)
 const ProtectedLayout = () => {
   const token = localStorage.getItem("token");
 
@@ -42,9 +41,8 @@ const ProtectedLayout = () => {
   );
 };
 
-
 const RoleProtected = ({ children, allowedRoles }) => {
-  const token = localStorage.getItem("token");
+const token = localStorage.getItem("token");
 
   if (!token) {
     return <Navigate to="/" replace />;
@@ -56,13 +54,11 @@ const RoleProtected = ({ children, allowedRoles }) => {
     const role = (decoded.role || "").toLowerCase().trim();
     const allowed = allowedRoles.map(r => r.toLowerCase());
 
-    // ❗ access denied
     if (!allowed.includes(role)) {
       return <Navigate to="/home" replace />;
     }
 
   } catch (err) {
-    // invalid or expired token
     localStorage.removeItem("token");
     return <Navigate to="/" replace />;
   }
