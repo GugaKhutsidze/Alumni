@@ -4,14 +4,14 @@
   box-sizing: border-box;
 }
 
-body, html {
-  height: 100%;
-  display: flex;         /* Added to center the SignUp card on the screen */
-  align-items: center;   
+.page-wrapper {
+  min-height: 100vh;
+  display: flex;
   justify-content: center;
-  background-color: #f0f0f0; 
+  align-items: center;
+  background: #f5f7fb;
+  padding: 40px 20px;
 }
-
 .SignUp {
   background-color: white;
   border-radius: 1vh;
@@ -105,7 +105,7 @@ body, html {
   .SignUp {
     flex-direction: column;
     width: 100%;        
-    min-width: 70vw;
+    min-width: 85vw;
     height: auto;
   }
 
