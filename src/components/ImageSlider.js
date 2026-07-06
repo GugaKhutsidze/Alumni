@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import './ImageSlider.css';
 import axios from "axios";
 
-/* ✅ LOCAL IMAGES (როგორც თავიდან გქონდა) */
 import img1 from '../images/img1.jpg';
 import img2 from '../images/img2.jpg';
 import img3 from '../images/img3.jpg';
@@ -18,21 +17,36 @@ const LOCAL_IMAGES = [
 ];
 
 const API = "http://localhost:5000/api/slides";
+const ME_API = "http://localhost:5000/api/me";
 
 const ImageSlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-const [slides, setSlides] = useState(LOCAL_IMAGES);
-const [file, setFile] = useState(null);
-const [isAdmin, setIsAdmin] = useState(false);
-useEffect(() => {
-  const token = localStorage.getItem("token");
-
-  if (token === "admin") {
-    setIsAdmin(true);
-  }
-}, []);
+  const [slides, setSlides] = useState(LOCAL_IMAGES);
+  const [file, setFile] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const SLIDES = slides.length ? slides : LOCAL_IMAGES;
+
+  // =========================
+  // CHECK ADMIN (REAL)
+  // =========================
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) return;
+
+    axios.get(ME_API, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    .then((res) => {
+      if (res.data.role === "admin") {
+        setIsAdmin(true);
+      }
+    })
+    .catch(() => setIsAdmin(false));
+  }, []);
 
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev + 1) % SLIDES.length);
@@ -43,7 +57,7 @@ useEffect(() => {
   };
 
   // =========================
-  // FETCH FROM BACKEND
+  // FETCH SLIDES
   // =========================
   useEffect(() => {
     const fetchSlides = async () => {
@@ -70,7 +84,7 @@ useEffect(() => {
   }, [slides]);
 
   // =========================
-  // UPLOAD (ADMIN)
+  // UPLOAD (ADMIN ONLY)
   // =========================
   const uploadImage = async () => {
     if (!file) return;
@@ -79,39 +93,39 @@ useEffect(() => {
     formData.append("file", file);
 
     try {
+      const token = localStorage.getItem("token");
+
       await axios.post(API, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`
         },
       });
 
       const res = await axios.get(API);
 
-      if (res.data && res.data.length > 0) {
-        setSlides(res.data);
-      } else {
-        setSlides(LOCAL_IMAGES);
-      }
-
+      setSlides(res.data.length ? res.data : LOCAL_IMAGES);
       setFile(null);
     } catch (err) {
-      setSlides(LOCAL_IMAGES);
+      console.log(err);
     }
   };
 
   return (
     <div className='asd'>
+
+      {/* ADMIN UPLOAD */}
       {isAdmin && (
-  <div>
-    <input
-      type="file"
-      onChange={(e) => setFile(e.target.files[0])}
-    />
-    <button onClick={uploadImage}>
-      Upload
-    </button>
-  </div>
-)}
+        <div>
+          <input
+            type="file"
+            onChange={(e) => setFile(e.target.files[0])}
+          />
+          <button onClick={uploadImage}>
+            Upload
+          </button>
+        </div>
+      )}
 
       <div className="slider-full-container">
         <div className="slider-viewport">
