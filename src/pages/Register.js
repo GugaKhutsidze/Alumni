@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
-import "./L&R.css";
+import "./LR.css";
 import { useTranslation } from "react-i18next";
 
 export default function Register() {
