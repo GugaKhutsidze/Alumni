@@ -6,6 +6,45 @@ import "./EE.css";
 import { useTranslation } from "react-i18next";
 import img4 from "../images/imag7.png";
 
+
+const isHex = (str) =>
+    typeof str === "string" &&
+    /^[0-9a-fA-F]+$/.test(str) &&
+    str.length % 2 === 0;
+
+const hexToBase64 = (hex) => {
+    const bytes = new Uint8Array(
+        hex.match(/.{2}/g).map((b) => parseInt(b, 16))
+    );
+
+    let binary = "";
+    bytes.forEach((b) => (binary += String.fromCharCode(b)));
+
+    return btoa(binary);
+};
+
+const getImageSrc = (file) => {
+    if (!file) return img4;
+
+    try {
+        if (file.startsWith("data:image")) return file;
+
+        if (file.startsWith("/9j") || file.startsWith("iVBOR")) {
+            return `data:image/jpeg;base64,${file}`;
+        }
+
+        // HEX
+        if (isHex(file)) {
+            return `data:image/jpeg;base64,${hexToBase64(file)}`;
+        }
+
+        return img4;
+    } catch (e) {
+        console.error("Image parse error:", e);
+        return img4;
+    }
+};
+
 function Event() {
     const [searchTerm, setSearchTerm] = useState("");
     const [events, setEvents] = useState([]);
@@ -20,6 +59,9 @@ function Event() {
 
     const token = localStorage.getItem("token");
 
+    /* =========================
+       USER FETCH (SAFE)
+    ========================= */
     useEffect(() => {
         const fetchUser = async () => {
             if (!token) {
@@ -28,12 +70,16 @@ function Event() {
             }
 
             try {
-                const res = await axios.get("https://localhost:8000/api/user", {
-                    headers: {
-                        Authorization: `Bearer ${token}`
+                const res = await axios.get(
+                    "https://localhost:8000/api/user",
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
                     }
-                });
+                );
 
+                console.log("USER:", res.data);
                 setUser(res.data);
             } catch (err) {
                 console.log("User fetch error:", err);
@@ -48,43 +94,63 @@ function Event() {
 
     const isAdmin = user?.role === "admin";
 
-    // 📦 GET EVENTS
+    /* =========================
+       EVENTS FETCH (DEBUG FIX)
+    ========================= */
     useEffect(() => {
-        axios.get("https://localhost:8000/api/events")
-            .then((res) => setEvents(res.data.data || []))
+        axios
+            .get(
+                "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net/api/events?languageId=1"
+            )
+            .then((res) => {
+                console.log("EVENT API RAW:", res.data);
+
+                // IMPORTANT FIX (if API is nested)
+                const data = Array.isArray(res.data)
+                    ? res.data
+                    : res.data?.data || [];
+
+                setEvents(data);
+            })
             .catch((err) => console.error(err));
     }, []);
 
-    // 🗑 DELETE EVENT
-    async function deleteHandler(id) {
-        const confirmDelete = window.confirm(t("ნამდვილად გსურთ წაშლა?"));
+    /* =========================
+       DELETE
+    ========================= */
+    async function deleteHandler(eventId) {
+        const confirmDelete = window.confirm(
+            t("ნამდვილად გსურთ წაშლა?")
+        );
         if (!confirmDelete) return;
 
         try {
             await axios.delete(
-                `https://localhost:8000/api/events/${id}`,
+                `https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net/api/events/${eventId}`,
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`
-                    }
+                        Authorization: `Bearer ${token}`,
+                    },
                 }
             );
 
-            setEvents(prev =>
-                prev.filter(event => event.id !== id)
+            setEvents((prev) =>
+                prev.filter((e) => e.eventId !== eventId)
             );
-
         } catch (e) {
             alert("წაშლა ვერ მოხერხდა.");
         }
     }
 
-    // 🔎 FILTER
-    const filteredEvents = events.filter(event =>
-        event.title?.toLowerCase().includes(searchTerm.toLowerCase())
+    /* =========================
+       FILTER + SORT
+    ========================= */
+    const filteredEvents = events.filter((event) =>
+        event?.title
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase())
     );
 
-    // 🔃 SORT
     if (sortBy === "az") {
         filteredEvents.sort((a, b) =>
             (a.title || "").localeCompare(b.title || "")
@@ -95,15 +161,26 @@ function Event() {
         );
     }
 
-    // 📄 PAGINATION
+    /* =========================
+       PAGINATION
+    ========================= */
     const indexOfLast = currentPage * itemsPerPage;
     const indexOfFirst = indexOfLast - itemsPerPage;
-    const currentItems = filteredEvents.slice(indexOfFirst, indexOfLast);
+    const currentItems = filteredEvents.slice(
+        indexOfFirst,
+        indexOfLast
+    );
 
-    const totalPages = Math.ceil(filteredEvents.length / itemsPerPage);
+    const totalPages = Math.ceil(
+        filteredEvents.length / itemsPerPage
+    );
 
     const limitText = (text, max) =>
-        !text ? "" : text.length > max ? text.slice(0, max) + "..." : text;
+        !text
+            ? ""
+            : text.length > max
+            ? text.slice(0, max) + "..."
+            : text;
 
     if (loadingUser) return <p>Loading...</p>;
 
@@ -111,53 +188,87 @@ function Event() {
         <div className="asd">
             <div className="A-list">
                 <div className="A-image">
+                    <div className="controls-container">
+                        <input
+                            className="search-bar"
+                            placeholder="ძებნა..."
+                            value={searchTerm}
+                            onChange={(e) => {
+                                setSearchTerm(e.target.value);
+                                setCurrentPage(1);
+                            }}
+                        />
 
-                <div className="controls-container">
-                    <input
-                        className="search-bar"
-                        placeholder="ძებნა..."
-                        value={searchTerm}
-                        onChange={(e) => {
-                            setSearchTerm(e.target.value);
-                            setCurrentPage(1);
-                        }}
-                    />
-
-                    <select
-                        className="sort-dropdown"
-                        value={sortBy}
-                        onChange={(e) => {
-                            setSortBy(e.target.value);
-                            setCurrentPage(1);
-                        }}
-                    >
-                        <option value="default"></option>
-                        <option value="az">{t("A-Z")}</option>
-                        <option value="za">{t("Z-A")}</option>
-                    </select>
-                </div>
+                        <select
+                            className="sort-dropdown"
+                            value={sortBy}
+                            onChange={(e) => {
+                                setSortBy(e.target.value);
+                                setCurrentPage(1);
+                            }}
+                        >
+                            <option value="default"></option>
+                            <option value="az">
+                                {t("A-Z")}
+                            </option>
+                            <option value="za">
+                                {t("Z-A")}
+                            </option>
+                        </select>
+                    </div>
                 </div>
 
                 <div className="As">
                     {currentItems.length > 0 ? (
-                        currentItems.map(event => (
-                            <div className="A" key={event.id}>
-                                <img src={event.image || img4} />
+                        currentItems.map((event) => (
+                            <div
+                                className="A"
+                                key={event.eventId}
+                            >
+                                {/* 🔥 FIXED IMAGE */}
+                                <img
+                                    src={getImageSrc(
+                                        event.file
+                                    )}
+                                    alt={event.title}
+                                />
 
                                 <div className="A-content">
-                                    <h3>{limitText(event.title, 30)}</h3>
-                                    <p>{limitText(event.description, 120)}</p>
-                                    <p>{event.year}</p>
+                                    <h3>
+                                        {limitText(
+                                            event.title,
+                                            30
+                                        )}
+                                    </h3>
+
+                                    <p>
+                                        {limitText(
+                                            event.description,
+                                            120
+                                        )}
+                                    </p>
+
+                                    <p>{event.eventDate}</p>
 
                                     <div className="A-buttons">
-                                        <Link to={`/event/${event.id}`}>
-                                            <button>{t("Learn More")}</button>
+                                        <Link
+                                            to={`/event/${event.eventId}`}
+                                        >
+                                            <button>
+                                                {t(
+                                                    "Learn More"
+                                                )}
+                                            </button>
                                         </Link>
 
                                         {isAdmin && (
                                             <button
                                                 className="delete-btn"
-                                                onClick={() => deleteHandler(event.id)}
+                                                onClick={() =>
+                                                    deleteHandler(
+                                                        event.eventId
+                                                    )
+                                                }
                                             >
                                                 {t("წაშლა")}
                                             </button>
@@ -167,23 +278,49 @@ function Event() {
                             </div>
                         ))
                     ) : (
-                        <p className="no-data">{t("Not found")}</p>
+                        <p className="no-data">
+                            {t("Not found")}
+                        </p>
                     )}
                 </div>
+
                 {totalPages > 0 && (
                     <div className="pagination-controls">
-                        <button disabled={currentPage === 1} onClick={() => setCurrentPage(prev => prev - 1)}>
+                        <button
+                            disabled={currentPage === 1}
+                            onClick={() =>
+                                setCurrentPage(
+                                    (prev) => prev - 1
+                                )
+                            }
+                        >
                             {t("Previous")}
                         </button>
-                        <span>გვერდი {currentPage} / {totalPages}</span>
-                        <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(prev => prev + 1)}>
+
+                        <span>
+                            გვერდი {currentPage} /{" "}
+                            {totalPages}
+                        </span>
+
+                        <button
+                            disabled={
+                                currentPage === totalPages
+                            }
+                            onClick={() =>
+                                setCurrentPage(
+                                    (prev) => prev + 1
+                                )
+                            }
+                        >
                             {t("Next")}
                         </button>
                     </div>
                 )}
             </div>
+
             <Footer />
         </div>
     );
 }
+
 export default Event;

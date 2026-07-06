@@ -21,8 +21,8 @@ function EventsDetail() {
       const config = { headers: { Authorization: `Bearer ${token}` } };
       
       const [eventRes, commentsRes] = await Promise.all([
-        axios.get(`https://warrior.ge/api/movies/${id}`, config),
-        axios.get(`https://warrior.ge/api/movies/${id}/comments`, config)
+        axios.get(`https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net/api/events/1?languageId=1'${id}`, config),
+        axios.get(`https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net/api/events/1?languageId=1'/${id}/comments`, config)
       ]);
 
       setEvents(eventRes.data.data);
@@ -46,7 +46,7 @@ function EventsDetail() {
 
   try {
     await axios.post(
-      `https://warrior.ge/api/movies/${id}/comments`,
+      `${id}/comments`,
       { content: newComment },
       { headers: { Authorization: `Bearer ${token}` } }
     );

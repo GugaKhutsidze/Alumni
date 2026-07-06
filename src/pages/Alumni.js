@@ -15,15 +15,15 @@ function Alumni() {
     const itemsPerPage = 20;
 
     useEffect(() => {
-        const url = "https://localhost:8000/api/alumni";
+        const url = "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net/api/alumni";
 
         axios.get(url)
-            .then((res) => setAlumnis(res.data.data || []))
+            .then((res) => setAlumnis(res.data || []))
             .catch((err) => console.error("მონაცემების წამოღების შეცდომა:", err));
     }, []);
 
     let filteredAlumnis = alumnis.filter((alumni) =>
-        `${alumni.firstname} ${alumni.lastname}`
+        `${alumni.Firstname} ${alumni.Lastname}`
             .toLowerCase()
             .includes(searchTerm.toLowerCase())
     );
@@ -31,11 +31,11 @@ function Alumni() {
     // sort
     if (sortBy === "az") {
         filteredAlumnis.sort((a, b) =>
-            (a.firstname + " " + a.lastname).localeCompare(b.firstname + " " + b.lastname)
+            (a.Firstname + " " + a.Lastname).localeCompare(b.Firstname + " " + b.Lastname)
         );
     } else if (sortBy === "za") {
         filteredAlumnis.sort((a, b) =>
-            (b.firstname + " " + b.lastname).localeCompare(a.firstname + " " + a.lastname)
+            (b.Firstname + " " + b.Lastname).localeCompare(a.Firstname + " " + a.Lastname)
         );
     }
 
@@ -84,7 +84,7 @@ function Alumni() {
                             <div className="B" key={alumni.id}>
                                 <div className="B-content">
                                     <h3>
-                                        {alumni.firstname} {alumni.lastname}
+                                        {alumni.Firstname} {alumni.Lastname}
                                     </h3>
                                 </div>
 

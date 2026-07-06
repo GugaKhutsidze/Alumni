@@ -88,6 +88,7 @@ function App() {
           <Route path="/alumni" element={<Alumni />} />
           <Route path="/add-event" element={<AddEvent />} />
           <Route path="/add-job" element={<AddJob />} />
+          
 
           {/* 🔐 Admin only routes */}
           <Route

@@ -8,8 +8,8 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
-  const [id, setId] = useState("");
-  const[tel, setTel] = useState("");
+  const [personalId, setpersonalId] = useState("");
+  const[phoneNumber, setphoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -27,10 +27,10 @@ export default function Register() {
   }, [navigate]);
 
   async function handleRegister() {
-    if (!email ||!tel|| !name || !id || !password) return alert("გთხოვ შეავსო ყველა ველი");
+    if (!email ||!phoneNumber|| !name || !personalId || !password) return alert("გთხოვ შეავსო ყველა ველი");
     try {
       setLoading(true);
-      await axios.post("http:://localhost:5053/api/auth/register", { email, name,tel, surname, password, id });
+      await axios.post("https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net/api/auth/register", { name,surname, email, personalId, password,phoneNumber });
       alert("რეგისტრაცია წარმატებით დასრულდა");
       navigate("/", { replace: true });
     } catch (error) {
@@ -45,8 +45,8 @@ export default function Register() {
       <div className={`SignUp ${isRegister ? "active-register" : ""}`}>
         <div className="form">
           <h1>{t("Register")}</h1>
-          <input type="text" placeholder={t("ID")} value={id} onChange={(e)=>setId(e.target.value)} />
-          <input type="tel" placeholder={t("Phone Number")} value={tel} onChange={(e)=>setTel(e.target.value)} />
+          <input type="text" placeholder={t("ID")} value={personalId} onChange={(e)=>setpersonalId(e.target.value)} />
+          <input type="phoneNumber" placeholder={t("Phone Number")} value={phoneNumber} onChange={(e)=>setphoneNumber(e.target.value)} />
           <input type="text" placeholder={t("First Name")} value={name} onChange={(e) => setName(e.target.value)} />
           <input type="text" placeholder={t("Last Name")} value={surname} onChange={(e) => setSurname(e.target.value)} />
           <input type="email" placeholder={t("Email")} value={email} onChange={(e) => setEmail(e.target.value)} />

@@ -36,7 +36,7 @@ export default function Login({ setIsLoggedIn }) {
       setLoading(true);
 
       const response = await axios.post(
-        "https://warrior.ge/api/login",
+        "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net/api/auth/login",
         { email, password }
       );
 
