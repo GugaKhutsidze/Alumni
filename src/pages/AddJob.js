@@ -6,7 +6,7 @@ import "./JobAdd.css";
 function AddJob() {
   const navigate = useNavigate();
 
-  const API_URL = "https://warrior.ge/api/movies";
+  const API_URL = "https://localhost:8000/api/jobs";
 
   const [form, setForm] = useState({
     title: "",

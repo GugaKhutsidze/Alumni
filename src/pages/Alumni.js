@@ -11,24 +11,35 @@ function Alumni() {
     const [sortBy, setSortBy] = useState("default");
     const [currentPage, setCurrentPage] = useState(1);
     const { t } = useTranslation();
+
     const itemsPerPage = 20;
 
     useEffect(() => {
-        const url = "https://warrior.ge/api/movies";
+        const url = "https://localhost:8000/api/alumni";
+
         axios.get(url)
             .then((res) => setAlumnis(res.data.data || []))
             .catch((err) => console.error("მონაცემების წამოღების შეცდომა:", err));
     }, []);
 
     let filteredAlumnis = alumnis.filter((alumni) =>
-        alumni.title?.toLowerCase().includes(searchTerm.toLowerCase())
+        `${alumni.firstname} ${alumni.lastname}`
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase())
     );
 
-    if (sortBy === "az")
-        filteredAlumnis.sort((a, b) => (a.title || "").localeCompare(b.title || ""));
-    else if (sortBy === "za")
-        filteredAlumnis.sort((a, b) => (b.title || "").localeCompare(a.title || ""));
+    // sort
+    if (sortBy === "az") {
+        filteredAlumnis.sort((a, b) =>
+            (a.firstname + " " + a.lastname).localeCompare(b.firstname + " " + b.lastname)
+        );
+    } else if (sortBy === "za") {
+        filteredAlumnis.sort((a, b) =>
+            (b.firstname + " " + b.lastname).localeCompare(a.firstname + " " + a.lastname)
+        );
+    }
 
+    // pagination
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = filteredAlumnis.slice(indexOfFirstItem, indexOfLastItem);
@@ -43,7 +54,6 @@ function Alumni() {
         <div className="Bsd">
             <div className="B-list">
                 <div className="B-image">
-
                     <div className="controls-container">
                         <input
                             className="search-bar"
@@ -72,22 +82,17 @@ function Alumni() {
                     {currentItems.length > 0 ? (
                         currentItems.map((alumni) => (
                             <div className="B" key={alumni.id}>
-                                <img
-                                    src={alumni.image || "https://via.placeholder.com/300x180"}
-                                    alt={"..."}
-                                />
                                 <div className="B-content">
-                                    <h3>{alumni.title} {alumni.year}</h3>
-                                    <p>
-                                     {alumni.description}
-                                    </p>
-
+                                    <h3>
+                                        {alumni.firstname} {alumni.lastname}
+                                    </h3>
                                 </div>
-                                      <div className="B-buttons">
-                                        <Link to={`/profile/${alumni.id}`}>
-                                            <button>{t("Learn More")}</button>
-                                        </Link>
-                                    </div>
+
+                                <div className="B-buttons">
+                                    <Link to={`/profile/${alumni.id}`}>
+                                        <button>{t("Learn More")}</button>
+                                    </Link>
+                                </div>
                             </div>
                         ))
                     ) : (

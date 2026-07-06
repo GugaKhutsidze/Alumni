@@ -16,8 +16,8 @@ const LOCAL_IMAGES = [
   { id: 5, url: img5 },
 ];
 
-const API = "http://localhost:5000/api/slides";
-const ME_API = "http://localhost:5000/api/me";
+const API = "http://localhost:5000/api/news";
+const ME_API = "http://localhost:5000/api/user";
 
 const ImageSlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -27,9 +27,7 @@ const ImageSlider = () => {
 
   const SLIDES = slides.length ? slides : LOCAL_IMAGES;
 
-  // =========================
-  // CHECK ADMIN (REAL)
-  // =========================
+  
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -56,9 +54,7 @@ const ImageSlider = () => {
     setCurrentIndex((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
   };
 
-  // =========================
-  // FETCH SLIDES
-  // =========================
+
   useEffect(() => {
     const fetchSlides = async () => {
       try {
@@ -77,15 +73,12 @@ const ImageSlider = () => {
     fetchSlides();
   }, []);
 
-  // auto slide
   useEffect(() => {
     const timer = setInterval(nextSlide, 5000);
     return () => clearInterval(timer);
   }, [slides]);
 
-  // =========================
-  // UPLOAD (ADMIN ONLY)
-  // =========================
+
   const uploadImage = async () => {
     if (!file) return;
 

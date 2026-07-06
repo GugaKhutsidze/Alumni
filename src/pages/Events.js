@@ -20,7 +20,6 @@ function Event() {
 
     const token = localStorage.getItem("token");
 
-    // 👤 GET USER FROM BACKEND (/me)
     useEffect(() => {
         const fetchUser = async () => {
             if (!token) {
@@ -29,7 +28,7 @@ function Event() {
             }
 
             try {
-                const res = await axios.get("https://warrior.ge/api/me", {
+                const res = await axios.get("https://localhost:8000/api/user", {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -51,7 +50,7 @@ function Event() {
 
     // 📦 GET EVENTS
     useEffect(() => {
-        axios.get("https://warrior.ge/api/movies")
+        axios.get("https://localhost:8000/api/events")
             .then((res) => setEvents(res.data.data || []))
             .catch((err) => console.error(err));
     }, []);
@@ -63,7 +62,7 @@ function Event() {
 
         try {
             await axios.delete(
-                `https://warrior.ge/api/movies/${id}`,
+                `https://localhost:8000/api/events/${id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`

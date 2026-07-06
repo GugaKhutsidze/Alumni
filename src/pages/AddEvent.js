@@ -8,7 +8,7 @@ function AddEvent() {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const API_URL = "https://warrior.ge/api/movies";
+  const API_URL = "https://localhost:8000/api/events";
 
   const [form, setForm] = useState({
     title: "",
