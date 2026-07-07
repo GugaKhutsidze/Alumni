@@ -133,7 +133,6 @@ body {
   background-size:cover;
 }
 
-/* მობილურის სტილები */
 @media (max-width: 100vh) {
   .A { height: 28vh; }
   .A-content h3 { font-size: 1.8vh; }
