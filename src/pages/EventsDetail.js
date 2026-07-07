@@ -53,7 +53,6 @@ function EventsDetail() {
 
     setNewComment("");
 
-    // 🔥 refresh comments immediately
     fetchEventData();
 
   } catch (e) {

@@ -6,7 +6,6 @@ import "./EE.css";
 import { useTranslation } from "react-i18next";
 import img4 from "../images/imag7.png";
 
-
 const isHex = (str) =>
     typeof str === "string" &&
     /^[0-9a-fA-F]+$/.test(str) &&
@@ -16,27 +15,21 @@ const hexToBase64 = (hex) => {
     const bytes = new Uint8Array(
         hex.match(/.{2}/g).map((b) => parseInt(b, 16))
     );
-
     let binary = "";
     bytes.forEach((b) => (binary += String.fromCharCode(b)));
-
     return btoa(binary);
 };
 
 const getImageSrc = (file) => {
     if (!file) return img4;
-
     try {
         if (file.startsWith("data:image")) return file;
-
         if (file.startsWith("/9j") || file.startsWith("iVBOR")) {
             return `data:image/jpeg;base64,${file}`;
         }
-
         if (isHex(file)) {
             return `data:image/jpeg;base64,${hexToBase64(file)}`;
         }
-
         return img4;
     } catch (e) {
         console.error("Image parse error:", e);
@@ -49,23 +42,22 @@ function Event() {
     const [events, setEvents] = useState([]);
     const [sortBy, setSortBy] = useState("default");
     const [currentPage, setCurrentPage] = useState(1);
-
     const [user, setUser] = useState(null);
     const [loadingUser, setLoadingUser] = useState(true);
 
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const itemsPerPage = 20;
-
     const token = localStorage.getItem("token");
 
-  
+   
+    const currentLanguageId = i18n.language === "ka" ? 1 : 2;
+
     useEffect(() => {
         const fetchUser = async () => {
             if (!token) {
                 setLoadingUser(false);
                 return;
             }
-
             try {
                 const res = await axios.get(
                     "https://localhost:8000/api/user",
@@ -75,7 +67,6 @@ function Event() {
                         },
                     }
                 );
-
                 console.log("USER:", res.data);
                 setUser(res.data);
             } catch (err) {
@@ -85,36 +76,27 @@ function Event() {
                 setLoadingUser(false);
             }
         };
-
         fetchUser();
     }, [token]);
 
     const isAdmin = user?.role === "admin";
 
-    /* =========================
-       EVENTS FETCH (DEBUG FIX)
-    ========================= */
+   
     useEffect(() => {
         axios
             .get(
-                "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net/api/events?languageId=1"
+                `https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net/api/events?languageId=${currentLanguageId}`
             )
             .then((res) => {
                 console.log("EVENT API RAW:", res.data);
-
-                // IMPORTANT FIX (if API is nested)
                 const data = Array.isArray(res.data)
                     ? res.data
                     : res.data?.data || [];
-
                 setEvents(data);
             })
             .catch((err) => console.error(err));
-    }, []);
+    }, [currentLanguageId]);
 
-    /* =========================
-       DELETE
-    ========================= */
     async function deleteHandler(eventId) {
         const confirmDelete = window.confirm(
             t("ნამდვილად გსურთ წაშლა?")
@@ -130,7 +112,6 @@ function Event() {
                     },
                 }
             );
-
             setEvents((prev) =>
                 prev.filter((e) => e.eventId !== eventId)
             );
@@ -139,7 +120,6 @@ function Event() {
         }
     }
 
- 
     const filteredEvents = events.filter((event) =>
         event?.title
             ?.toLowerCase()
@@ -156,7 +136,6 @@ function Event() {
         );
     }
 
-    
     const indexOfLast = currentPage * itemsPerPage;
     const indexOfFirst = indexOfLast - itemsPerPage;
     const currentItems = filteredEvents.slice(
@@ -218,7 +197,6 @@ function Event() {
                                 className="A"
                                 key={event.eventId}
                             >
-                                {/* 🔥 FIXED IMAGE */}
                                 <img
                                     src={getImageSrc(
                                         event.file
