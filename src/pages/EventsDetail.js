@@ -90,7 +90,46 @@ function EventsDetail() {
     }
   }
 
+<<<<<<< HEAD
   if (!events ) {
+=======
+  // const getEventImage = () => {
+  //   if (!events?.file) return img3; 
+
+  //   if (events.file.startsWith("/9j/") || events.file.startsWith("data:image")) {
+  //     return events.file.startsWith("data:image") 
+  //       ? events.file 
+  //       : `data:image/jpeg;base64,${events.file}`;
+  //   }
+
+  //   if (events.file.startsWith("http://") || events.file.startsWith("https://")) {
+  //     return events.file; 
+  //   }
+
+  //   return `${SERVER_DOMAIN}${events.file.startsWith("/") ? "" : "/"}${events.file}`;
+  // };
+
+  const getEventImage = () => {
+    if (!events?.imageUrl) return img3;
+
+    return `${SERVER_DOMAIN}/${events.imageUrl}`;
+};
+
+  const getUserImage = (userImage) => {
+    if (!userImage) return img3;
+
+    if (userImage.startsWith("/9j/") || userImage.startsWith("data:image")) {
+      return userImage.startsWith("data:image") ? userImage : `data:image/jpeg;base64,${userImage}`;
+    }
+
+    if (userImage.startsWith("http://") || userImage.startsWith("https://")) {
+      return userImage;
+    }
+    return `${SERVER_DOMAIN}${userImage.startsWith("/") ? "" : "/"}${userImage}`;
+  };
+
+  if (loading) {
+>>>>>>> 83de581dda8fd0e9f3e6e24064e1b0505d995e2b
     return (
       <p className="no-data">{t("Not found")}</p>
     );
