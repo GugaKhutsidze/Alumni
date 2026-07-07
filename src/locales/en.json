@@ -70,7 +70,9 @@
     "Change Password": "Change Password",
     "Cancel Password Change": "Cancel Password Change",
     "Old Password": "Old Password",
-    "New Password": "New Password"
+    "New Password": "New Password",
+    "Next": "Next",
+    "Previous": "Previous"
 
 
   }

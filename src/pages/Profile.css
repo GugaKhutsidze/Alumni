@@ -133,23 +133,33 @@
   font-weight: 700;
 }
 
-.field p {
-  margin: 0;
-  color: #4b5563;
-  line-height: 1.7;
-  font-size: 16px;
+.field p, 
+.field input,
+.field textarea {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box; 
+  word-break: break-all;       
+  overflow-wrap: break-word;   
 }
 
 .field input,
 .field textarea {
-  width: 100%;
   padding: 12px 15px;
   border: 1px solid #cfd7e3;
   border-radius: 8px;
   font-size: 15px;
   background: #fff;
   transition: .2s;
-  box-sizing: border-box;
+}
+
+.field p {
+  margin: 0;
+  font-size: 16px;
+  color: #374151; 
+  line-height: 1.6;
+  padding: 4px 0; 
+  background: transparent; 
 }
 
 .field input:focus,
