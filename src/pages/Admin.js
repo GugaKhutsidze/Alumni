@@ -211,7 +211,7 @@ const AdminPanel = ({ token: propsToken }) => {
   return (
     <div className="admin-layout">
       <aside className="admin-sidebar">
-        <h2 className="admin-sidebar-title">{t("TSU Admin")}</h2>
+        <h2 className="admin-sidebar-title">{t("Dashboard")}</h2>
         <nav className="admin-sidebar-nav">
           <button 
             onClick={() => { setActiveTab("dashboard"); setCurrentPage(1); }} 
