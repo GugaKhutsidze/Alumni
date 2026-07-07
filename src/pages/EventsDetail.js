@@ -76,21 +76,27 @@ function EventsDetail() {
     }
   }
 
+  // const getEventImage = () => {
+  //   if (!events?.file) return img3; 
+
+  //   if (events.file.startsWith("/9j/") || events.file.startsWith("data:image")) {
+  //     return events.file.startsWith("data:image") 
+  //       ? events.file 
+  //       : `data:image/jpeg;base64,${events.file}`;
+  //   }
+
+  //   if (events.file.startsWith("http://") || events.file.startsWith("https://")) {
+  //     return events.file; 
+  //   }
+
+  //   return `${SERVER_DOMAIN}${events.file.startsWith("/") ? "" : "/"}${events.file}`;
+  // };
+
   const getEventImage = () => {
-    if (!events?.file) return img3; 
+    if (!events?.imageUrl) return img3;
 
-    if (events.file.startsWith("/9j/") || events.file.startsWith("data:image")) {
-      return events.file.startsWith("data:image") 
-        ? events.file 
-        : `data:image/jpeg;base64,${events.file}`;
-    }
-
-    if (events.file.startsWith("http://") || events.file.startsWith("https://")) {
-      return events.file; 
-    }
-
-    return `${SERVER_DOMAIN}${events.file.startsWith("/") ? "" : "/"}${events.file}`;
-  };
+    return `${SERVER_DOMAIN}/${events.imageUrl}`;
+};
 
   const getUserImage = (userImage) => {
     if (!userImage) return img3;
