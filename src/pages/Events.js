@@ -252,9 +252,7 @@ function Event() {
                                                     "Learn More"
                                                 )}
                                             </button>
-                                        </Link>
-
-                                        {isAdmin && (
+                                        </Link> {isAdmin && (
                                             <button
                                                 className="delete-btn"
                                                 onClick={() =>
