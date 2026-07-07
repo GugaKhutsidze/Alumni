@@ -33,6 +33,7 @@ function AddEvent() {
 
   const handleImage = (e) => {
     const file = e.target.files[0];
+
     if (!file) return;
 
     setImageFile(file);
@@ -42,7 +43,6 @@ function AddEvent() {
   const handleAdd = async (e) => {
     e.preventDefault();
 
-    // Basic Validation
     if (
       !form.titleGeo ||
       !form.titleEng ||
@@ -54,36 +54,33 @@ function AddEvent() {
       return;
     }
 
-    setLoadingAdd(true);
-
     try {
-      // Use FormData to allow file uploads alongside fields
-      const formData = new FormData();
-      formData.append("titleGeo", form.titleGeo);
-      formData.append("titleEng", form.titleEng);
-      formData.append("descriptionGeo", form.descriptionGeo);
-      formData.append("descriptionEng", form.descriptionEng);
-      formData.append("eventDate", form.eventDate);
-      
-      // Crucial fix: Convert partnerId string back to a valid Number/Integer
-      formData.append("partnerId", Number(form.partnerId));
+      setLoadingAdd(true);
 
-      // Append the file if one was selected, otherwise append null
+      const formData = new FormData();
+
+      // Names must match API
+      formData.append("TitleGeo", form.titleGeo);
+      formData.append("TitleEng", form.titleEng);
+      formData.append("DescriptionGeo", form.descriptionGeo);
+      formData.append("DescriptionEng", form.descriptionEng);
+      formData.append("EventDate", form.eventDate);
+      formData.append("PartnerId", Number(form.partnerId));
+
+      // API expects Photo
       if (imageFile) {
-        formData.append("file", imageFile);
-      } else {
-        formData.append("file", "");
+        formData.append("Photo", imageFile);
       }
 
-      await axios.post(API_URL, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      // Debug
+      for (const pair of formData.entries()) {
+        console.log(pair[0], pair[1]);
+      }
+
+      await axios.post(API_URL, formData);
 
       alert("Event added!");
 
-      // Reset Form State
       setForm({
         titleGeo: "",
         titleEng: "",
@@ -92,20 +89,23 @@ function AddEvent() {
         eventDate: "",
         partnerId: 0,
       });
+
       setImageFile(null);
       setPreview("");
 
       navigate("/event");
+
     } catch (err) {
-      console.error("FULL ERROR:", err);
-      console.error("RESPONSE:", err?.response?.data);
-      console.error("STATUS:", err?.response?.status);
+      console.error("ERROR:", err);
+      console.error("DATA:", err.response?.data);
+      console.error("STATUS:", err.response?.status);
 
       alert(
-        err?.response?.data?.message ||
-        err?.message ||
+        err.response?.data?.message ||
+        err.message ||
         "Failed to add event"
       );
+
     } finally {
       setLoadingAdd(false);
     }
@@ -114,9 +114,11 @@ function AddEvent() {
   return (
     <div className="add-page">
       <div className="add-box">
+
         <h1>{t("Add Event")}</h1>
 
         <form onSubmit={handleAdd}>
+
           <input
             name="titleGeo"
             placeholder="Title Geo"
@@ -159,16 +161,26 @@ function AddEvent() {
             onChange={handleChange}
           />
 
-          <input type="file" accept="image/*" onChange={handleImage} />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImage}
+          />
 
           {preview && (
-            <img className="preview" src={preview} alt="preview" />
+            <img
+              className="preview"
+              src={preview}
+              alt="preview"
+            />
           )}
 
           <button type="submit" disabled={loadingAdd}>
             {loadingAdd ? "Adding..." : "Add Event"}
           </button>
+
         </form>
+
       </div>
     </div>
   );
