@@ -174,19 +174,21 @@ const AdminPanel = ({ token: propsToken }) => {
     }
   };
 
-  const filteredAlumni = alumnis.filter(alumni => {
-    const fName = alumni.firstName || alumni.Firstname || '';
-    const lName = alumni.lastName || alumni.LastName || '';
-    const uEmail = alumni.email || alumni.Email || '';
-    const sId = alumni.studentId || alumni.StudentId || alumni.id || '';
+const filteredAlumni = alumnis.filter(alumni => {
+    const firstName = (alumni.studentFirstName || alumni.Firstname || "").toString().toLowerCase();
+    const lastName = (alumni.studentLastName || alumni.LastName || "").toString().toLowerCase();
+    const email = (alumni.email || alumni.Email || "").toString().toLowerCase();
+    const studentId = (alumni.studentId || alumni.StudentId || alumni.id || "").toString();
 
-    const fullName = `${fName} ${lName}`.toLowerCase();
-    const email = String(uEmail).toLowerCase();
-    const studentIdStr = String(sId);
-    
-    return fullName.includes(searchQuery.toLowerCase()) || 
-           email.includes(searchQuery.toLowerCase()) || 
-           studentIdStr.includes(searchQuery);
+    const query = searchQuery.toLowerCase();
+
+    return (
+      firstName.includes(query) || 
+      lastName.includes(query) || 
+      `${firstName} ${lastName}`.includes(query) ||
+      email.includes(query) || 
+      studentId.includes(query)
+    );
   });
 
   const sortedAlumni = [...filteredAlumni].sort((a, b) => {
@@ -264,29 +266,29 @@ const AdminPanel = ({ token: propsToken }) => {
             {currentItems.length > 0 ? (
               <div className="admin-alumni-grid">
                 {currentItems.map((alumni) => {
-                  const displayFirstName = alumni.firstName || alumni.Firstname || t("Unknown");
-                  const displayLastName = alumni.lastName || alumni.LastName || "";
+                  const displayFirstName = alumni.studentFirstName || alumni.Firstname || t("Unknown");
+                  const displayLastName = alumni.studentLastName || alumni.LastName || "";
                   const displayEmail = alumni.email || alumni.Email || t("No Email Provided");
                   const displayId = alumni.studentId || alumni.StudentId || alumni.id || "N/A";
 
                   return (
                     <div key={displayId + displayEmail} className="admin-alumni-card">
                       <div className="admin-card-content">
-                        <div style={{ marginBottom: "0.75rem" }}>
-                          <span style={{ fontSize: "0.8rem", textTransform: "uppercase", color: "#64748b", display: "block" }}>{t("Full Name")}</span>
-                          <h3 style={{ margin: "0", fontSize: "1.15rem" }}>
+                        <div >
+                          <span >{t("Full Name")}</span>
+                          <h3 >
                             {displayFirstName} {displayLastName !== "-" ? displayLastName : ""}
                           </h3>
                         </div>
-                        <div style={{ marginBottom: "0.75rem" }}>
-                          <span style={{ fontSize: "0.8rem", textTransform: "uppercase", color: "#64748b", display: "block" }}>{t("Student ID")}</span>
-                          <span style={{ fontSize: "0.95rem", fontWeight: "600", color: "#1a2e40" }}>
+                        <div >
+                          <span>{t("Student ID")}</span>
+                          <span>
                             #{displayId}
                           </span>
                         </div>
-                        <div style={{ marginBottom: "0.5rem" }}>
-                          <span style={{ fontSize: "0.8rem", textTransform: "uppercase", color: "#64748b", display: "block" }}>{t("Institutional Email")}</span>
-                          <span style={{ fontSize: "0.9rem", color: "#1a2e40", wordBreak: "break-all" }}>
+                        <div >
+                          <span >{t(" Email")}</span>
+                          <span >
                             {displayEmail}
                           </span>
                         </div>
