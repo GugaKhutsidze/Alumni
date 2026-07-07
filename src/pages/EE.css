@@ -125,12 +125,16 @@ body {
   display: flex;
   flex-direction: column;
   flex: 1;
+  
 }
 
 .A-content h3 {
   margin: 0 0 1vh 0;
   color: #28282B;
   font-size: 2vh;
+   overflow: hidden;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .A-content p {
@@ -138,12 +142,15 @@ body {
   margin: 0.7vh 0;
   color: #444;
   line-height: 1.6;
+
+  overflow: hidden;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 
 .A-buttons {
   margin-top: auto;
-  padding-top: 2vh;
 }
 
 .A-buttons button {

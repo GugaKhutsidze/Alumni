@@ -57,5 +57,9 @@
 "Password": "პაროლი",
 "Already have an account?": "უკვე გაქვთ ანგარიში?",
 "Login Here": "შესვლა ამ გვერდზე",
-"Add Job": "სამუშაოს დამატება"
+"Add Job": "სამუშაოს დამატება",
+"Change Password": "პაროლის შეცვლა",
+"Cancel Password Change": "პაროლის შეცვლის გაუქმება",
+"Old Password": "ძველი პაროლი",
+"New Password": "ახალი პაროლი"
 }

@@ -33,7 +33,6 @@ const getImageSrc = (file) => {
             return `data:image/jpeg;base64,${file}`;
         }
 
-        // HEX
         if (isHex(file)) {
             return `data:image/jpeg;base64,${hexToBase64(file)}`;
         }
@@ -59,9 +58,7 @@ function Event() {
 
     const token = localStorage.getItem("token");
 
-    /* =========================
-       USER FETCH (SAFE)
-    ========================= */
+  
     useEffect(() => {
         const fetchUser = async () => {
             if (!token) {
@@ -142,9 +139,7 @@ function Event() {
         }
     }
 
-    /* =========================
-       FILTER + SORT
-    ========================= */
+ 
     const filteredEvents = events.filter((event) =>
         event?.title
             ?.toLowerCase()
@@ -161,9 +156,7 @@ function Event() {
         );
     }
 
-    /* =========================
-       PAGINATION
-    ========================= */
+    
     const indexOfLast = currentPage * itemsPerPage;
     const indexOfFirst = indexOfLast - itemsPerPage;
     const currentItems = filteredEvents.slice(
@@ -237,14 +230,14 @@ function Event() {
                                     <h3>
                                         {limitText(
                                             event.title,
-                                            30
+                                            20
                                         )}
                                     </h3>
 
                                     <p>
                                         {limitText(
                                             event.description,
-                                            120
+                                            90
                                         )}
                                     </p>
 

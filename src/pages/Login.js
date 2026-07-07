@@ -40,7 +40,6 @@ export default function Login({ setIsLoggedIn }) {
         { email, password }
       );
 
-      // 🔥 ONLY token (safe & correct)
       localStorage.setItem("token", response.data.token);
 
       if (setIsLoggedIn) setIsLoggedIn(true);
