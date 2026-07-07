@@ -248,6 +248,9 @@ span {
   transition: 0.3s ease;
   font-size: 1vh;
 }
+add-box h1{
+  font-size: 10vh;
+}
 
 .A-buttons button:hover {
   background-color: #0a4d82;

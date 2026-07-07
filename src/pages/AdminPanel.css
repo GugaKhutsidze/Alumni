@@ -1,116 +1,194 @@
-/* Container Layout */
 .admin-layout {
   display: flex;
   min-height: 100vh;
   background-color: #f4f7f6;
 }
 
-/* Sidebar Styles */
 .admin-sidebar {
-  width: 260px;
-  background-color: #2c3e50;
+  width: 26vh;
+  background-color: #0a4d82;
   color: white;
-  padding: 20px;
+  padding: 2vh;
   display: flex;
   flex-direction: column;
 }
 
 .admin-sidebar-title {
-  font-size: 1.2rem;
-  margin-bottom: 2rem;
+  font-size: 3vh;
+  margin-bottom: 2vh;
   text-align: center;
 }
 
 .admin-sidebar-nav {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 1vh;
+}
+.admin-sidebar-nav button {
+  font-size: 1.6vh;
+}
+
+.admin-main {
+  flex: 1;
+  padding: 3vh;
 }
 
 .admin-sidebar-btn {
   background: transparent;
   border: none;
   color: #bdc3c7;
-  padding: 12px;
+  padding: 1.2vh;
   text-align: left;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 0.5vh;
   transition: 0.3s;
 }
 
 .admin-sidebar-btn:hover, .admin-active {
-  background-color: #34495e;
+  background-color: #28282B;
   color: white;
 }
 
-.admin-main {
-  flex: 1;
-  padding: 30px;
- 
+.admin-action-btn, 
+.admin-submit-btn {
+  background-color: #0a4d82;
+  color: white;
+  border: none;
+  padding: 1.2vh 2vh;
+  border-radius: 0.5vh;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+  margin-top: 1vh;
 }
 
-/* Grid & Cards */
+.admin-action-btn:hover, 
+.admin-submit-btn:hover {
+  background-color: #073a63;
+}
+
+.admin-submit-btn:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+}
+
+.admin-search-bar, 
+.admin-sort-dropdown {
+  padding: 1vh 1.5vh;
+  border: 0.1vh solid #ccc;
+  border-radius: 0.5vh;
+  font-size: 1.6vh;
+}
+
+.admin-controls-container {
+  display: flex;
+  gap: 1vh;
+  margin-bottom: 2vh;
+}
+
+.admin-search-bar { flex: 1; }
+
 .admin-alumni-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(30vh, 1fr));
+  gap: 2vh;
 }
 
 .admin-alumni-card {
   background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-/* Ensure the card container has a minimum width constraint */
-.admin-alumni-card {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  padding: 2vh;
+  border-radius: 0.8vh;
+  box-shadow: 0 0.2vh 0.5vh rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
-  /* This prevents the card from shrinking too much if text is long */
-  min-width: 0; 
+  min-width: 0;
 }
 
-/* Fix for long names and emails */
 .admin-card-content span, 
 .admin-card-content h3 {
-  display: block; /* Required for width-based overflow */
+  display: block; 
   width: 100%;
-  white-space: nowrap;      /* Prevents text from wrapping to new line */
-  overflow: hidden;         /* Hides the overflowing text */
-  text-overflow: ellipsis;  /* Adds '...' at the end of long text */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.admin-add-box {
+  max-width: 60vh;
+  margin: 2vh auto;
+  background: #ffffff;
+  padding: 4vh;
+  border-radius: 1.2vh;
+  box-shadow: 0 0.8vh 2vh rgba(0, 0, 0, 0.08);
+  border: 0.1vh solid #ececec;
 }
 
-/* Optional: If you WANT long emails to wrap instead of truncating: */
-.admin-email-text {
-  word-break: break-all;    /* Forces long strings like emails to wrap */
-  white-space: normal;      /* Allows wrapping */
-}
-/* Forms */
-.admin-add-box {
-  max-width: 600px;
-  margin: 0 auto;
-  background: white;
-  padding: 30px;
-  border-radius: 8px;
+.admin-add-box h1 {
+  font-size: 2.5vh;
+  color: #333;
+  margin-bottom: 2.5vh;
+  text-align: center;
+  font-weight: 600;
 }
 
 .admin-add-box input, 
 .admin-add-box textarea {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 1.2vh 1.5vh;
+  margin-bottom: 1.8vh;
+  border: 0.15vh solid #e0e0e0;
+  border-radius: 0.6vh;
+  font-size: 1.6vh;
+  background-color: #fafafa;
+  transition: all 0.3s ease;
+  box-sizing: border-box; /* Ensures padding doesn't break width */
 }
 
-/* Responsive Breakpoint */
+/* Adds a nice glow effect when clicking into a field */
+.admin-add-box input:focus, 
+.admin-add-box textarea:focus {
+  outline: none;
+  border-color: #0a4d82;
+  background-color: white;
+  box-shadow: 0 0 0 0.4vh rgba(10, 77, 130, 0.1);
+}
+
+.admin-add-box textarea {
+  resize: vertical;
+  min-height: 15vh;
+}
+
+/* Style for the file input */
+.admin-add-box input[type="file"] {
+  background: transparent;
+  border: 0.15vh dashed #ccc;
+  cursor: pointer;
+}
+
+.admin-pagination-controls {
+  margin-top: 3vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1vh;
+}
+
+.admin-pagination-controls button {
+  padding: 0.8vh 1.5vh;
+  border: 0.1vh solid #0a4d82;
+  background: white;
+  color: #0a4d82;
+  border-radius: 0.4vh;
+  cursor: pointer;
+}
+
+.admin-pagination-controls button:disabled {
+  border-color: #ccc;
+  color: #ccc;
+}
+
 @media (max-width: 768px) {
   .admin-layout {
-    flex-direction: column; /* Stack sidebar on top */
+    flex-direction: column;
   }
 
   .admin-sidebar {
@@ -119,17 +197,17 @@
   }
 
   .admin-sidebar-nav {
-    flex-direction: row; /* Turn sidebar links into a horizontal nav bar */
+    flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
   }
 
   .admin-main {
-    padding: 15px;
+    padding: 1.5vh;
   }
 
   .admin-controls-container {
     flex-direction: column;
-    gap: 10px;
+    gap: 1vh;
   }
 }
