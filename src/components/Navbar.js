@@ -115,17 +115,11 @@ const Navbar = () => {
 
               {role === "admin" && (
                 <>
-                  <NavLink to="/add-event" onClick={() => setMenuOpen(false)}>
-                    {t("Add Event")}
+                  <NavLink to="/admin" onClick={() => setMenuOpen(false)}>
+                    {t("Dashboard")}
                   </NavLink>
 
-                  <NavLink to="/add-job" onClick={() => setMenuOpen(false)}>
-                    {t("Add Job")}
-                  </NavLink>
-
-                  <NavLink to="/alumni" onClick={() => setMenuOpen(false)}>
-                    {t("Alumni")}
-                  </NavLink>
+               
                 </>
               )}
 

@@ -5,42 +5,58 @@ import "./EventsDetail.css";
 import { useTranslation } from "react-i18next";
 import img3 from "../images/imag7.png";
 
+const SERVER_DOMAIN = "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net";
+
+const parseImageSrc = (file) => {
+  if (!file) return img3; 
+  if (file.startsWith("/9j/") || file.startsWith("data:image")) {
+    return file.startsWith("data:image") ? file : `data:image/jpeg;base64,${file}`;
+  }
+  if (file.startsWith("http://") || file.startsWith("https://")) {
+    return file; 
+  }
+  return `${SERVER_DOMAIN}${file.startsWith("/") ? "" : "/"}${file}`;
+};
+
 function EventsDetail() {
   const [events, setEvents] = useState(null);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
-  const [loading, setLoading] = useState(true);
   const { id } = useParams();
   const token = localStorage.getItem("token");
   const { t, i18n } = useTranslation();
 
-  // 1. ენის ID-ის განსაზღვრა
   const currentLanguageId = i18n.language === "ka" ? 1 : 2;
-
-  // 2. ბაზისური URL-ები (API_BASE_URL უნდა დასრულდეს სუფთად /api-ით)
   const API_BASE_URL = "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net/api";
-  const SERVER_DOMAIN = "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net";
 
   const fetchEventData = useCallback(async () => {
     if (!token) return;
-    setLoading(true);
+    
     try {
       const config = { headers: { Authorization: `Bearer ${token}` } };
       
-      // ივენთის დეტალების წამოღება სწორი მისამართით
       try {
         const eventRes = await axios.get(`${API_BASE_URL}/events/${id}?languageId=${currentLanguageId}`, config);
+        if (eventRes.data) {
+          eventRes.data.computedImage = parseImageSrc(eventRes.data.file);
+        }
         setEvents(eventRes.data);
       } catch (eventError) {
         console.error("Error fetching event details:", eventError);
         setEvents(null);
       }
 
-      // კომენტარების წამოღება სწორი მისამართით
       try {
         const commentsRes = await axios.get(`${API_BASE_URL}/events/${id}/comments?languageId=${currentLanguageId}`, config);
         const commentData = commentsRes.data || [];
-        setComments(Array.isArray(commentData) ? commentData : []);
+        const processedComments = (Array.isArray(commentData) ? commentData : []).map(c => ({
+          ...c,
+          user: {
+            ...c.user,
+            computedUserImage: parseImageSrc(c.user?.image)
+          }
+        }));
+        setComments(processedComments);
       } catch (commentsError) {
         console.warn("Comments endpoint error:", commentsError);
         setComments([]);
@@ -48,10 +64,8 @@ function EventsDetail() {
 
     } catch (e) {
       console.error("General fetch error:", e);
-    } finally {
-      setLoading(false);
     }
-  }, [id, token, currentLanguageId]); // ენის ცვლილებაზეც რომ თავიდან წამოიღოს მონაცემები
+  }, [id, token, currentLanguageId]);
 
   useEffect(() => {
     fetchEventData();
@@ -76,62 +90,23 @@ function EventsDetail() {
     }
   }
 
-  const getEventImage = () => {
-    if (!events?.file) return img3; 
-
-    if (events.file.startsWith("/9j/") || events.file.startsWith("data:image")) {
-      return events.file.startsWith("data:image") 
-        ? events.file 
-        : `data:image/jpeg;base64,${events.file}`;
-    }
-
-    if (events.file.startsWith("http://") || events.file.startsWith("https://")) {
-      return events.file; 
-    }
-
-    return `${SERVER_DOMAIN}${events.file.startsWith("/") ? "" : "/"}${events.file}`;
-  };
-
-  const getUserImage = (userImage) => {
-    if (!userImage) return img3;
-
-    if (userImage.startsWith("/9j/") || userImage.startsWith("data:image")) {
-      return userImage.startsWith("data:image") ? userImage : `data:image/jpeg;base64,${userImage}`;
-    }
-
-    if (userImage.startsWith("http://") || userImage.startsWith("https://")) {
-      return userImage;
-    }
-    return `${SERVER_DOMAIN}${userImage.startsWith("/") ? "" : "/"}${userImage}`;
-  };
-
-  if (loading) {
+  if (!events ) {
     return (
-      <div className="event-detail-loading" style={{ textAlign: "center", padding: "100px", fontSize: "20px" }}>
-        <h2>იტვირთება...</h2>
-      </div>
-    );
-  }
-
-  if (!events) {
-    return (
-      <div className="event-detail-error" style={{ textAlign: "center", padding: "100px", color: "red" }}>
-        <h2>ღონისძიება ვერ მოიძებნა </h2>
-      </div>
+      <p className="no-data">{t("Not found")}</p>
     );
   }
 
   return (
     <div className="event-detail">
       <div className="event-main-content">
-        <img src={getEventImage()} alt={events?.title} className="event-image" />
+        <img src={events?.computedImage || img3} alt={events?.title} className="event-image" />
         <div className="event-info-body">
-          <h1>{events?.title}</h1>
+          <h1>{events?.title || t("Loading...")}</h1>
           <div className="event-meta">
             <p><strong>{t("Description")}:</strong> {events?.description}</p>
             <p>
               <strong>{t("Date")}:</strong>{" "}
-              {events?.eventDate ? new Date(events.eventDate).toLocaleDateString("ka-GE") : "თარიღი არ არის"}
+              {events?.eventDate ? new Date(events.eventDate).toLocaleDateString("ka-GE") : ""}
             </p>
           </div>
         </div>
@@ -147,11 +122,10 @@ function EventsDetail() {
               <div key={c.id} className="comment">
                 <strong>
                   <img 
-                    src={getUserImage(c.user?.image)} 
+                    src={c.user?.computedUserImage} 
                     alt="User avatar" 
-                    style={{ width: "30px", height: "30px", borderRadius: "50%", marginRight: "10px", objectFit: "cover" }} 
                   />
-                  {c.user?.firstname || "სახელი"} {c.user?.lastname || "გვარი"}
+                  {c.user?.firstname || ""} {c.user?.lastname || ""}
                 </strong>
                 <p>{c.content}</p>
               </div>

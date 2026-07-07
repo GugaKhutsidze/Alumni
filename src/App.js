@@ -16,10 +16,9 @@ import About from "./pages/About";
 import Events from "./pages/Events";
 import Employment from "./pages/Employment";
 import EventsDetail from "./pages/EventsDetail";
+import AdminPanel from "./pages/Admin";
 import Profile from "./pages/Profile";
-import Alumni from "./pages/Alumni";
-import AddEvent from "./pages/AddEvent";
-import AddJob from "./pages/AddJob";
+
 
 import Navbar from "./components/Navbar";
 
@@ -85,38 +84,19 @@ function App() {
           <Route path="/employment" element={<Employment />} />
           <Route path="/event/:id" element={<EventsDetail />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/alumni" element={<Alumni />} />
-          <Route path="/add-event" element={<AddEvent />} />
-          <Route path="/add-job" element={<AddJob />} />
+          <Route path="/admin" element={<AdminPanel />} />
           
 
           {/* 🔐 Admin only routes */}
           <Route
-            path="/add-event"
+            path="/admin"
             element={
               <RoleProtected allowedRoles={["admin"]}>
-                <AddEvent />
+                <AdminPanel />
               </RoleProtected>
             }
           />
 
-          <Route
-            path="/add-job"
-            element={
-              <RoleProtected allowedRoles={["admin"]}>
-                <AddJob />
-              </RoleProtected>
-            }
-          />
-
-          <Route
-            path="/alumni"
-            element={
-              <RoleProtected allowedRoles={["admin"]}>
-                <Alumni />
-              </RoleProtected>
-            }
-          />
 
         </Route>
 

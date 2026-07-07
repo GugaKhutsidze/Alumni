@@ -8,24 +8,10 @@ body {
   background-color: #f8f9fb;
 }
 
-::-webkit-scrollbar {
-  width: 0.6vh;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #28282B;
-  border-radius: 10vh;
-  transition: 0.3s ease;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #0e62a2;
-}
-
+::-webkit-scrollbar { width: 0.6vh; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #28282B; border-radius: 10vh; transition: 0.3s ease; }
+::-webkit-scrollbar-thumb:hover { background: #0e62a2; }
 
 .asd {
   min-height: 100vh;
@@ -37,7 +23,6 @@ body {
   flex: 1;
   width: 90%;
   margin: 0 auto;
-  color: #ffffff;
 }
 
 .controls-container {
@@ -53,9 +38,9 @@ body {
 
 .search-bar,
 .sort-dropdown {
-  min-width:5vh;
-  margin-top:4vh;
-  margin-bottom:4vh;
+  min-width: 5vh;
+  margin-top: 4vh;
+  margin-bottom: 4vh;
   padding: 1vh;
   border: 0.1vh solid #ddd;
   outline: none;
@@ -63,28 +48,12 @@ body {
   font-size: 1.8vh;
   box-shadow: 0 0.2vh 0.5vh rgba(0, 0, 0, 0.05);
   transition: 0.3s;
-
-}
-.sort-dropdown option {
-  font-size: clamp(0.8vh,1.5vh,2vh);
-  background-color: white;
 }
 
-.search-bar {
-  flex: 20;
-}
+.search-bar { flex: 20; }
+.sort-dropdown { flex: 1; }
 
-.sort-dropdown {
-  flex: 1;
-}
-
-.search-bar:focus,
-.sort-dropdown:focus {
-  border-color: #0e62a2;
-  box-shadow: 0 0 1vh rgba(14, 98, 162, 0.2);
-}
-
-
+/* Grid განლაგება */
 .As {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(32vh, 1fr));
@@ -92,6 +61,7 @@ body {
     padding: 1vh 0;
 }
 
+/* ბარათი - სიმაღლე შევამცირე, რადგან ფოტო აღარ არის */
 .A {
   background-color: white;
   border-radius: 1.5vh;
@@ -100,7 +70,8 @@ body {
   box-shadow: 0 1vh 3vh rgba(0, 0, 0, 0.12);
   display: flex;
   flex-direction: column;
-  height: 45vh;
+  height: 30vh; 
+  padding: 2vh;
 }
 
 .A:hover {
@@ -108,49 +79,31 @@ body {
   box-shadow: 0 2vh 5vh rgba(0, 0, 0, 0.18);
 }
 
-
-.A-image {
-  width: 100%;
-  background-image: url('../images/asd.jpg  ');
-  background-size:cover;
-}
-.A img {
-  width: 100%;
-  height: 15vh;
-  object-fit: cover;
-}
-
+/* კონტენტი - სრულად იკავებს ადგილს */
 .A-content {
-  padding: 2vh;
   display: flex;
   flex-direction: column;
   flex: 1;
-  
 }
 
 .A-content h3 {
   margin: 0 0 1vh 0;
   color: #28282B;
-  font-size: 2vh;
-   overflow: hidden;
-  overflow-wrap: break-word;
-  word-break: break-word;
+  font-size: 2.2vh;
+  overflow: hidden;
 }
 
 .A-content p {
-  font-size: 1.5vh;
+  font-size: 1.6vh;
   margin: 0.7vh 0;
   color: #444;
   line-height: 1.6;
-
-  overflow: hidden;
-  overflow-wrap: break-word;
-  word-break: break-word;
+  flex: 1; /* ტექსტი გაივსება თავისუფალ ადგილს */
 }
-
 
 .A-buttons {
   margin-top: auto;
+  padding-top: 1vh;
 }
 
 .A-buttons button {
@@ -170,89 +123,20 @@ body {
   transform: scale(1.03);
 }
 
-
-.pagination-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 2vh;
-  margin-top: 4vh;
-  padding-bottom: 4vh;
-  flex-wrap: wrap;
+.delete-btn {
+  background-color: #a20e0e !important;
+  margin-left: 1vh;
+}
+.A-image {
+  width: 100%;
+  background-image: url('../images/asd.jpg  ');
+  background-size:cover;
 }
 
-.pagination-controls button {
-  background-color: #28282B;
-  color: white;
-  border: none;
-  padding: 1.2vh 3vh;
-  border-radius: 1vh;
-  cursor: pointer;
-  transition: 0.3s ease;
-  font-size: 1.5vh;
-}
-
-.pagination-controls button:hover {
-  background-color: #0e62a2;
-  transform: scale(1.03);
-}
-
-.no-data {
-  text-align: center;
-  grid-column: 1 / -1;
-  color: #999;
-  font-size: 2vh;
-  padding: 4vh 0;
-}
-span {
-  font-size: 1.5vh;
-  color:#28282B;
-}
+/* მობილურის სტილები */
 @media (max-width: 100vh) {
-  .A {
-  background-color: white;
-  border-radius: 1.5vh;
-  overflow: hidden;
-  transition: 0.3s ease;
-  box-shadow: 0 1vh 3vh rgba(0, 0, 0, 0.12);
-  display: flex;
-  flex-direction: column;
-  height: 35vh;
-}
-.A-content h3 {
-  color: #28282B;
-  font-size: 1.5vh;
-}
-
-.A-content p {
-  font-size: 1vh;
-  margin: 0.7vh 0;
-  color: #444;
-  line-height: 1.6;
-}
-
-
-.A-buttons {
-  margin-top: auto;
-  padding-top: 2vh;
-}
-
-.A-buttons button {
-  background: #28282B;
-  color: white;
-  border: none;
-  border-radius: 1vh;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s ease;
-  font-size: 1vh;
-}
-
-.A-buttons button:hover {
-  background-color: #0a4d82;
-  transform: scale(1.03);
-}
-
-
-
+  .A { height: 28vh; }
+  .A-content h3 { font-size: 1.8vh; }
+  .A-content p { font-size: 1.3vh; }
+  .A-buttons button { font-size: 1.2vh; padding: 1vh 2vh; }
 }
