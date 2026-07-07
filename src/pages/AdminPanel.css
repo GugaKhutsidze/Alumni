@@ -140,10 +140,9 @@
   font-size: 1.6vh;
   background-color: #fafafa;
   transition: all 0.3s ease;
-  box-sizing: border-box; /* Ensures padding doesn't break width */
+  box-sizing: border-box; 
 }
 
-/* Adds a nice glow effect when clicking into a field */
 .admin-add-box input:focus, 
 .admin-add-box textarea:focus {
   outline: none;
@@ -157,7 +156,6 @@
   min-height: 15vh;
 }
 
-/* Style for the file input */
 .admin-add-box input[type="file"] {
   background: transparent;
   border: 0.15vh dashed #ccc;
