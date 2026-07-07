@@ -44,12 +44,12 @@ function Event() {
     const [currentPage, setCurrentPage] = useState(1);
     const [user, setUser] = useState(null);
     const [loadingUser, setLoadingUser] = useState(true);
+    const [loadingEvents, setLoadingEvents] = useState(true);
 
     const { t, i18n } = useTranslation();
     const itemsPerPage = 20;
     const token = localStorage.getItem("token");
 
-   
     const currentLanguageId = i18n.language === "ka" ? 1 : 2;
 
     useEffect(() => {
@@ -67,7 +67,6 @@ function Event() {
                         },
                     }
                 );
-                console.log("USER:", res.data);
                 setUser(res.data);
             } catch (err) {
                 console.log("User fetch error:", err);
@@ -81,23 +80,23 @@ function Event() {
 
     const isAdmin = user?.role === "admin";
 
-   
     useEffect(() => {
+        setLoadingEvents(true);
         axios
             .get(
                 `https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net/api/events?languageId=${currentLanguageId}`
             )
             .then((res) => {
-                console.log("EVENT API RAW:", res.data);
                 const data = Array.isArray(res.data)
                     ? res.data
                     : res.data?.data || [];
                 setEvents(data);
             })
-            .catch((err) => console.error(err));
+            .catch((err) => console.error(err))
+            .finally(() => setLoadingEvents(false));
     }, [currentLanguageId]);
 
-    async function deleteHandler(eventId) {
+    const deleteHandler = async (eventId) => {
         const confirmDelete = window.confirm(
             t("ნამდვილად გსურთ წაშლა?")
         );
@@ -118,7 +117,7 @@ function Event() {
         } catch (e) {
             alert("წაშლა ვერ მოხერხდა.");
         }
-    }
+    };
 
     const filteredEvents = events.filter((event) =>
         event?.title
@@ -154,7 +153,13 @@ function Event() {
             ? text.slice(0, max) + "..."
             : text;
 
-    if (loadingUser) return <p>Loading...</p>;
+    if (loadingUser || loadingEvents) {
+        return (
+            <div style={{ textAlign: "center", padding: "100px", fontSize: "20px" }}>
+                <h2>იტვირთება...</h2>
+            </div>
+        );
+    }
 
     return (
         <div className="asd">
@@ -230,7 +235,8 @@ function Event() {
                                                     "Learn More"
                                                 )}
                                             </button>
-                                        </Link> {isAdmin && (
+                                        </Link>{" "}
+                                        {isAdmin && (
                                             <button
                                                 className="delete-btn"
                                                 onClick={() =>

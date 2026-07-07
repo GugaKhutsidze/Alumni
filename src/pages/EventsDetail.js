@@ -12,8 +12,12 @@ function EventsDetail() {
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
   const token = localStorage.getItem("token");
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
+  // 1. ენის ID-ის განსაზღვრა
+  const currentLanguageId = i18n.language === "ka" ? 1 : 2;
+
+  // 2. ბაზისური URL-ები (API_BASE_URL უნდა დასრულდეს სუფთად /api-ით)
   const API_BASE_URL = "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net/api";
   const SERVER_DOMAIN = "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net";
 
@@ -23,16 +27,18 @@ function EventsDetail() {
     try {
       const config = { headers: { Authorization: `Bearer ${token}` } };
       
+      // ივენთის დეტალების წამოღება სწორი მისამართით
       try {
-        const eventRes = await axios.get(`${API_BASE_URL}/events/${id}?languageId=1`, config);
+        const eventRes = await axios.get(`${API_BASE_URL}/events/${id}?languageId=${currentLanguageId}`, config);
         setEvents(eventRes.data);
       } catch (eventError) {
         console.error("Error fetching event details:", eventError);
         setEvents(null);
       }
 
+      // კომენტარების წამოღება სწორი მისამართით
       try {
-        const commentsRes = await axios.get(`${API_BASE_URL}/events/${id}/comments?languageId=1`, config);
+        const commentsRes = await axios.get(`${API_BASE_URL}/events/${id}/comments?languageId=${currentLanguageId}`, config);
         const commentData = commentsRes.data || [];
         setComments(Array.isArray(commentData) ? commentData : []);
       } catch (commentsError) {
@@ -45,7 +51,7 @@ function EventsDetail() {
     } finally {
       setLoading(false);
     }
-  }, [id, token]);
+  }, [id, token, currentLanguageId]); // ენის ცვლილებაზეც რომ თავიდან წამოიღოს მონაცემები
 
   useEffect(() => {
     fetchEventData();
@@ -118,7 +124,6 @@ function EventsDetail() {
   return (
     <div className="event-detail">
       <div className="event-main-content">
-        {/* ✅ სურათის უსაფრთხო ჩატვირთვა */}
         <img src={getEventImage()} alt={events?.title} className="event-image" />
         <div className="event-info-body">
           <h1>{events?.title}</h1>
@@ -133,7 +138,7 @@ function EventsDetail() {
       </div>
 
       <aside className="comments-sidebar">
-        <h2>კომენტარები</h2>
+        <h2>{t("Comments")}</h2>
         <div className="comments-list">
           {comments.length === 0 ? (
             <p className="no-comments">კომენტარები ჯერ არ არის</p>
