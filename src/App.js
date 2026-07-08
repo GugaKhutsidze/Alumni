@@ -2,10 +2,10 @@ import React, { Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import "./App.css";
+import AddNews from "./pages/AddNews";
 
 import Navbar from "./components/Navbar";
 
-// --- YOUR HELPER FUNCTION ---
 export function getUserRole() {
   const token = localStorage.getItem("token");
   if (!token) return "";
@@ -93,6 +93,7 @@ function App() {
               <Route path="AddEvent" element={<AddEvent />} />
               <Route path="AddJob" element={<AddJob />} />
               <Route path="Alumni" element={<Alumni />} />
+              <Route path="AddNews" element={<AddNews />} />
             </Route>
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />

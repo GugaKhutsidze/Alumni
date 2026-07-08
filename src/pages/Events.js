@@ -141,7 +141,6 @@ setCurrentPage(1);
 </div>
 
 
-// ... (კოდის დანარჩენი ნაწილი უცვლელია)
 
                 <div className="As">
                     {currentItems.map(event => (

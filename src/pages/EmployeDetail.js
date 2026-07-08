@@ -1,113 +1,138 @@
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import "./EmployDetail.css"; 
+import "./EmployDetail.css";
 import { useTranslation } from "react-i18next";
-import img3 from "../images/imag7.png";
+
+const API_BASE_URL =
+  "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net/api";
+
 
 function EmployDetail() {
-  const [employee, setEmployee] = useState(null);
-  const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState("");
+  const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
+
   const { id } = useParams();
   const token = localStorage.getItem("token");
+
   const { t } = useTranslation();
 
-  const fetchEmployeeData = useCallback(async () => {
-    if (!token) return;
-    setLoading(true);
-    try {
-      const config = { headers: { Authorization: `Bearer ${token}` } };
-      
-      const [employeeRes, commentsRes] = await Promise.all([
-        axios.get(`https://warrior.ge/api/employees/${id}`, config),
-        axios.get(`https://warrior.ge/api/employees/${id}/comments`, config)
-      ]);
 
-      setEmployee(employeeRes.data.data);
-      
-      const commentData = commentsRes.data.data || commentsRes.data || [];
-      setComments(Array.isArray(commentData) ? commentData : []);
+  const fetchJobData = useCallback(async () => {
+    if (!token) return;
+
+    try {
+      setLoading(true);
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+
+      const jobRes = await axios.get(
+        `${API_BASE_URL}/jobs/${id}`,
+        config
+      );
+
+
+      if (jobRes.data) {
+        setJob(jobRes.data);
+      }
+
+
     } catch (e) {
-      console.error("Error fetching employee:", e);
+      console.error("Fetch job error:", e);
+
     } finally {
       setLoading(false);
     }
+
   }, [id, token]);
 
+
+
   useEffect(() => {
-    fetchEmployeeData();
-  }, [fetchEmployeeData]);
+    fetchJobData();
+  }, [fetchJobData]);
 
- async function addComment(e) {
-  e.preventDefault();
-  if (!newComment.trim()) return;
 
-  try {
-    await axios.post(
-      `https://warrior.ge/api/employees/${id}/comments`,
-      { content: newComment },
-      { headers: { Authorization: `Bearer ${token}` } }
+
+  if (loading || !job) {
+    return (
+      <div className="page-loading">
+        <span className="spinner"></span>
+      </div>
     );
-
-    setNewComment("");
-
-    fetchEmployeeData();
-
-  } catch (e) {
-    console.error("Error posting comment:", e);
   }
-}
-  if (loading) {
-    return <h2>{t("loading")}</h2>;
-  }
+
+
 
   return (
     <div className="employ-detail">
+
       <div className="employ-main-content">
-        <img src={employee?.image || img3} alt={employee?.firstname} className="employ-image" />
+
+
         <div className="employ-info-body">
-          <h1>{employee?.firstname}</h1>
+
+          <h1>
+            {job.title}
+          </h1>
+
+
           <div className="employ-meta">
-            <p><strong>{t("position")}:</strong> {employee?.position}</p>
-            <p><strong>{t("department")}:</strong> {employee?.department}</p>
-            <p><strong>{t("description")}:</strong> {employee?.description}</p>
+
+
+            <p>
+              <strong>
+                {t("Description")}:
+              </strong>{" "}
+              {job.description}
+            </p>
+
+
+            <p>
+              <strong>
+                {t("Salary")}:
+              </strong>{" "}
+              {job.salary}
+            </p>
+
+
+            <p>
+              <strong>
+                {t("Start Date")}:
+              </strong>{" "}
+              {job.startDate
+                ? new Date(job.startDate).toLocaleDateString("ka-GE")
+                : ""}
+            </p>
+
+
+            <p>
+              <strong>
+                {t("End Date")}:
+              </strong>{" "}
+              {job.endDate
+                ? new Date(job.endDate).toLocaleDateString("ka-GE")
+                : ""}
+            </p>
+
+
           </div>
+
+
         </div>
+
+
       </div>
 
-      <aside className="comments-sidebar">
-        <h2>კომენტარები</h2>
-        <div className="comments-list">
-          {comments.length === 0 ? (
-            <p className="no-comments">კომენტარები ჯერ არ არის</p>
-          ) : (
-            comments.map((c) => (
-              <div key={c.id} className="comment">
-                <strong>
-                  <img src={c.user?.image || img3} alt={c.user?.firstname || "avatar"} />
-                  {c.user?.firstname || "მომხმარებელი"}{c.user?.lastname || "მომხმარებელი"}
-                </strong>
-                <p>{c.content}</p>
-              </div>
-            ))
-          )}
-        </div>
 
-        <form onSubmit={addComment} className="comment-form">
-          <input
-            type="text"
-            placeholder="დაწერე კომენტარი..."
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            className="comment-input"
-          />
-          <button type="submit" className="comment-button">გაგზავნა</button>
-        </form>
-      </aside>
     </div>
   );
 }
+
 
 export default EmployDetail;
