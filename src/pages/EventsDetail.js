@@ -11,7 +11,6 @@ const SERVER_DOMAIN =
 const API_BASE_URL =
   "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net/api";
 
-
 const parseImageSrc = (file) => {
   if (!file) return img3;
 
@@ -28,20 +27,15 @@ const parseImageSrc = (file) => {
   return `${SERVER_DOMAIN}${file.startsWith("/") ? "" : "/"}${file}`;
 };
 
-
 function EventsDetail() {
   const [events, setEvents] = useState(null);
-  const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState("");
   const [loading, setLoading] = useState(true);
 
   const { id } = useParams();
   const token = localStorage.getItem("token");
-
   const { t, i18n } = useTranslation();
 
   const currentLanguageId = i18n.language === "ka" ? 1 : 2;
-
 
   const fetchEventData = useCallback(async () => {
     if (!token) return;
@@ -55,12 +49,10 @@ function EventsDetail() {
         },
       };
 
-
       const eventRes = await axios.get(
         `${API_BASE_URL}/events/${id}?languageId=${currentLanguageId}`,
         config
       );
-
 
       if (eventRes.data) {
         setEvents({
@@ -70,69 +62,16 @@ function EventsDetail() {
           ),
         });
       }
-
-
-      const commentsRes = await axios.get(
-        `${API_BASE_URL}/events/${id}/comments?languageId=${currentLanguageId}`,
-        config
-      );
-
-
-      const processedComments = (commentsRes.data || []).map((c) => ({
-        ...c,
-        user: {
-          ...c.user,
-          computedUserImage: parseImageSrc(c.user?.image),
-        },
-      }));
-
-      setComments(processedComments);
-
-
     } catch (e) {
       console.error("Fetch error:", e);
-
     } finally {
       setLoading(false);
     }
-
   }, [id, token, currentLanguageId]);
-
 
   useEffect(() => {
     fetchEventData();
   }, [fetchEventData]);
-
-
-
-  async function addComment(e) {
-    e.preventDefault();
-
-    if (!newComment.trim() || !token) return;
-
-
-    try {
-      await axios.post(
-        `${API_BASE_URL}/events/${id}/comments`,
-        {
-          content: newComment,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      setNewComment("");
-      fetchEventData();
-
-    } catch (e) {
-      alert("კომენტარის გაგზავნა ვერ მოხერხდა.");
-    }
-  }
-
-
 
   if (loading || !events) {
     return (
@@ -142,31 +81,22 @@ function EventsDetail() {
     );
   }
 
-
-
   return (
     <div className="event-detail">
-
       <div className="event-main-content">
-
         <img
           src={events.computedImage}
           alt={events.title}
           className="event-image"
         />
 
-
         <div className="event-info-body">
-
           <h1>{events.title}</h1>
 
           <div className="event-meta">
-
             <p>
-              <strong>{t("Description")}:</strong>{" "}
-              {events.description}
+              <strong>{t("Description")}:</strong> {events.description}
             </p>
-
 
             <p>
               <strong>{t("Date")}:</strong>{" "}
@@ -174,85 +104,11 @@ function EventsDetail() {
                 ? new Date(events.eventDate).toLocaleDateString("ka-GE")
                 : ""}
             </p>
-
           </div>
-
         </div>
-
       </div>
-
-
-
-      <aside className="comments-sidebar">
-
-        <h2>{t("Comments")}</h2>
-
-
-        <div className="comments-list">
-
-          {comments.length === 0 ? (
-            <p className="no-comments">
-              კომენტარები ჯერ არ არის
-            </p>
-          ) : (
-
-            comments.map((c) => (
-
-              <div key={c.id} className="comment">
-
-                <strong>
-                  <img
-                    src={c.user?.computedUserImage}
-                    alt="User"
-                  />
-
-                  {c.user?.firstname} {c.user?.lastname}
-
-                </strong>
-
-
-                <p>{c.content}</p>
-
-              </div>
-
-            ))
-
-          )}
-
-        </div>
-
-
-
-        <form
-          onSubmit={addComment}
-          className="comment-form"
-        >
-
-          <input
-            type="text"
-            placeholder="დაწერე კომენტარი..."
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            className="comment-input"
-          />
-
-
-          <button
-            type="submit"
-            className="comment-button"
-          >
-            გაგზავნა
-          </button>
-
-
-        </form>
-
-
-      </aside>
-
     </div>
   );
 }
-
 
 export default EventsDetail;

@@ -19,7 +19,7 @@ function Employment() {
 
     const token = localStorage.getItem("token");
     const currentLanguageId = i18n.language === "ka" ? 1 : 2;
-    const itemsPerPage = 50;
+    const itemsPerPage = 20;
 
     const isAdmin = useMemo(() => {
         if (!token) return false;
@@ -41,14 +41,14 @@ function Employment() {
             .finally(() => setLoading(false));
     }, [currentLanguageId]);
 
-    const deleteHandler = async (advertisementId) => {
+    const deleteHandler = async (id) => {
         if (!window.confirm(t("ნამდვილად გსურთ წაშლა?"))) return;
         setIsDeleting(true);
         try {
-            await axios.delete(`${URL}/api/jobs/${advertisementId}`, {
+            await axios.delete(`${URL}/api/jobs/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            setEmployment(prev => prev.filter(emp => emp.advertisementId !== advertisementId));
+            setEmployment(prev => prev.filter(emp => emp.advertisementId !== id));
         } catch {
             alert(t("წაშლა ვერ მოხერხდა."));
         } finally {
