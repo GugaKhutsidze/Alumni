@@ -1,62 +1,63 @@
 .admin-container {
   display: flex;
   min-height: 100vh;
+  background: #f8fafc;
 }
 
 .admin-sidebar {
   width: 260px;
-  background: #ffffff;
+  background: linear-gradient(
+    180deg,
+    #2c3e50,
+    #3498db
+  );
   padding: 2rem 1.5rem;
-  border-right: 1px solid #e0e0e0;
   display: flex;
   flex-direction: column;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08);
 }
 
 .admin-sidebar h2 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-bottom: 2.5rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05rem;
+  color: white;
   text-align: center;
+  font-size: 1.4rem;
+  margin-bottom: 2.5rem;
+  font-weight: 700;
 }
 
 .admin-nav {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.8rem;
 }
 
 .admin-nav-link {
-  padding: 0.85rem 1rem;
-  color: #67748e;
+  padding: 14px 18px;
+  color: rgba(255, 255, 255, 0.85);
   text-decoration: none;
+  border-radius: 12px;
   font-size: 0.95rem;
-  font-weight: 500;
-  border-radius: 8px;
-  transition: all 0.2s ease;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 .admin-nav-link:hover {
-  background: #f0f2f5;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
 }
 
 .admin-nav-link.active {
-  color: #ffffff;
+  background: white;
+  color: #2c3e50;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
-/* ==========================
-   Main Content
-========================== */
 .admin-main {
   flex: 1;
   padding: 3rem;
   overflow-y: auto;
 }
 
-/* ==========================
-   Responsive (Mobile First Strategy)
-========================== */
 @media (max-width: 768px) {
   .admin-container {
     flex-direction: column;
@@ -64,26 +65,11 @@
 
   .admin-sidebar {
     width: 100%;
-    padding: 1.5rem;
-    border-right: none;
-    border-bottom: 1px solid #e0e0e0;
-  }
-
-  .admin-sidebar h2 {
-    margin-bottom: 1rem;
   }
 
   .admin-nav {
     flex-direction: row;
     overflow-x: auto;
-    gap: 0.5rem;
-    padding-bottom: 0.5rem;
-  }
-
-  .admin-nav-link {
-    white-space: nowrap;
-    padding: 0.6rem 1rem;
-    font-size: 0.85rem;
   }
 
   .admin-main {

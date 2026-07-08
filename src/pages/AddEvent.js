@@ -5,6 +5,7 @@ import "./EJ.css";
 
 function AddEvent() {
   const { t } = useTranslation();
+
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState(null);
 
@@ -14,12 +15,16 @@ function AddEvent() {
     DescriptionGeo: "",
     DescriptionEng: "",
     EventDate: new Date().toISOString(),
-    PartnerId: 0
+    PartnerId: 0,
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+
+    setForm({
+      ...form,
+      [name]: value,
+    });
   };
 
   const handleFileChange = (e) => {
@@ -30,16 +35,18 @@ function AddEvent() {
     e.preventDefault();
     setLoading(true);
 
-    const API_URL = "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net/api/events";
+    const API_URL =
+      "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net/api/events";
 
-    // 1. Create FormData object
     const formData = new FormData();
+
     formData.append("TitleGeo", form.TitleGeo);
     formData.append("TitleEng", form.TitleEng);
     formData.append("DescriptionGeo", form.DescriptionGeo);
     formData.append("DescriptionEng", form.DescriptionEng);
     formData.append("EventDate", form.EventDate);
     formData.append("PartnerId", form.PartnerId);
+
     if (imageFile) {
       formData.append("Photo", imageFile);
     }
@@ -48,9 +55,10 @@ function AddEvent() {
       await axios.post(API_URL, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          "accept": "*/*"
+          accept: "*/*",
         },
       });
+
       alert(t("Event added successfully!"));
     } catch (err) {
       console.error(err);
@@ -62,19 +70,59 @@ function AddEvent() {
 
   return (
     <div className="add-page">
-      <div className="add-box">
+      <div className="job-form">
         <h2>{t("Add Event")}</h2>
+
         <form onSubmit={handleAdd} className="admin-form">
-          <input name="TitleGeo" placeholder={t("Title (Geo)")} value={form.TitleGeo} onChange={handleChange} required />
-          <input name="TitleEng" placeholder={t("Title (Eng)")} value={form.TitleEng} onChange={handleChange} required />
-          <textarea name="DescriptionGeo" placeholder={t("Description (Geo)")} value={form.DescriptionGeo} onChange={handleChange} required />
-          <textarea name="DescriptionEng" placeholder={t("Description (Eng)")} value={form.DescriptionEng} onChange={handleChange} required />
-          
+          <input
+            name="TitleGeo"
+            placeholder={t("Title (Geo)")}
+            value={form.TitleGeo}
+            onChange={handleChange}
+            required
+          />
+
+          <input
+            name="TitleEng"
+            placeholder={t("Title (Eng)")}
+            value={form.TitleEng}
+            onChange={handleChange}
+            required
+          />
+
+          <textarea
+            name="DescriptionGeo"
+            placeholder={t("Description (Geo)")}
+            value={form.DescriptionGeo}
+            onChange={handleChange}
+            required
+          />
+
+          <textarea
+            name="DescriptionEng"
+            placeholder={t("Description (Eng)")}
+            value={form.DescriptionEng}
+            onChange={handleChange}
+            required
+          />
+
           <label>{t("Partner ID")}</label>
-          <input type="number" name="PartnerId" value={form.PartnerId} onChange={handleChange} />
+
+          <input
+            type="number"
+            name="PartnerId"
+            value={form.PartnerId}
+            onChange={handleChange}
+          />
 
           <label>{t("Upload Photo")}</label>
-          <input type="file" name="Photo" accept="image/*" onChange={handleFileChange} />
+
+          <input
+            type="file"
+            name="Photo"
+            accept="image/*"
+            onChange={handleFileChange}
+          />
 
           <button type="submit" disabled={loading}>
             {loading ? t("Adding...") : t("Add Event")}

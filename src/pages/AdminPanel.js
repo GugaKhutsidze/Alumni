@@ -1,4 +1,4 @@
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "./AdminPanel.css";
 
@@ -11,17 +11,26 @@ const AdminPanel = () => {
         <h2>{t("Menu")}</h2>
 
         <nav className="admin-nav">
-          <Link to="/AdminPanel/AddEvent" className="admin-nav-link">
+          <NavLink
+            to="/AdminPanel/AddEvent"
+            className="admin-nav-link"
+          >
             {t("Add Event")}
-          </Link>
+          </NavLink>
 
-          <Link to="/AdminPanel/AddJob" className="admin-nav-link">
+          <NavLink
+            to="/AdminPanel/AddJob"
+            className="admin-nav-link"
+          >
             {t("Add Job")}
-          </Link>
+          </NavLink>
 
-          <Link to="/AdminPanel/Alumni" className="admin-nav-link">
+          <NavLink
+            to="/AdminPanel/Alumni"
+            className="admin-nav-link"
+          >
             {t("Alumni")}
-          </Link>
+          </NavLink>
         </nav>
       </aside>
 
