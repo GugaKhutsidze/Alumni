@@ -1,0 +1,143 @@
+/* --- Base Layout --- */
+.event-detail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* --- Main Content Area --- */
+.event-main-content {
+  flex: 2;
+  min-width: 300px;
+}
+
+.event-image {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.event-info-body h1 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #1a1a1a;
+}
+
+.event-meta p {
+  margin-bottom: 0.5rem;
+  color: #444;
+}
+
+.event-meta strong {
+  color: #222;
+}
+
+/* --- Sidebar (Comments) --- */
+.comments-sidebar {
+  flex: 1;
+  min-width: 300px;
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  border: 1px solid #e1e4e8;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+}
+
+.comments-sidebar h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+/* --- Comments List --- */
+.comments-list {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
+
+.comment {
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.comment img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-right: 10px;
+  vertical-align: middle;
+  object-fit: cover;
+}
+
+/* --- Comment Form --- */
+.comment-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+.comment-input {
+  flex: 1;
+  padding: 0.6rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+}
+
+.comment-input:focus {
+  border-color: #3498db;
+}
+
+.comment-button {
+  padding: 0.6rem 1rem;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.comment-button:hover {
+  background-color: #2980b9;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .event-detail {
+    flex-direction: column;
+  }
+}
+
+/* --- Spinner --- */
+.page-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

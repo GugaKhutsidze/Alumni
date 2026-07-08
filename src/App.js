@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom
 import { jwtDecode } from "jwt-decode";
 import "./App.css";
 import AddNews from "./pages/AddNews";
+import EmployDetail from "./pages/EmployDetail";
 
 import Navbar from "./components/Navbar";
 
@@ -82,6 +83,8 @@ function App() {
             <Route path="/employment" element={<Employment />} />
             <Route path="/event/:id" element={<EventsDetail />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/employment/:id" element={<EmployDetail />} />
+ 
             
             
             {/* ADMIN ROUTE */}

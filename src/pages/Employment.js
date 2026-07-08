@@ -41,14 +41,14 @@ function Employment() {
             .finally(() => setLoading(false));
     }, [currentLanguageId]);
 
-    const deleteHandler = async (id) => {
+    const deleteHandler = async (advertisementId) => {
         if (!window.confirm(t("ნამდვილად გსურთ წაშლა?"))) return;
         setIsDeleting(true);
         try {
-            await axios.delete(`${URL}/api/jobs/${id}`, {
+            await axios.delete(`${URL}/api/jobs/${advertisementId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            setEmployment(prev => prev.filter(emp => emp.advertisementId !== id));
+            setEmployment(prev => prev.filter(emp => emp.advertisementId !== advertisementId));
         } catch {
             alert(t("წაშლა ვერ მოხერხდა."));
         } finally {
