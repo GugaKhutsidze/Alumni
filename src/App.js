@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -9,30 +9,34 @@ import {
 import { jwtDecode } from "jwt-decode";
 import "./App.css";
 
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Events from "./pages/Events";
-import Employment from "./pages/Employment";
-import EventsDetail from "./pages/EventsDetail";
-import AdminPanel from "./pages/Admin";
-import Profile from "./pages/Profile";
-
-
 import Navbar from "./components/Navbar";
+
+// Lazy loaded pages
+const Login = React.lazy(() => import("./pages/Login"));
+const Register = React.lazy(() => import("./pages/Register"));
+const Home = React.lazy(() => import("./pages/Home"));
+const About = React.lazy(() => import("./pages/About"));
+const Events = React.lazy(() => import("./pages/Events"));
+const Employment = React.lazy(() => import("./pages/Employment"));
+const EventsDetail = React.lazy(() => import("./pages/EventsDetail"));
+const AdminPanel = React.lazy(() => import("./pages/Admin"));
+const Profile = React.lazy(() => import("./pages/Profile"));
 
 
 const ProtectedLayout = () => {
+
   const token = localStorage.getItem("token");
+
 
   if (!token) {
     return <Navigate to="/" replace />;
   }
 
+
   return (
     <>
       <Navbar />
+
       <div className="container">
         <Outlet />
       </div>
@@ -40,72 +44,221 @@ const ProtectedLayout = () => {
   );
 };
 
+
+
+// Check admin role
 const RoleProtected = ({ children, allowedRoles }) => {
-const token = localStorage.getItem("token");
+
+  const token = localStorage.getItem("token");
+
 
   if (!token) {
     return <Navigate to="/" replace />;
   }
 
+
   try {
+
     const decoded = jwtDecode(token);
 
-    const role = (decoded.role || "").toLowerCase().trim();
-    const allowed = allowedRoles.map(r => r.toLowerCase());
 
-    if (!allowed.includes(role)) {
-      return <Navigate to="/home" replace />;
+    console.log("JWT:", decoded);
+
+
+    let role =
+      decoded.role ||
+      decoded.Role ||
+      decoded.roleId ||
+      decoded.RoleID ||
+      decoded[
+        "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+      ] ||
+      "";
+
+
+
+    // RoleID 1 = Admin
+    if (role === 1 || role === "1") {
+      role = "admin";
     }
 
-  } catch (err) {
+
+
+    role = String(role)
+      .toLowerCase()
+      .trim();
+
+
+
+    console.log("USER ROLE:", role);
+
+
+
+    const allowed = allowedRoles.map((r) =>
+      r.toLowerCase().trim()
+    );
+
+
+
+    if (!allowed.includes(role)) {
+
+      return <Navigate to="/home" replace />;
+
+    }
+
+
+
+    return children;
+
+
+
+  } catch (error) {
+
+    console.error("JWT ERROR:", error);
+
     localStorage.removeItem("token");
+
     return <Navigate to="/" replace />;
+
   }
 
-  return children;
 };
 
 
+
+
 function App() {
+
   return (
+
     <BrowserRouter>
-      <Routes>
 
-        {/* Public routes */}
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+      <Suspense
 
-        {/* Protected routes */}
-        <Route element={<ProtectedLayout />}>
+        fallback={
 
-          <Route path="/home" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/events" element={<Events />} />
-          <Route path="/employment" element={<Employment />} />
-          <Route path="/event/:id" element={<EventsDetail />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/admin" element={<AdminPanel />} />
-          
+          <div className="page-loading">
 
-          {/* 🔐 Admin only routes */}
+            <span className="spinner"></span>
+
+          </div>
+
+        }
+
+      >
+
+
+        <Routes>
+
+
+
+          {/* Public */}
+
           <Route
-            path="/admin"
-            element={
-              <RoleProtected allowedRoles={["admin"]}>
-                <AdminPanel />
-              </RoleProtected>
-            }
+            path="/"
+            element={<Login />}
           />
 
 
-        </Route>
+          <Route
+            path="/register"
+            element={<Register />}
+          />
 
-        {/* fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
 
-      </Routes>
+
+
+          {/* Protected */}
+
+          <Route element={<ProtectedLayout />}>
+
+
+
+            <Route
+              path="/home"
+              element={<Home />}
+            />
+
+
+            <Route
+              path="/about"
+              element={<About />}
+            />
+
+
+            <Route
+              path="/events"
+              element={<Events />}
+            />
+
+
+            <Route
+              path="/employment"
+              element={<Employment />}
+            />
+
+
+            <Route
+              path="/event/:id"
+              element={<EventsDetail />}
+            />
+
+
+            <Route
+              path="/profile"
+              element={<Profile />}
+            />
+
+
+
+
+            {/* ADMIN ONLY */}
+
+            <Route
+
+              path="/admin"
+
+              element={
+
+                <RoleProtected allowedRoles={["admin"]}>
+
+                  <AdminPanel />
+
+                </RoleProtected>
+
+              }
+
+            />
+
+
+          </Route>
+
+
+
+
+          {/* Not Found */}
+
+          <Route
+
+            path="*"
+
+            element={<Navigate to="/" replace />}
+
+          />
+
+
+
+        </Routes>
+
+
+      </Suspense>
+
+
     </BrowserRouter>
+
   );
+
 }
+
 
 export default App;

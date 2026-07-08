@@ -8,139 +8,466 @@ import "../App.css";
 const Navbar = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [token, setToken] = useState(localStorage.getItem("token"));
 
-  // თვალყური ვადევნოთ ტოკენის ცვლილებებს localStorage-ში
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [token, setToken] = useState(
+    localStorage.getItem("token")
+  );
+
+
   useEffect(() => {
+
     const handleStorageChange = () => {
       setToken(localStorage.getItem("token"));
     };
 
-    // ვუსმენთ გარე ცვლილებებს (მაგალითად, სხვა ტაბიდან)
-    window.addEventListener("storage", handleStorageChange);
-    
-    // პერიოდულად შევამოწმოთ ლოკალური ცვლილებები (რადგან setItem არ იწვევს storage ივენთს იმავე ტაბზე)
+
+    window.addEventListener(
+      "storage",
+      handleStorageChange
+    );
+
+
     const interval = setInterval(() => {
-      const currentToken = localStorage.getItem("token");
+
+      const currentToken =
+        localStorage.getItem("token");
+
+
       if (currentToken !== token) {
         setToken(currentToken);
       }
+
     }, 1000);
 
+
+
     return () => {
-      window.removeEventListener("storage", handleStorageChange);
+
+      window.removeEventListener(
+        "storage",
+        handleStorageChange
+      );
+
       clearInterval(interval);
+
     };
+
+
   }, [token]);
 
-  // ტოკენის დეკოდირება და ვალიდაცია
+
+
+
   const { isAuth, role } = useMemo(() => {
-    if (!token) return { isAuth: false, role: "" };
+
+
+    if (!token) {
+      return {
+        isAuth: false,
+        role: ""
+      };
+    }
+
 
     try {
+
+
       const decoded = jwtDecode(token);
 
-      // ვამოწმებთ ვადას (Token Expiration)
-      if (decoded.exp && decoded.exp * 1000 < Date.now()) {
+
+      console.log(
+        "NAVBAR JWT:",
+        decoded
+      );
+
+
+      if (
+        decoded.exp &&
+        decoded.exp * 1000 < Date.now()
+      ) {
+
         localStorage.removeItem("token");
-        return { isAuth: false, role: "" };
+
+        return {
+          isAuth: false,
+          role: ""
+        };
+
       }
 
+
+
+      let userRole =
+
+        decoded.role ||
+
+        decoded.Role ||
+
+        decoded.roleId ||
+
+        decoded.RoleID ||
+
+        decoded[
+          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+        ] ||
+
+        "";
+
+
+
+      if (
+        userRole === 1 ||
+        userRole === "1"
+      ) {
+
+        userRole = "admin";
+
+      }
+
+
+
+      console.log(
+        "NAVBAR ROLE:",
+        userRole
+      );
+
+
+
       return {
+
         isAuth: true,
-        role: (decoded.role || "").toLowerCase().trim(),
+
+        role: String(userRole)
+          .toLowerCase()
+          .trim()
+
       };
-    } catch (err) {
-      localStorage.removeItem("token");
-      return { isAuth: false, role: "" };
+
+
+
+    } catch (error) {
+
+
+      console.error(
+        "JWT ERROR:",
+        error
+      );
+
+
+      localStorage.removeItem(
+        "token"
+      );
+
+
+      return {
+        isAuth: false,
+        role: ""
+      };
+
     }
+
+
   }, [token]);
 
+
+
+
+
   const handleLogout = () => {
-    localStorage.removeItem("token");
+
+    localStorage.removeItem(
+      "token"
+    );
+
     setToken(null);
+
     setMenuOpen(false);
-    navigate("/", { replace: true });
+
+    navigate(
+      "/",
+      {
+        replace: true
+      }
+    );
+
   };
+
+
+
+
 
   const changeLanguage = (lang) => {
+
     i18n.changeLanguage(lang);
-    localStorage.setItem("language", lang);
-    setMenuOpen(false); // ენის შეცვლისას მობილური მენიუ დაიხუროს
+
+    localStorage.setItem(
+      "language",
+      lang
+    );
+
+    setMenuOpen(false);
+
   };
 
+
+
+
+
+
   return (
+
     <nav className="navbar">
+
+
       <div className="nav-container">
-        
+
+
+
         <div
+
           className="logo"
+
           onClick={() => {
-            navigate(isAuth ? "/Home" : "/");
+
+            navigate(
+              isAuth ? "/home" : "/"
+            );
+
             setMenuOpen(false);
+
           }}
-          style={{ cursor: "pointer" }}
+
+          style={{
+            cursor: "pointer"
+          }}
+
         >
-          <img src={logo} alt="TSU Logo" />
+
+          <img
+            src={logo}
+            alt="TSU Logo"
+          />
+
         </div>
 
-        <div className="burger" onClick={() => setMenuOpen(prev => !prev)}>
-          {menuOpen ? "✕" : "☰"} {/* ვიზუალური გაუმჯობესება: იქსი დახურვისას */}
+
+
+
+
+        <div
+
+          className="burger"
+
+          onClick={() =>
+            setMenuOpen(
+              prev => !prev
+            )
+          }
+
+        >
+
+          {menuOpen ? "✕" : "☰"}
+
         </div>
 
-        <div className={`nav-links ${menuOpen ? "open" : ""}`}>
+
+
+
+
+
+        <div
+
+          className={`nav-links ${
+            menuOpen ? "open" : ""
+          }`}
+
+        >
+
+
+
           {isAuth && (
+
             <>
-              <NavLink to="/Home" onClick={() => setMenuOpen(false)}>
+
+
+              <NavLink
+
+                to="/home"
+
+                onClick={() =>
+                  setMenuOpen(false)
+                }
+
+              >
+
                 {t("Home")}
+
               </NavLink>
 
-              <NavLink to="/About" onClick={() => setMenuOpen(false)}>
+
+
+
+              <NavLink
+
+                to="/about"
+
+                onClick={() =>
+                  setMenuOpen(false)
+                }
+
+              >
+
                 {t("About us")}
+
               </NavLink>
 
-              <NavLink to="/Events" onClick={() => setMenuOpen(false)}>
+
+
+
+
+              <NavLink
+
+                to="/events"
+
+                onClick={() =>
+                  setMenuOpen(false)
+                }
+
+              >
+
                 {t("Events")}
+
               </NavLink>
 
-              <NavLink to="/Employment" onClick={() => setMenuOpen(false)}>
+
+
+
+
+              <NavLink
+
+                to="/employment"
+
+                onClick={() =>
+                  setMenuOpen(false)
+                }
+
+              >
+
                 {t("Employment")}
+
               </NavLink>
 
-              <NavLink to="/Profile" onClick={() => setMenuOpen(false)}>
-                {t("Profile")}
-     
-          </NavLink>
 
-              {role === "admin" && (
-                <>
-                  <NavLink to="/admin" onClick={() => setMenuOpen(false)}>
+
+
+
+              <NavLink
+
+                to="/profile"
+
+                onClick={() =>
+                  setMenuOpen(false)
+                }
+
+              >
+
+                {t("Profile")}
+
+              </NavLink>
+
+
+
+
+
+              {
+                role === "admin" && (
+
+                  <NavLink
+
+                    to="/admin"
+
+                    onClick={() =>
+                      setMenuOpen(false)
+                    }
+
+                  >
+
                     {t("Dashboard")}
+
                   </NavLink>
 
-               
-                </>
-              )}
+                )
+              }
 
-              <button onClick={handleLogout} className="logout-btn">
+
+
+
+
+
+              <button
+
+                onClick={handleLogout}
+
+                className="logout-btn"
+
+              >
+
                 {t("Log out")}
+
               </button>
+
+
             </>
+
           )}
 
+
+
+
+
+
           <select
+
             className="language-select"
+
             value={i18n.language}
-            onChange={(e) => changeLanguage(e.target.value)}
+
+            onChange={(e) =>
+              changeLanguage(
+                e.target.value
+              )
+            }
+
           >
-            <option value="ka">ქარ</option>
-            <option value="en">EN</option>
+
+            <option value="ka">
+              ქარ
+            </option>
+
+
+            <option value="en">
+              EN
+            </option>
+
+
           </select>
+
+
+
+
         </div>
+
+
+
       </div>
+
+
     </nav>
+
   );
+
 };
+
 
 export default Navbar;

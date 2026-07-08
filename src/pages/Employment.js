@@ -1,227 +1,114 @@
-import { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import Footer from "../components/Footer";
 import "./EE.css";
 import { useTranslation } from "react-i18next";
-import img4 from "../images/imag7.png";
 
-const apiBaseUrl = "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net";
-
-// კომპონენტი, რომელიც თითოეული ვაკანსიის ID-ით და ენის მიხედვით იღებს მის imageUrl-ს
-function JobImage({ jobId, languageId, alt }) {
-    const [imgSrc, setImgSrc] = useState(img4);
-
-    useEffect(() => {
-        if (!jobId) return;
-
-        axios
-            .get(`${apiBaseUrl}/api/jobs/${jobId}?languageId=${languageId}`)
-            .then((res) => {
-                if (res.data && res.data.imageUrl) {
-                    const url = res.data.imageUrl;
-                    const cleanPath = url.startsWith("/") ? url.slice(1) : url;
-                    setImgSrc(`${apiBaseUrl}/${cleanPath}`);
-                }
-            })
-            .catch((err) => {
-                console.error(`შეცდომა სურათის წამოღებისას ვაკანსიისთვის ${jobId}:`, err);
-                setImgSrc(img4);
-            });
-    }, [jobId, languageId]);
-
-    return <img src={imgSrc} alt={alt} />;
-}
+const URL = "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net";
 
 function Employment() {
-    const [searchTerm, setSearchTerm] = useState("");
+    const { t, i18n } = useTranslation();
     const [employment, setEmployment] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
     const [sortBy, setSortBy] = useState("default");
     const [currentPage, setCurrentPage] = useState(1);
-
-    const [user, setUser] = useState(null);
-    const [loadingUser, setLoadingUser] = useState(true);
-
-    const { t, i18n } = useTranslation();
-    const itemsPerPage = 20;
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const token = localStorage.getItem("token");
     const currentLanguageId = i18n.language === "ka" ? 1 : 2;
+    const itemsPerPage = 20;
 
-    // მომხმარებლის ავტორიზაციის შემოწმება
-    useEffect(() => {
-        const fetchUser = async () => {
-            if (!token) {
-                setLoadingUser(false);
-                return;
-            }
-
-            try {
-                const res = await axios.get(`${apiBaseUrl}/api/user`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-                setUser(res.data);
-            } catch (err) {
-                console.log("User fetch error:", err);
-                setUser(null);
-            } finally {
-                setLoadingUser(false);
-            }
-        };
-
-        fetchUser();
+    const isAdmin = useMemo(() => {
+        if (!token) return false;
+        try {
+            const decoded = jwtDecode(token);
+            const role = decoded.role || decoded.Role || decoded.roleId || 
+                         decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+            return role == 1 || String(role).toLowerCase() === "admin";
+        } catch { return false; }
     }, [token]);
 
-    const isAdmin = user?.role === "admin";
-
-    // ვაკანსიების სიის წამოღება ბეკენდიდან
     useEffect(() => {
-        axios.get(`${apiBaseUrl}/api/jobs?languageId=${currentLanguageId}`)
+        setLoading(true);
+        axios.get(`${URL}/api/jobs?advertisementTypeId=1&languageId=${currentLanguageId}`)
             .then((res) => {
-                const data = Array.isArray(res.data) ? res.data : res.data?.data || [];
-                setEmployment(data);
+                setEmployment(Array.isArray(res.data) ? res.data : []);
             })
-            .catch((err) => console.error(err));
+            .catch((err) => console.error(err))
+            .finally(() => setLoading(false));
     }, [currentLanguageId]);
 
-    // ვაკანსიის წაშლა
-    async function deleteHandler(id) {
-        const confirmDelete = window.confirm(t("ნამდვილად გსურთ წაშლა?"));
-        if (!confirmDelete) return;
-
+    const deleteHandler = async (id) => {
+        if (!window.confirm(t("ნამდვილად გსურთ წაშლა?"))) return;
+        setIsDeleting(true);
         try {
-            await axios.delete(
-                `${apiBaseUrl}/api/jobs/${id}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
-
-            setEmployment(prev => prev.filter(emp => emp.id !== id));
-        } catch (e) {
-            alert("წაშლა ვერ მოხერხდა.");
+            await axios.delete(`${URL}/api/jobs/${id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setEmployment(prev => prev.filter(emp => emp.advertisementId !== id));
+        } catch {
+            alert(t("წაშლა ვერ მოხერხდა."));
+        } finally {
+            setIsDeleting(false);
         }
-    }
+    };
 
-    // ძებნა და სორტირება (A-Z, Z-A)
-    const filteredEmployment = useMemo(() => {
-        let processed = employment.filter(emp =>
+    const { currentItems, totalPages } = useMemo(() => {
+        let processed = [...employment].filter(emp => 
             emp.title?.toLowerCase().includes(searchTerm.toLowerCase())
         );
-
-        if (sortBy === "az") {
-            processed.sort((a, b) => (a.title || "").localeCompare(b.title || ""));
-        } else if (sortBy === "za") {
-            processed.sort((a, b) => (b.title || "").localeCompare(a.title || ""));
-        }
-
-        return processed;
-    }, [employment, searchTerm, sortBy]);
-
-    // პაგინაციის გამოთვლები
-    const indexOfLast = currentPage * itemsPerPage;
-    const indexOfFirst = indexOfLast - itemsPerPage;
-    const currentItems = filteredEmployment.slice(indexOfFirst, indexOfLast);
-    const totalPages = Math.ceil(filteredEmployment.length / itemsPerPage);
-
-    const limitText = (text, max) =>
-        !text ? "" : text.length > max ? text.slice(0, max) + "..." : text;
-
-    if (loadingUser) return <p>Loading...</p>;
+        if (sortBy === "az") processed.sort((a,b) => (a.title || "").localeCompare(b.title || ""));
+        else if (sortBy === "za") processed.sort((a,b) => (b.title || "").localeCompare(a.title || ""));
+        
+        const index = currentPage * itemsPerPage;
+        return {
+            currentItems: processed.slice(index - itemsPerPage, index),
+            totalPages: Math.ceil(processed.length / itemsPerPage)
+        };
+    }, [employment, searchTerm, sortBy, currentPage]);
 
     return (
         <div className="asd">
             <div className="A-list">
+                {/* აი, თქვენი საძიებო და დახარისხების არე */}
                 <div className="A-image">
                     <div className="controls-container">
-                        <input
-                            className="search-bar"
-                            placeholder="ძებნა..."
-                            value={searchTerm}
-                            onChange={(e) => {
-                                setSearchTerm(e.target.value);
-                                setCurrentPage(1);
-                            }}
-                        />
-
-                        <select 
-                            className="sort-dropdown"
-                            value={sortBy}
-                            onChange={(e) => {
-                                setSortBy(e.target.value);
-                                setCurrentPage(1);
-                            }}
-                        >
-                            <option value="default"></option>
-                            <option value="az">{t("A-Z")}</option>
-                            <option value="za">{t("Z-A")}</option>
+                        <input className="search-bar" placeholder={t("ძებნა...")} value={searchTerm} 
+                               onChange={e => { setSearchTerm(e.target.value); setCurrentPage(1); }} />
+                        <select className="sort-dropdown" value={sortBy} onChange={e => setSortBy(e.target.value)}>
+                            <option value="default">{t("დახარისხება")}</option>
+                            <option value="az">A-Z</option>
+                            <option value="za">Z-A</option>
                         </select>
                     </div>
                 </div>
 
                 <div className="As">
-                    {currentItems.length > 0 ? (
-                        currentItems.map(emp => (
-                            <div className="A" key={emp.id}>
-                                {/* დინამიური სურათის კომპონენტი */}
-                                <JobImage 
-                                    jobId={emp.id} 
-                                    languageId={currentLanguageId} 
-                                    alt={emp.title} 
-                                />
-
-                                <div className="A-content">
-                                    <h3>{limitText(emp.title, 30)}</h3>
-                                    <p>{limitText(emp.description, 120)}</p>
-                                    <p>{emp.year}</p>
-
-                                    <div className="A-buttons">
-                                        <Link to={`/employment/${emp.id}`}>
-                                            <button>{t("Learn More")}</button>
-                                        </Link>
-
-                                        {isAdmin && (
-                                            <button
-                                                className="delete-btn"
-                                                onClick={() => deleteHandler(emp.id)}
-                                            >
-                                                {t("წაშლა")}
-                                            </button>
-                                        )}
-                                    </div>
+                    {loading ? <p>{t("იტვირთება...")}</p> : currentItems.map(emp => (
+                        <div className="A" key={emp.advertisementId}>
+                            <div className="A-content">
+                                <h3>{emp.title}</h3>
+                                <p>{emp.description?.substring(0, 90)}...</p>
+                                <p><strong>{t("ხელფასი")}:</strong> {emp.salary} GEL</p>
+                                <p><strong>{t("თარიღი")}:</strong> {new Date(emp.startDate).toLocaleDateString()} - {new Date(emp.endDate).toLocaleDateString()}</p>
+                                
+                                <div className="A-buttons">
+                                    <Link to={`/employment/${emp.advertisementId}`}>
+                                        <button>{t("Learn More")}</button>
+                                    </Link>
+                                    {isAdmin && (
+                                        <button className="delete-btn" disabled={isDeleting} onClick={() => deleteHandler(emp.advertisementId)}>
+                                            {isDeleting ? "..." : t("Delete")}
+                                        </button>
+                                    )}
                                 </div>
                             </div>
-                        ))
-                    ) : (
-                        <p className="no-data">{t("Not found")}</p>
-                    )}
+                        </div>
+                    ))}
                 </div>
-
-                {totalPages > 1 && (
-                    <div className="pagination-controls">
-                        <button
-                            disabled={currentPage === 1}
-                            onClick={() => setCurrentPage(p => p - 1)}
-                        >
-                            {t("Previous")}
-                        </button>
-
-                        <span>
-                            გვერდი {currentPage} / {totalPages}
-                        </span>
-
-                        <button
-                            disabled={currentPage === totalPages}
-                            onClick={() => setCurrentPage(p => p + 1)}
-                        >
-                            {t("Next")}
-                        </button>
-                    </div>
-                )}
             </div>
             <Footer />
         </div>

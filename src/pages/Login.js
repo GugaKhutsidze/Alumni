@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import "./LR.css";
 import { useTranslation } from "react-i18next";
 
@@ -37,15 +38,35 @@ export default function Login({ setIsLoggedIn }) {
 
       const response = await axios.post(
         "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net/api/auth/login",
-        { email, password }
+        {
+          email,
+          password,
+        }
       );
 
-      localStorage.setItem("token", response.data.token);
+      const token = response.data.token;
 
-      if (setIsLoggedIn) setIsLoggedIn(true);
+      // Save token
+      localStorage.setItem("token", token);
+
+      // Decode token
+      const decoded = jwtDecode(token);
+
+      // Get role (supports both standard ASP.NET and custom JWTs)
+      const role =
+        decoded.role ||
+        decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] ||
+        "";
+
+      localStorage.setItem("role", role);
+
+      if (setIsLoggedIn) {
+        setIsLoggedIn(true);
+      }
 
       navigate("/Home", { replace: true });
     } catch (error) {
+      console.error(error);
       alert("ელფოსტა ან პაროლი არასწორია");
     } finally {
       setLoading(false);
@@ -72,13 +93,24 @@ export default function Login({ setIsLoggedIn }) {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <button disabled={loading} onClick={handleLogin}>
-            {loading ? "იტვირთება..." : t("Sign in")}
+          <button
+            className="login-btn"
+            disabled={loading}
+            onClick={handleLogin}
+          >
+            {loading ? (
+              <>
+                <span className="spinner"></span>
+                {t("Sign in...")}
+              </>
+            ) : (
+              t("Sign in")
+            )}
           </button>
 
           <p>
             {t("Not Registered Yet?")}{" "}
-            <NavLink to="/register">{t("Register Here")} </NavLink>
+            <NavLink to="/register">{t("Register Here")}</NavLink>
 
             <select
               className="language-s"
