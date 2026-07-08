@@ -141,52 +141,57 @@ setCurrentPage(1);
 </div>
 
 
-<div className="As">
+// ... (კოდის დანარჩენი ნაწილი უცვლელია)
 
-{currentItems.map(event=>(
+                <div className="As">
+                    {currentItems.map(event => (
+                        <div className="A" key={event.eventId}>
+                            <div className="A-content">
+                                <h3>{limitText(event.title, 20)}</h3>
+                                <p>{limitText(event.description, 90)}</p>
+                                <p>{event.eventDate}</p>
 
-<div className="A" key={event.eventId}>
+                                <div className="A-buttons">
+                                    <Link to={`/event/${event.eventId}`}>
+                                        <button>{t("Learn More")}</button>
+                                    </Link> {isAdmin && (
+                                        <button
+                                            className="delete-btn"
+                                            disabled={isDeleting}
+                                            onClick={() => deleteHandler(event.eventId)}
+                                        >
+                                            {isDeleting ? t("...") : t("Delete")}
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
 
-<div className="A-content">
+                {/* პაგინაციის ბლოკი */}
+                {totalPages > 1 && (
+                    <div className="pagination-controls">
+                        <button 
+                            disabled={currentPage === 1} 
+                            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                        >
+                            {t("წინა")}
+                        </button>
+                        <span>{currentPage} / {totalPages}</span>
+                        <button 
+                            disabled={currentPage === totalPages} 
+                            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                        >
+                            {t("შემდეგი")}
+                        </button>
+                    </div>
+                )}
 
-<h3>{limitText(event.title,20)}</h3>
-
-<p>{limitText(event.description,90)}</p>
-
-<p>{event.eventDate}</p>
-
-
-<div className="A-buttons">
-
-<Link to={`/event/${event.eventId}`}>
-<button>{t("Learn More")}</button>
-</Link> {isAdmin&&(
-<button
-className="delete-btn"
-disabled={isDeleting}
-onClick={()=>deleteHandler(event.eventId)}
->
-{isDeleting?t("..."):t("Delete")}
-</button>
-)}
-
-</div>
-
-</div>
-
-</div>
-
-))}
-
-</div>
-
-</div>
-
-<Footer/>
-
-</div>
-);
-
+            </div>
+            <Footer/>
+        </div>
+    );
 }
 
 export default Event;

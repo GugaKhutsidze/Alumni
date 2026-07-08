@@ -1,14 +1,34 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  font-family: sans-serif;
+  background-color: #f8f9fb;
+}
 
-::-webkit-scrollbar { width: 0.6vh; }
-::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar {
+  width: 0.6vh;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 ::-webkit-scrollbar-thumb {
   background: #28282B;
   border-radius: 10vh;
+  transition: 0.3s ease;
 }
-::-webkit-scrollbar-thumb:hover { background: #0e62a2; }
+
+::-webkit-scrollbar-thumb:hover {
+  background: #0e62a2;
+}
+
 
 .asd {
-  min-height: 100vh;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -17,118 +37,121 @@
   flex: 1;
   width: 90%;
   margin: 0 auto;
+  color: #ffffff;
 }
 
-/* ძიება და ფილტრი */
 .controls-container {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 1.5vh;
-  margin: 4vh auto;
+  margin: 0 auto 4vh auto;
   width: 100%;
   max-width: 65%;
   flex-wrap: wrap;
 }
 
-.search-bar, .sort-dropdown {
-  margin-top:5vh;
-  padding: 1.2vh 2vh;
+.search-bar,
+.sort-dropdown {
+  min-width:5vh;
+  margin-top:4vh;
+  margin-bottom:4vh;
+  padding: 1vh;
   border: 0.1vh solid #ddd;
+  outline: none;
   border-radius: 1vh;
   font-size: 1.8vh;
   box-shadow: 0 0.2vh 0.5vh rgba(0, 0, 0, 0.05);
   transition: 0.3s;
+
+}
+.sort-dropdown option {
+  font-size: clamp(0.8vh,1.5vh,2vh);
+  background-color: white;
 }
 
-.search-bar { flex: 20; }
-.sort-dropdown { flex: 1; }
+.search-bar {
+  flex: 20;
+}
 
-.search-bar:focus, .sort-dropdown:focus {
+.sort-dropdown {
+  flex: 1;
+}
+
+.search-bar:focus,
+.sort-dropdown:focus {
   border-color: #0e62a2;
   box-shadow: 0 0 1vh rgba(14, 98, 162, 0.2);
-  outline: none;
 }
 
 .As {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(35vh, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 3vh;
-  padding: 1vh 0;
 }
 
+/* აკადემიური სტილის ბარათი */
 .A {
-  background-color: white;
-  border-radius: 1.5vh;
+  background: white;
+  border-radius: 1.2vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 0.5vh 1.5vh rgba(0,0,0,0.05);
-  transition: all 0.4s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(0,0,0,0.05);
 }
 
 .A:hover {
-  transform: translateY(-1vh);
-  box-shadow: 0 1.5vh 3vh rgba(0,0,0,0.15);
-  border-bottom: 0.6vh solid #0e62a2;
+  box-shadow: 0 2vh 4vh rgba(0, 0, 0, 0.1);
 }
 
-.A-image {
+.A img {
   width: 100%;
-  height: 15vh;
-  background-image: url('../images/asd.jpg');
-  background-size: cover;
-  background-position: center;
-  transition: 0.5s;
+  height: 20vh;
+  object-fit: cover;
+  border-bottom: 1px solid #eee;
 }
 
-.A:hover .A-image { transform: scale(1.05); }
-
-.A-content {
-  padding: 2vh;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
+.A-content { padding: 2.5vh; display: flex; flex-direction: column; flex: 1; }
 
 .A-content h3 {
-  margin: 0 0 1vh 0;
-  color: #0a4d82;
-  font-size: 2vh;
+  margin: 0 0 1.5vh 0;
+  color: #1a1a1a;
+  font-size: 2.2vh;
+  font-weight: 600;
+  line-height: 1.3;
 }
 
 .A-content p {
   font-size: 1.5vh;
-  color: #444;
-  line-height: 1.6;
+  color: #666;
+  line-height: 1.7;
   margin-bottom: 2vh;
 }
 
-/* ღილაკები */
 .A-buttons { margin-top: auto; }
 
 .A-buttons button {
-  width: 100%;
-  padding: 1.2vh;
-  background: #28282B;
+  padding: 1.2vh 2.5vh;
+  background: #0a4d82;
   color: white;
   border: none;
-  border-radius: 1vh;
-  font-weight: 600;
+  border-radius: 0.6vh;
+  font-weight: 500;
   cursor: pointer;
-  transition: 0.3s;
+  transition: background 0.3s;
 }
+.A-buttons button:hover { background-color: #28282B; }
 
-.A-buttons button:hover {
-  background-color: #0a4d82;
-}
 
-/* პაგინაცია */
 .pagination-controls {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 2vh;
-  margin: 4vh 0;
+  margin-top: 4vh;
+  padding-bottom: 4vh;
+  flex-wrap: wrap;
 }
 
 .pagination-controls button {
@@ -138,14 +161,32 @@
   padding: 1.2vh 3vh;
   border-radius: 1vh;
   cursor: pointer;
+  transition: 0.3s ease;
+  font-size: 1.5vh;
 }
 
-/* მობილური ვერსია */
+.pagination-controls button:hover {
+  background-color: #0e62a2;
+  transform: scale(1.03);
+}
+
+.no-data {
+  text-align: center;
+  grid-column: 1 / -1;
+  color: #999;
+  font-size: 2vh;
+  padding: 4vh 0;
+}
+span {
+  font-size: 1.5vh;
+  color:#28282B;
+}
+.A-image {
+  width: 100%;
+  background-image: url('../images/asd.jpg  ');
+  background-size:cover;
+}
 @media (max-width: 768px) {
-  .As {
-    grid-template-columns: 1fr;
-  }
-  .controls-container {
-    max-width: 90%;
-  }
+  .As { grid-template-columns: 1fr; }
+  .A { height: auto; }
 }

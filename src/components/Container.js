@@ -10,9 +10,9 @@ export default function AboutUs() {
       <div className="about-container">
 
         <div className="about-content">
-          <span className="about-tag">{t("Platform of graduates of Ivane Javakhishvili Tbilisi State University")}  </span>
+          <span className="about-tag">{t("Platform of graduates of Ivane Javakhishvili Tbilisi State University")}</span>
 
-          <h1>  {t("About us")} </h1>
+          <h1>{t("About us")} </h1>
 
           <p>
             {t("Alumni platform of Tbilisi State University unites university graduates, students and academic community in a single space.")}

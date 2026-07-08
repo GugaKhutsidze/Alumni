@@ -1,211 +1,92 @@
-.admin-layout {
+.admin-container {
   display: flex;
   min-height: 100vh;
-  background-color: #f4f7f6;
 }
 
 .admin-sidebar {
-  width: 26vh;
-  background-color: #0a4d82;
-  color: white;
-  padding: 2vh;
+  width: 260px;
+  background: #ffffff;
+  padding: 2rem 1.5rem;
+  border-right: 1px solid #e0e0e0;
   display: flex;
   flex-direction: column;
 }
 
-.admin-sidebar-title {
-  font-size: 3vh;
-  margin-bottom: 2vh;
+.admin-sidebar h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 2.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
   text-align: center;
 }
 
-.admin-sidebar-nav {
+.admin-nav {
   display: flex;
   flex-direction: column;
-  gap: 1vh;
-}
-.admin-sidebar-nav button {
-  font-size: 1.6vh;
+  gap: 0.5rem;
 }
 
+.admin-nav-link {
+  padding: 0.85rem 1rem;
+  color: #67748e;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.admin-nav-link:hover {
+  background: #f0f2f5;
+}
+
+.admin-nav-link.active {
+  color: #ffffff;
+}
+
+/* ==========================
+   Main Content
+========================== */
 .admin-main {
   flex: 1;
-  padding: 3vh;
+  padding: 3rem;
+  overflow-y: auto;
 }
 
-.admin-sidebar-btn {
-  background: transparent;
-  border: none;
-  color: #bdc3c7;
-  padding: 1.2vh;
-  text-align: left;
-  cursor: pointer;
-  border-radius: 0.5vh;
-  transition: 0.3s;
-}
-
-.admin-sidebar-btn:hover, .admin-active {
-  background-color: #28282B;
-  color: white;
-}
-
-.admin-action-btn, 
-.admin-submit-btn {
-  background-color: #0a4d82;
-  color: white;
-  border: none;
-  padding: 1.2vh 2vh;
-  border-radius: 0.5vh;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 0.3s ease;
-  margin-top: 1vh;
-}
-
-.admin-action-btn:hover, 
-.admin-submit-btn:hover {
-  background-color: #073a63;
-}
-
-.admin-submit-btn:disabled {
-  background-color: #bdc3c7;
-  cursor: not-allowed;
-}
-
-.admin-search-bar, 
-.admin-sort-dropdown {
-  padding: 1vh 1.5vh;
-  border: 0.1vh solid #ccc;
-  border-radius: 0.5vh;
-  font-size: 1.6vh;
-}
-
-.admin-controls-container {
-  display: flex;
-  gap: 1vh;
-  margin-bottom: 2vh;
-}
-
-.admin-search-bar { flex: 1; }
-
-.admin-alumni-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(30vh, 1fr));
-  gap: 2vh;
-}
-
-.admin-alumni-card {
-  background: white;
-  padding: 2vh;
-  border-radius: 0.8vh;
-  box-shadow: 0 0.2vh 0.5vh rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.admin-card-content span, 
-.admin-card-content h3 {
-  display: block; 
-  width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.admin-add-box {
-  max-width: 60vh;
-  margin: 2vh auto;
-  background: #ffffff;
-  padding: 4vh;
-  border-radius: 1.2vh;
-  box-shadow: 0 0.8vh 2vh rgba(0, 0, 0, 0.08);
-  border: 0.1vh solid #ececec;
-}
-
-.admin-add-box h1 {
-  font-size: 2.5vh;
-  color: #333;
-  margin-bottom: 2.5vh;
-  text-align: center;
-  font-weight: 600;
-}
-
-.admin-add-box input, 
-.admin-add-box textarea {
-  width: 100%;
-  padding: 1.2vh 1.5vh;
-  margin-bottom: 1.8vh;
-  border: 0.15vh solid #e0e0e0;
-  border-radius: 0.6vh;
-  font-size: 1.6vh;
-  background-color: #fafafa;
-  transition: all 0.3s ease;
-  box-sizing: border-box; 
-}
-
-.admin-add-box input:focus, 
-.admin-add-box textarea:focus {
-  outline: none;
-  border-color: #0a4d82;
-  background-color: white;
-  box-shadow: 0 0 0 0.4vh rgba(10, 77, 130, 0.1);
-}
-
-.admin-add-box textarea {
-  resize: vertical;
-  min-height: 15vh;
-}
-
-.admin-add-box input[type="file"] {
-  background: transparent;
-  border: 0.15vh dashed #ccc;
-  cursor: pointer;
-}
-
-.admin-pagination-controls {
-  margin-top: 3vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1vh;
-}
-
-.admin-pagination-controls button {
-  padding: 0.8vh 1.5vh;
-  border: 0.1vh solid #0a4d82;
-  background: white;
-  color: #0a4d82;
-  border-radius: 0.4vh;
-  cursor: pointer;
-}
-
-.admin-pagination-controls button:disabled {
-  border-color: #ccc;
-  color: #ccc;
-}
-
+/* ==========================
+   Responsive (Mobile First Strategy)
+========================== */
 @media (max-width: 768px) {
-  .admin-layout {
+  .admin-container {
     flex-direction: column;
   }
 
   .admin-sidebar {
     width: 100%;
-    height: auto;
+    padding: 1.5rem;
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
   }
 
-  .admin-sidebar-nav {
+  .admin-sidebar h2 {
+    margin-bottom: 1rem;
+  }
+
+  .admin-nav {
     flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
+    overflow-x: auto;
+    gap: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .admin-nav-link {
+    white-space: nowrap;
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
   }
 
   .admin-main {
-    padding: 1.5vh;
-  }
-
-  .admin-controls-container {
-    flex-direction: column;
-    gap: 1vh;
+    padding: 1.5rem;
   }
 }

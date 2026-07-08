@@ -1,167 +1,295 @@
-import React, { useState, useEffect } from 'react';
-import './ImageSlider.css';
+import React, { useState, useEffect } from "react";
+import "./ImageSlider.css";
 import axios from "axios";
 
-import img1 from '../images/img1.jpg';
-import img2 from '../images/img2.jpg';
-import img3 from '../images/img3.jpg';
-import img4 from '../images/img4.jpg';
-import img5 from '../images/img5.jpg';
+import img1 from "../images/img1.jpg";
+import img2 from "../images/img2.jpg";
+import img3 from "../images/img3.jpg";
+import img4 from "../images/img4.jpg";
+import img5 from "../images/img5.jpg";
+
 
 const LOCAL_IMAGES = [
-  { id: 1, url: img1 },
-  { id: 2, url: img2 },
-  { id: 3, url: img3 },
-  { id: 4, url: img4 },
-  { id: 5, url: img5 },
+  img1,
+  img2,
+  img3,
+  img4,
+  img5,
 ];
 
-const API = "http://localhost:5000/api/news";
-const ME_API = "http://localhost:5000/api/user";
+
+const API =
+  "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net/api/news";
+
+
 
 const ImageSlider = () => {
+
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [slides, setSlides] = useState(LOCAL_IMAGES);
-  const [file, setFile] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [slides, setSlides] = useState([]);
 
-  const SLIDES = slides.length ? slides : LOCAL_IMAGES;
-
-  
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (!token) return;
-
-    axios.get(ME_API, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-    .then((res) => {
-      if (res.data.role === "admin") {
-        setIsAdmin(true);
-      }
-    })
-    .catch(() => setIsAdmin(false));
-  }, []);
-
-  const nextSlide = () => {
-    setCurrentIndex((prev) => (prev + 1) % SLIDES.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentIndex((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
-  };
 
 
   useEffect(() => {
-    const fetchSlides = async () => {
+
+    const fetchNews = async () => {
+
       try {
+
         const res = await axios.get(API);
 
-        if (res.data && res.data.length > 0) {
-          setSlides(res.data);
-        } else {
-          setSlides(LOCAL_IMAGES);
-        }
-      } catch (err) {
-        setSlides(LOCAL_IMAGES);
+
+        const data = res.data.map((item,index)=>({
+
+          id:item.newsId,
+
+          url:
+            LOCAL_IMAGES[index % LOCAL_IMAGES.length],
+
+          title:item.title,
+
+          body:item.body,
+
+          date:item.newsDate
+
+        }));
+
+
+        setSlides(data);
+
+
+      } catch(error){
+
+        console.log(error);
+
+
+        setSlides(
+          LOCAL_IMAGES.map((image,index)=>({
+            id:index,
+            url:image,
+            title:"",
+            body:""
+          }))
+        );
+
       }
+
     };
 
-    fetchSlides();
-  }, []);
 
-  useEffect(() => {
-    const timer = setInterval(nextSlide, 5000);
-    return () => clearInterval(timer);
-  }, [slides]);
+    fetchNews();
+
+  },[]);
 
 
-  const uploadImage = async () => {
-    if (!file) return;
 
-    const formData = new FormData();
-    formData.append("file", file);
 
-    try {
-      const token = localStorage.getItem("token");
+  useEffect(()=>{
 
-      await axios.post(API, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`
-        },
-      });
+    if(!slides.length)
+      return;
 
-      const res = await axios.get(API);
 
-      setSlides(res.data.length ? res.data : LOCAL_IMAGES);
-      setFile(null);
-    } catch (err) {
-      console.log(err);
-    }
+    const timer=setInterval(()=>{
+
+      setCurrentIndex(prev =>
+        (prev + 1) % slides.length
+      );
+
+    },5000);
+
+
+
+    return ()=>clearInterval(timer);
+
+
+  },[slides]);
+
+
+
+
+
+  const nextSlide=()=>{
+
+    setCurrentIndex(prev =>
+      (prev + 1) % slides.length
+    );
+
   };
 
-  return (
-    <div className='asd'>
 
-      {/* ADMIN UPLOAD */}
-      {isAdmin && (
-        <div>
-          <input
-            type="file"
-            onChange={(e) => setFile(e.target.files[0])}
-          />
-          <button onClick={uploadImage}>
-            Upload
-          </button>
-        </div>
-      )}
+
+  const prevSlide=()=>{
+
+    setCurrentIndex(prev =>
+      (prev - 1 + slides.length) % slides.length
+    );
+
+  };
+
+
+
+
+  if(!slides.length)
+    return null;
+
+
+
+
+  return (
+
+    <div className="asd">
+
 
       <div className="slider-full-container">
+
+
         <div className="slider-viewport">
+
 
           <div
             className="slider-track"
+
             style={{
-              transform: `translateX(-${currentIndex * 100}%)`
+              transform:
+              `translateX(-${currentIndex * 100}%)`
             }}
+
           >
-            {SLIDES.map((image, index) => (
+
+
+            {slides.map((slide)=>(
+
+
               <div
-                key={index}
+
+                key={slide.id}
+
                 className="slide-item"
+
                 style={{
-                  backgroundImage: `url(${image.url})`
+                  backgroundImage:
+                  `url(${slide.url})`
                 }}
-              />
+
+              >
+
+
+                <div className="slide-content">
+
+
+                  <span className="slide-date">
+
+                    {new Date(
+                      slide.date
+                    ).toLocaleDateString()}
+
+                  </span>
+
+
+
+                  <h1>
+                    {slide.title}
+                  </h1>
+
+
+
+                  <p>
+
+                    {slide.body?.length > 160
+                    ?
+                    slide.body.substring(0,160)+"..."
+                    :
+                    slide.body
+                    }
+
+                  </p>
+
+
+
+                  <button>
+                    Read More
+                  </button>
+
+
+                </div>
+
+
+              </div>
+
+
             ))}
+
+
+
           </div>
 
-          <button className="arrow arrow-left" onClick={prevSlide}>
+
+
+
+
+          <button
+            className="arrow arrow-left"
+            onClick={prevSlide}
+          >
             ❮
           </button>
 
-          <button className="arrow arrow-right" onClick={nextSlide}>
+
+
+          <button
+            className="arrow arrow-right"
+            onClick={nextSlide}
+          >
             ❯
           </button>
 
+
+
+
+
           <div className="dots-container">
-            {SLIDES.map((_, index) => (
+
+
+            {slides.map((_,index)=>(
+
+
               <div
+
                 key={index}
-                onClick={() => setCurrentIndex(index)}
-                className={`dot ${currentIndex === index ? 'active' : ''}`}
+
+                onClick={()=>
+                  setCurrentIndex(index)
+                }
+
+                className={
+                  currentIndex===index
+                  ?
+                  "dot active"
+                  :
+                  "dot"
+                }
+
               />
+
+
             ))}
+
+
           </div>
 
+
         </div>
+
+
       </div>
+
+
     </div>
+
   );
+
 };
+
 
 export default ImageSlider;

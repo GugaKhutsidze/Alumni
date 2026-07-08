@@ -19,7 +19,7 @@ function Employment() {
 
     const token = localStorage.getItem("token");
     const currentLanguageId = i18n.language === "ka" ? 1 : 2;
-    const itemsPerPage = 20;
+    const itemsPerPage = 50;
 
     const isAdmin = useMemo(() => {
         if (!token) return false;
@@ -73,15 +73,14 @@ function Employment() {
     return (
         <div className="asd">
             <div className="A-list">
-                {/* აი, თქვენი საძიებო და დახარისხების არე */}
                 <div className="A-image">
                     <div className="controls-container">
                         <input className="search-bar" placeholder={t("ძებნა...")} value={searchTerm} 
                                onChange={e => { setSearchTerm(e.target.value); setCurrentPage(1); }} />
-                        <select className="sort-dropdown" value={sortBy} onChange={e => setSortBy(e.target.value)}>
-                            <option value="default">{t("დახარისხება")}</option>
-                            <option value="az">A-Z</option>
-                            <option value="za">Z-A</option>
+                        <select className="sort-dropdown" value={sortBy} onChange={e => { setSortBy(e.target.value); setCurrentPage(1); }}>
+                            <option value="default"></option>
+                            <option value="az">{t("A-Z")}</option>
+                            <option value="za">{t("Z-A")}</option>
                         </select>
                     </div>
                 </div>
@@ -98,8 +97,7 @@ function Employment() {
                                 <div className="A-buttons">
                                     <Link to={`/employment/${emp.advertisementId}`}>
                                         <button>{t("Learn More")}</button>
-                                    </Link>
-                                    {isAdmin && (
+                                    </Link> {isAdmin && (
                                         <button className="delete-btn" disabled={isDeleting} onClick={() => deleteHandler(emp.advertisementId)}>
                                             {isDeleting ? "..." : t("Delete")}
                                         </button>
@@ -109,6 +107,19 @@ function Employment() {
                         </div>
                     ))}
                 </div>
+
+                {/* პაგინაცია - აი ეს ბლოკი უნდა გქონდეს აუცილებლად */}
+                {totalPages > 1 && (
+                    <div className="pagination-controls">
+                        <button disabled={currentPage === 1} onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}>
+                            {t("წინა")}
+                        </button>
+                        <span>{currentPage} / {totalPages}</span>
+                        <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}>
+                            {t("შემდეგი")}
+                        </button>
+                    </div>
+                )}
             </div>
             <Footer />
         </div>
