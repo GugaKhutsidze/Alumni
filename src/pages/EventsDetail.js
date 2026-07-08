@@ -8,7 +8,7 @@ import img3 from "../images/imag7.png";
 const SERVER_DOMAIN =
   "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net";
 
-const API_BASE_URL =
+const URL =
   "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net/api";
 
 const parseImageSrc = (file) => {
@@ -50,7 +50,7 @@ function EventsDetail() {
       };
 
       const eventRes = await axios.get(
-        `${API_BASE_URL}/events/${id}?languageId=${currentLanguageId}`,
+        `${URL}/events/${id}?languageId=${currentLanguageId}`,
         config
       );
 

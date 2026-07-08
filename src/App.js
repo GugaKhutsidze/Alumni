@@ -29,12 +29,12 @@ export function getUserRole() {
   }
 }
 
-// Lazy imports
 const Login = React.lazy(() => import("./pages/Login"));
 const Register = React.lazy(() => import("./pages/Register"));
 const Home = React.lazy(() => import("./pages/Home"));
 const About = React.lazy(() => import("./pages/About"));
 const Events = React.lazy(() => import("./pages/Events"));
+const NewsDetail = React.lazy(() => import("./pages/NewsDetail"));
 const Employment = React.lazy(() => import("./pages/Employment"));
 const EventsDetail = React.lazy(() => import("./pages/EventsDetail"));
 const Profile = React.lazy(() => import("./pages/Profile"));
@@ -84,6 +84,7 @@ function App() {
             <Route path="/event/:id" element={<EventsDetail />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/employment/:id" element={<EmployDetail />} />
+            <Route path="/news/:id" element={<NewsDetail />} />
  
             
             

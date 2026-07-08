@@ -6,7 +6,6 @@ export default function Home() {
   return (
      <div className="page">
       <ImageSlider />
-      <Footer />
     </div>
   );
 }

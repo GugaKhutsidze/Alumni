@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import "./EmployDetail.css";
 import { useTranslation } from "react-i18next";
 
-const API_BASE_URL = "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net/api";
+const URL = "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net/api";
 
 function EmployDetail() {
   const { id } = useParams();
@@ -14,7 +14,6 @@ function EmployDetail() {
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 1 = ქართული, 0 = ინგლისური
   const currentLanguageId = i18n.language === "ka" ? 1 : 0;
 
   const fetchJobData = useCallback(async () => {
@@ -23,7 +22,7 @@ function EmployDetail() {
       const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
 
       const jobRes = await axios.get(
-        `${API_BASE_URL}/jobs/${id}?languageId=${currentLanguageId}`,
+        `${URL}/api/jobs/${id}?languageId=${currentLanguageId}`,
         config
       );
 

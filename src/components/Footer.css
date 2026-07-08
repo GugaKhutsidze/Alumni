@@ -28,7 +28,7 @@ html, body {
     background-color: var(--tsu-dark);
     color: var(--white);
     padding: 8vh 8vh 3vh;
-    border-top: 4px solid var(--tsu-accent);
+    border-top: 0.4vh solid var(--tsu-accent);
 }
 
 .footer-container {
@@ -71,7 +71,7 @@ html, body {
     margin-top: 6vh;
     width: 100%;
     text-align: center;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 0.1vh solid rgba(255, 255, 255, 0.1);
     padding-top: 2vh;
 }
 

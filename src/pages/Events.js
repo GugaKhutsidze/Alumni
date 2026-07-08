@@ -132,7 +132,9 @@ function Event() {
                         <span>{currentPage} / {totalPages}</span>
                         <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}>{t("შემდეგი")}</button>
                     </div>
+                    
                 )}
+                
             </div>
             <Footer />
         </div>
