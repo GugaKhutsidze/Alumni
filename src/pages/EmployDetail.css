@@ -23,7 +23,7 @@
 }
 
 .event-info-body h1 {
-  font-size: 3vh; /* ოდნავ გავზარდე, რომ სათაური გამოიკვეთოს */
+  font-size: 3vh; 
   margin-top: 0;
   margin-bottom: 2vh;
   color: #1a1a1a;

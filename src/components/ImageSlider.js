@@ -103,11 +103,9 @@ const ImageSlider = () => {
                                     <span className="slide-date">{slide.date && new Date(slide.date).toLocaleDateString()}</span>
                                     <h1 className="text-limit">{cleanText(slide.title, 60)}</h1>
                                     <p className="text-limit-body">{cleanText(slide.body, 160)}</p>
-                                    <Link to={`/news/${slide.newsId}`}><button>{t("Read More")}</button></Link>
-                                    {isAdmin && (
+                                    <Link to={`/news/${slide.newsId}`}><button>{t("Read More")}</button></Link> {isAdmin && (
                                         <>
-                                            <button className="edit-btn" onClick={() => editHandler(slide)}>{t("Edit")}</button>
-                                            <button className="delete-btn" disabled={isDeleting} onClick={() => deleteHandler(slide.newsId)}>
+                                            <button className="edit-btn" onClick={() => editHandler(slide)}>{t("Edit")}</button> <button className="delete-btn" disabled={isDeleting} onClick={() => deleteHandler(slide.newsId)}>
                                                 {isDeleting ? "..." : t("Delete")}
                                             </button>
                                         </>

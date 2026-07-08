@@ -9,7 +9,6 @@ export default function About() {
     <div className="page">
       <Container />
       <Footer />
-  
     </div>
   );
 }

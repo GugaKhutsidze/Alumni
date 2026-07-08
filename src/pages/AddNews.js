@@ -3,7 +3,7 @@ import axios from "axios";
 import { useTranslation } from "react-i18next";
 import "./EJ.css";
 
-const API_URL = "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net/api/news";
+const URL = "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net/api/news";
 
 function AddNews() {
   const { t } = useTranslation();
@@ -28,7 +28,6 @@ function AddNews() {
 
     const token = localStorage.getItem("token");
 
-    // ვქმნით FormData-ს, რადგან API მოითხოვს multipart/form-data-ს
     const formData = new FormData();
     formData.append("TitleGeo", form.TitleGeo);
     formData.append("TitleEng", form.TitleEng);
@@ -38,7 +37,7 @@ function AddNews() {
     formData.append("NewsDate", form.NewsDate);
 
     try {
-      await axios.post(API_URL, formData, {
+      await axios.post(URL, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           "Authorization": `Bearer ${token}`,

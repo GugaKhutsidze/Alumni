@@ -46,13 +46,10 @@ export default function Login({ setIsLoggedIn }) {
 
       const token = response.data.token;
 
-      // Save token
       localStorage.setItem("token", token);
 
-      // Decode token
       const decoded = jwtDecode(token);
 
-      // Get role (supports both standard ASP.NET and custom JWTs)
       const role =
         decoded.role ||
         decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] ||

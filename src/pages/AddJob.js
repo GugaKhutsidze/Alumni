@@ -3,7 +3,7 @@ import axios from "axios";
 import { useTranslation } from "react-i18next";
 import "./EJ.css";
 
-const API_URL =
+const URL =
   "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net/api/jobs";
 
 function AddJob() {
@@ -62,7 +62,7 @@ function AddJob() {
     };
 
     try {
-      await axios.post(API_URL, jobData, {
+      await axios.post(URL, jobData, {
         headers: {
           Accept: "*/*",
           "Content-Type": "application/json",
