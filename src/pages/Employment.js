@@ -16,7 +16,6 @@ function Employment() {
     const [currentPage, setCurrentPage] = useState(1);
     const [isDeleting, setIsDeleting] = useState(false);
     const [loading, setLoading] = useState(true);
-
     const token = localStorage.getItem("token");
     const currentLanguageId = i18n.language === "ka" ? 1 : 2;
     const itemsPerPage = 20;
@@ -25,19 +24,18 @@ function Employment() {
         if (!token) return false;
         try {
             const decoded = jwtDecode(token);
-            const role = decoded.role || decoded.Role || decoded.roleId || 
-                         decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+            const role = decoded.role || decoded.Role || decoded.roleId || decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
             return role == 1 || String(role).toLowerCase() === "admin";
-        } catch { return false; }
+        } catch {
+            return false;
+        }
     }, [token]);
 
     useEffect(() => {
         setLoading(true);
         axios.get(`${URL}/api/jobs?advertisementTypeId=1&languageId=${currentLanguageId}`)
-            .then((res) => {
-                setEmployment(Array.isArray(res.data) ? res.data : []);
-            })
-            .catch((err) => console.error(err))
+            .then(res => setEmployment(Array.isArray(res.data) ? res.data : []))
+            .catch(err => console.error(err))
             .finally(() => setLoading(false));
     }, [currentLanguageId]);
 
@@ -45,9 +43,7 @@ function Employment() {
         if (!window.confirm(t("ნამდვილად გსურთ წაშლა?"))) return;
         setIsDeleting(true);
         try {
-            await axios.delete(`${URL}/api/jobs/${id}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            await axios.delete(`${URL}/api/jobs/${id}`, { headers: { Authorization: `Bearer ${token}` } });
             setEmployment(prev => prev.filter(emp => emp.advertisementId !== id));
         } catch {
             alert(t("წაშლა ვერ მოხერხდა."));
@@ -56,13 +52,40 @@ function Employment() {
         }
     };
 
+    const editHandler = async (emp) => {
+        const newTitle = window.prompt(t("შეიყვანეთ ახალი სათაური"), emp.title);
+        if (!newTitle) return;
+        const newDescription = window.prompt(t("შეიყვანეთ ახალი აღწერა"), emp.description);
+        if (!newDescription) return;
+        const newSalary = window.prompt(t("შეიყვანეთ ხელფასი"), emp.salary);
+        if (!newSalary) return;
+        const updatedJob = {
+            advertisementTypeID: emp.advertisementTypeID || 1,
+            isAlumniAd: emp.isAlumniAd ?? true,
+            partnerID: emp.partnerID || 0,
+            titleGeo: newTitle,
+            titleEng: newTitle,
+            descriptionGeo: newDescription,
+            descriptionEng: newDescription,
+            startDate: emp.startDate,
+            endDate: emp.endDate,
+            salary: newSalary
+        };
+        try {
+            await axios.put(`${URL}/api/jobs/${emp.advertisementId}`, updatedJob, {
+                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }
+            });
+            setEmployment(prev => prev.map(item => item.advertisementId === emp.advertisementId ? { ...item, title: newTitle, description: newDescription, salary: newSalary } : item));
+        } catch (error) {
+            console.error(error);
+            alert(t("რედაქტირება ვერ მოხერხდა."));
+        }
+    };
+
     const { currentItems, totalPages } = useMemo(() => {
-        let processed = [...employment].filter(emp => 
-            emp.title?.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-        if (sortBy === "az") processed.sort((a,b) => (a.title || "").localeCompare(b.title || ""));
-        else if (sortBy === "za") processed.sort((a,b) => (b.title || "").localeCompare(a.title || ""));
-        
+        let processed = employment.filter(emp => emp.title?.toLowerCase().includes(searchTerm.toLowerCase()));
+        if (sortBy === "az") processed.sort((a, b) => (a.title || "").localeCompare(b.title || ""));
+        if (sortBy === "za") processed.sort((a, b) => (b.title || "").localeCompare(a.title || ""));
         const index = currentPage * itemsPerPage;
         return {
             currentItems: processed.slice(index - itemsPerPage, index),
@@ -75,8 +98,7 @@ function Employment() {
             <div className="A-list">
                 <div className="A-image">
                     <div className="controls-container">
-                        <input className="search-bar" placeholder={t("ძებნა...")} value={searchTerm} 
-                               onChange={e => { setSearchTerm(e.target.value); setCurrentPage(1); }} />
+                        <input className="search-bar" placeholder={t("ძებნა...")} value={searchTerm} onChange={e => { setSearchTerm(e.target.value); setCurrentPage(1); }} />
                         <select className="sort-dropdown" value={sortBy} onChange={e => { setSortBy(e.target.value); setCurrentPage(1); }}>
                             <option value="default"></option>
                             <option value="az">{t("A-Z")}</option>
@@ -84,40 +106,34 @@ function Employment() {
                         </select>
                     </div>
                 </div>
-
                 <div className="As">
-                    {loading ? <p>{t("იტვირთება...")}</p> : currentItems.map(emp => (
-                        <div className="A" key={emp.advertisementId}>
-                            <div className="A-content">
-                                <h3>{emp.title}</h3>
-                                <p>{emp.description?.substring(0, 90)}...</p>
-                                <p><strong>{t("ხელფასი")}:</strong> {emp.salary} GEL</p>
-                                <p><strong>{t("თარიღი")}:</strong> {new Date(emp.startDate).toLocaleDateString()} - {new Date(emp.endDate).toLocaleDateString()}</p>
-                                
-                                <div className="A-buttons">
-                                    <Link to={`/employment/${emp.advertisementId}`}>
-                                        <button>{t("Learn More")}</button>
-                                    </Link> {isAdmin && (
-                                        <button className="delete-btn" disabled={isDeleting} onClick={() => deleteHandler(emp.advertisementId)}>
-                                            {isDeleting ? "..." : t("Delete")}
-                                        </button>
-                                    )}
+                    {loading ? <p>{t("იტვირთება...")}</p> : (
+                        currentItems.map(emp => (
+                            <div className="A" key={emp.advertisementId}>
+                                <div className="A-content">
+                                    <h3>{emp.title}</h3>
+                                    <p>{emp.description?.substring(0, 90)}...</p>
+                                    <p><strong>{t("ხელფასი")}:</strong> {emp.salary} GEL</p>
+                                    <p><strong>{t("თარიღი")}:</strong> {new Date(emp.startDate).toLocaleDateString()} - {new Date(emp.endDate).toLocaleDateString()}</p>
+                                    <div className="A-buttons">
+                                        <Link to={`/employment/${emp.advertisementId}`}><button>{t("Learn More")}</button></Link> {isAdmin && (
+                                            <>
+                                                <button className="edit-btn" onClick={() => editHandler(emp)}>{t("Edit")}</button> <button className="delete-btn" disabled={isDeleting} onClick={() => deleteHandler(emp.advertisementId)}>
+                                                    {isDeleting ? "..." : t("Delete")}
+                                                </button>
+                                            </>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        ))
+                    )}
                 </div>
-
-                {/* პაგინაცია - აი ეს ბლოკი უნდა გქონდეს აუცილებლად */}
                 {totalPages > 1 && (
                     <div className="pagination-controls">
-                        <button disabled={currentPage === 1} onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}>
-                            {t("წინა")}
-                        </button>
+                        <button disabled={currentPage === 1} onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}>{t("წინა")}</button>
                         <span>{currentPage} / {totalPages}</span>
-                        <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}>
-                            {t("შემდეგი")}
-                        </button>
+                        <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}>{t("შემდეგი")}</button>
                     </div>
                 )}
             </div>
@@ -125,5 +141,4 @@ function Employment() {
         </div>
     );
 }
-
 export default Employment;
