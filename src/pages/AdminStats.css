@@ -45,8 +45,10 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #4f46e5, #06b6d4);
-}
+  background: linear-gradient(
+    180deg,
+    #3498db
+  );}
 
 .stats-card h3 {
   color: #64748b;
@@ -58,8 +60,10 @@
 }
 
 .stats-number {
-  background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
-  -webkit-background-clip: text;
+  background: linear-gradient(
+    180deg,
+    #3498db
+  );  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-size: 5.5vh;
   font-weight: 800;
