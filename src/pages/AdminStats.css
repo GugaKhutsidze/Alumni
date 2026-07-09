@@ -14,14 +14,12 @@
   letter-spacing: -0.05rem;
 }
 
-/* სტატისტიკის გრიდი */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 3vh 2vw;
 }
 
-/* ბარათების სტილი */
 .stats-card {
   background: #ffffff;
   padding: 4vh 2vw;
@@ -40,7 +38,6 @@
   border-color: #cbd5e1;
 }
 
-/* ბარათების ზედა პატარა ხაზი დეკორისთვის */
 .stats-card::before {
   content: "";
   position: absolute;
@@ -70,7 +67,6 @@
   line-height: 1;
 }
 
-/* ლოუდერი და შეცდომები */
 .page-loading {
   display: flex;
   justify-content: center;

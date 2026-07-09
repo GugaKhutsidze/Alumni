@@ -54,7 +54,6 @@ function EmployDetail() {
     e.preventDefault();
     if (!content.trim()) return;
 
-    // ვალიდაცია გაგზავნამდე i18n მესიჯით
     if (content.length > 500) {
       alert(t("feedback_max_length_error", { count: 500 }));
       return;
@@ -124,7 +123,7 @@ function EmployDetail() {
         <form className="feedback-form" onSubmit={sendFeedback}>
           <textarea
             value={content}
-            maxLength={500} // ზღუდავს ჩაწერას ვიზუალურადაც
+            maxLength={500} 
             onChange={(e) => setContent(e.target.value)}
             placeholder={t("Write your feedback")}
           />
