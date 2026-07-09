@@ -9,7 +9,7 @@ import img1 from "../images/img1.jpg";
 import img2 from "../images/img2.jpg";
 import img3 from "../images/img3.jpg";
 import img4 from "../images/img4.jpg";
-import img5 from "../images/imag5.jpg";
+import img5 from "../images/img5.jpg";
 
 const LOCAL_IMAGES = [img1, img2, img3, img4, img5];
 const URL = "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net";
@@ -43,7 +43,7 @@ const ImageSlider = () => {
         axios.get(`${URL}/api/news?languageId=${currentLanguageId}`)
             .then(res => {
                 const data = Array.isArray(res.data) ? res.data : res.data?.data || [];
-                setSlides(data.slice(-5).reverse().map((item, index) => ({
+                setSlides(data.slice(-10).reverse().map((item, index) => ({
                     newsId: item.newsId,
                     url: LOCAL_IMAGES[index % LOCAL_IMAGES.length],
                     title: item.title || item.titleGeo || "",
@@ -86,7 +86,7 @@ const ImageSlider = () => {
 
     useEffect(() => {
         if (slides.length <= 1) return;
-        const timer = setInterval(() => setCurrentIndex(prev => (prev + 1) % slides.length), 5000);
+        const timer = setInterval(() => setCurrentIndex(prev => (prev + 1) % slides.length), 10000);
         return () => clearInterval(timer);
     }, [slides]);
 

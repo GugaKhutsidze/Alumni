@@ -42,6 +42,7 @@ const AdminPanel = React.lazy(() => import("./pages/AdminPanel"));
 const AddEvent = React.lazy(() => import("./pages/AddEvent"));
 const AddJob = React.lazy(() => import("./pages/AddJob"));
 const Alumni = React.lazy(() => import("./pages/Alumni"));
+const AdminStats = React.lazy(() => import("./pages/AdminStats"));
 
 const ProtectedLayout = () => {
   const token = localStorage.getItem("token");
@@ -98,6 +99,7 @@ function App() {
               <Route path="AddJob" element={<AddJob />} />
               <Route path="Alumni" element={<Alumni />} />
               <Route path="AddNews" element={<AddNews />} />
+              <Route path ="AdminStats" element={<AdminStats />} />
             </Route>
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />

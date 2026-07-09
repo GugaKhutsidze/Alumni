@@ -3,12 +3,10 @@ import axios from "axios";
 import { useTranslation } from "react-i18next";
 import "./EJ.css";
 
-const URL =
-  "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net/api/jobs";
+const URL = "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net/api/jobs";
 
 function AddJob() {
   const { t } = useTranslation();
-
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -26,7 +24,6 @@ function AddJob() {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-
     setFormData((prev) => ({
       ...prev,
       [name]:
@@ -40,8 +37,17 @@ function AddJob() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
 
+    if (formData.titleGeo.length > 200 || formData.titleEng.length > 200) {
+      alert(t("title_max_length_error", { count: 200 }));
+      return;
+    }
+    if (formData.descriptionGeo.length > 4000 || formData.descriptionEng.length > 4000) {
+      alert(t("description_max_length_error", { count: 4000 }));
+      return;
+    }
+
+    setLoading(true);
     const token = localStorage.getItem("token");
 
     const jobData = {
@@ -52,12 +58,8 @@ function AddJob() {
       titleEng: formData.titleEng,
       descriptionGeo: formData.descriptionGeo,
       descriptionEng: formData.descriptionEng,
-      startDate: formData.startDate
-        ? new Date(formData.startDate).toISOString()
-        : null,
-      endDate: formData.endDate
-        ? new Date(formData.endDate).toISOString()
-        : null,
+      startDate: formData.startDate ? new Date(formData.startDate).toISOString() : null,
+      endDate: formData.endDate ? new Date(formData.endDate).toISOString() : null,
       salary: formData.salary,
     };
 
@@ -86,12 +88,7 @@ function AddJob() {
       });
     } catch (err) {
       console.error(err.response?.data || err);
-
-      alert(
-        err.response?.data?.title ||
-          err.response?.data?.message ||
-          t("job_add_error")
-      );
+      alert(err.response?.data?.title || err.response?.data?.message || t("job_add_error"));
     } finally {
       setLoading(false);
     }
@@ -132,6 +129,7 @@ function AddJob() {
       <input
         type="text"
         name="titleGeo"
+        maxLength={200}
         placeholder={t("title_geo")}
         value={formData.titleGeo}
         onChange={handleChange}
@@ -141,6 +139,7 @@ function AddJob() {
       <input
         type="text"
         name="titleEng"
+        maxLength={200}
         placeholder={t("title_eng")}
         value={formData.titleEng}
         onChange={handleChange}
@@ -149,6 +148,7 @@ function AddJob() {
 
       <textarea
         name="descriptionGeo"
+        maxLength={4000}
         placeholder={t("description_geo")}
         value={formData.descriptionGeo}
         onChange={handleChange}
@@ -157,6 +157,7 @@ function AddJob() {
 
       <textarea
         name="descriptionEng"
+        maxLength={4000}
         placeholder={t("description_eng")}
         value={formData.descriptionEng}
         onChange={handleChange}

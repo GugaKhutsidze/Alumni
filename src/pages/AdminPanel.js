@@ -37,6 +37,12 @@ const AdminPanel = () => {
           >
             {t("Add News")}
           </NavLink>
+          <NavLink
+            to="/AdminPanel/AdminStats"
+            className="admin-nav-link"
+          >
+            {t("Statistics")}
+          </NavLink>  
         </nav>
       </aside>
 

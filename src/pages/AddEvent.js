@@ -35,7 +35,7 @@ function AddEvent() {
     e.preventDefault();
     setLoading(true);
 
-    const API_URL =
+    const URl =
       "https://alumni-tsu-api-2026-gde9e8bsd3hnb7ar.westeurope-01.azurewebsites.net/api/events";
 
     const formData = new FormData();
@@ -52,7 +52,7 @@ function AddEvent() {
     }
 
     try {
-      await axios.post(API_URL, formData, {
+      await axios.post(URL, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           accept: "*/*",
